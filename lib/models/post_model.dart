@@ -21,6 +21,7 @@ class Post {
   List<Bookmark> bookmarks;
   List<Tag> tags;
   int views;
+  bool liked;
 
   Post({
     required this.id,
@@ -38,7 +39,8 @@ class Post {
     required this.bookmarks,
     required this.tags,
     required this.createdAt,
-    required this.views
+    required this.views,
+    required this.liked
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -70,7 +72,8 @@ class Post {
       votes: votes,
       bookmarks: bookmarks,
       tags: tags,
-      views: (json['views'] ?? 0) as int
+      views: (json['views'] ?? 0) as int,
+      liked: (json['liked'] ?? false) as bool
     );
   }
 }

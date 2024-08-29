@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CardCategories extends StatelessWidget {
-  const CardCategories({super.key, required this.categoriesName, required this.color});
+  const CardCategories({super.key, required this.categoriesName, required this.isSelected});
   final String categoriesName;
-  final Color color;
+  final bool isSelected;
 
 
   @override
@@ -15,9 +15,18 @@ class CardCategories extends StatelessWidget {
       child: Text(
         categoriesName,
         style: TextStyle(
-            color: color,
-            fontWeight: heavy,
-            fontSize: smLabel
+          // color: isSelected ? kPrimary : kBlack,
+          color: Colors.transparent,
+          fontWeight: isSelected ? heavy : regular,
+          fontSize: smLabel,
+          shadows: [
+            Shadow(
+                color: isSelected ? kPrimary : kBlack,
+                offset: const Offset(0, -8))
+          ],
+          decoration: isSelected ? TextDecoration.underline : TextDecoration.none,
+          decorationColor: kPrimary,
+          decorationThickness: 3.h,
         ),
       ),
     );

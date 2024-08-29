@@ -22,16 +22,39 @@ class CardViewers extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Container(
+            imgPath.isNotEmpty
+                ? CachedNetworkImage(
+              imageUrl: Api.imgurl + imgPath,
+              imageBuilder: (context, imageProvider) => Container(
+                width: 40.h,
+                height: 40.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100.h),
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              errorWidget: (context, url, error) => Container(
+                width: 40.h,
+                height: 40.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100.h),
+                  image: const DecorationImage(
+                    image: AssetImage('assets/images/profile_large.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            )
+                : Container(
               width: 40.h,
               height: 40.h,
               decoration: BoxDecoration(
-                color: kLight,
                 borderRadius: BorderRadius.circular(100.h),
-                image: DecorationImage(
-                  image: CachedNetworkImageProvider(
-                    Api.imgurl + imgPath,
-                  ),
+                image: const DecorationImage(
+                  image: AssetImage('assets/images/profile_large.png'),
                   fit: BoxFit.cover,
                 ),
               ),

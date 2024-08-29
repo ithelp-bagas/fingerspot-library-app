@@ -1,3 +1,5 @@
+import 'package:fingerspot_library_app/models/user_model.dart';
+
 class Comment {
   int id;
   int postId;
@@ -8,6 +10,7 @@ class Comment {
   int status;
   int view;
   String createdAt;
+  User user;
 
   Comment({
     required this.id,
@@ -19,9 +22,14 @@ class Comment {
     required this.status,
     required this.view,
     required this.createdAt,
+    required this.user
   });
 
   factory Comment.fromJson(Map<String, dynamic> json) {
+    Map<String, dynamic> userJson = json['user'] ?? {};
+    User user = User.fromJson(userJson);
+
+
     return Comment(
         id: (json['id'] ?? 0) as int,
         postId: (json['post_id'] ?? 0) as int,
@@ -32,6 +40,7 @@ class Comment {
         status: (json['status'] ?? 0) as int,
         view: (json['id'] ?? 0) as int,
         createdAt: (json['created_at'] ?? '') as String,
+        user: user,
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fingerspot_library_app/controllers/post_controller.dart';
 import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/helpers.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
@@ -11,7 +12,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class CardDiskusi extends StatelessWidget {
-  CardDiskusi({super.key, required this.nameUser, required this.title, required this.content, required this.like, required this.comment, required this.view, required this.date, required this.imagePath, required this.postId});
+  CardDiskusi({super.key, required this.nameUser, required this.title, required this.content, required this.like, required this.comment, required this.view, required this.date, required this.imagePath, required this.postId, required this.index});
   final String nameUser;
   final String title;
   final String content;
@@ -21,8 +22,11 @@ class CardDiskusi extends StatelessWidget {
   final String date;
   final String imagePath;
   final int postId;
+  final int index;
   
   Helper helper = Helper();
+
+  final PostController postController = Get.put(PostController());
 
   @override
   Widget build(BuildContext context) {
@@ -36,15 +40,39 @@ class CardDiskusi extends StatelessWidget {
             children: [
               Expanded(
                 flex: 1,
-                child: Container(
+                child: imagePath.isNotEmpty
+                    ? CachedNetworkImage(
+                  imageUrl: Api.imgurl + imagePath,
+                  imageBuilder: (context, imageProvider) => Container(
+                    width: 28.h,
+                    height: 28.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100.h),
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    width: 28.h,
+                    height: 28.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100.h),
+                      image: const DecorationImage(
+                        image: AssetImage('assets/images/profile_large.png'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                )
+                    : Container(
                   width: 28.h,
                   height: 28.h,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100.h),
-                    image: DecorationImage(
-                      image: CachedNetworkImageProvider(
-                        Api.imgurl + imagePath,
-                      ),
+                    image: const DecorationImage(
+                      image: AssetImage('assets/images/profile_large.png'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -95,7 +123,7 @@ class CardDiskusi extends StatelessWidget {
           SizedBox(height: 10.h,),
           GestureDetector(
             onTap: () {
-              Get.toNamed(Routes.DETAIL, arguments: {'postId': postId, 'imgPath': imagePath});
+              Get.toNamed(Routes.DETAIL, arguments: {'postId': postId, 'imgPath': imagePath ?? '', 'liked': postController.postList[index].liked});
             },
             child: ExpandableText(
               text: helper.renderHtmlToString(content),
@@ -108,8 +136,18 @@ class CardDiskusi extends StatelessWidget {
           SizedBox(height: 10.h,),
           Row(
             children: [
-              IconHome(icon: Icons.thumb_up_alt_outlined, label: like),
-              IconHome(icon: Icons.comment_bank_outlined, label: comment),
+              Obx(() {
+                return GestureDetector(
+                  child: IconHome(icon: postController.postList[index].liked ? Icons.thumb_up : Icons.thumb_up_alt_outlined, label: like, color: postController.postList[index].liked ? kPrimary : kGrey,),
+                  onTap: () async{
+                    await postController.likePost(postId, true, false);
+                  },
+                );
+              }),
+              GestureDetector(
+                onTap: () => Get.toNamed(Routes.KOMENTAR, arguments: {'komentar': comment, 'postId': postId}),
+                child: IconHome(icon: Icons.comment_bank_outlined, label: comment),
+              ),
               GestureDetector(
                 onTap: () => Get.toNamed(Routes.VIEWER, arguments: {'postId': postId}),
                   child: IconHome(

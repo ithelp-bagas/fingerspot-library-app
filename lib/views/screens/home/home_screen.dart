@@ -5,6 +5,7 @@ import 'package:fingerspot_library_app/models/auth_model.dart';
 import 'package:fingerspot_library_app/views/components/card_categories.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
 import 'package:fingerspot_library_app/views/screens/home/components/card_diskusi.dart';
+import 'package:fingerspot_library_app/views/screens/home/components/shimmer_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -72,12 +73,12 @@ class HomeScreen extends StatelessWidget {
                   return GestureDetector(
                     onTap: () async{
                       await postController.tappedCategory(category.id);
-                      print(category.id);
-                      print(postController.selectedCategoryId.value);
                     },
-                    child: CardCategories(
-                      categoriesName: '${category.name} (${category.postsCount})',
-                      color: category.id == postController.selectedCategoryId.value ? kPrimary : kBlack,
+                    child: Obx(() =>
+                      CardCategories(
+                        categoriesName: '${category.name} (${category.postsCount})',
+                        isSelected: postController.selectedCategoryId.value == category.id,
+                      ),
                     ),
                   );
                 },
@@ -86,44 +87,69 @@ class HomeScreen extends StatelessWidget {
           }),
           Obx(() {
             final postList = postController.postList;
-            if (postList.isEmpty) {
-              return Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset('assets/images/no_data.png', width: 200.h,),
-                    Text(
-                      'Belum ada data',
-                      style: TextStyle(
-                          fontSize: defLabel,
-                          fontWeight: heavy
-                      ),
-                    )
-                  ],
-                ),
-              );
-            } else {
-              return Container(
+            if(postController.isLoading.value) {
+              return SizedBox(
                 height: MediaQuery.of(context).size.height * .7,
                 child: ListView.builder(
-                  itemCount: postList.length,
+                  itemCount: 5,
                   itemBuilder: (context, index) {
-                    final post = postList[index];
-                    return CardDiskusi(
-                      nameUser: '${post.user.firstname} ${post.user.lastname}',
-                      title: post.title,
-                      content: post.content,
-                      like: post.postLike.toString(),
-                      comment: post.postComment.toString(),
-                      view: post.views.toString(),
-                      date: post.createdAt,
-                      imagePath: post.user.image,
-                      postId: post.id,
-                    );
+                    return const ShimmerCard();
                   },
                 ),
               );
+            } else {
+              if (postList.isEmpty) {
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    await postController.getPost(postController.selectedCategoryId.value);
+                  },
+                  child: SizedBox(
+                  height: MediaQuery.of(context).size.height * .7,
+                  child: Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset('assets/images/no_data.png', width: 100.h,),
+                        Text(
+                          'Belum ada data',
+                          style: TextStyle(
+                              fontSize: defLabel,
+                              fontWeight: heavy
+                          ),
+                        )
+                      ],
+                    ),
+                  )),
+                );
+              } else {
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    await postController.getPost(postController.selectedCategoryId.value);
+                  },
+                  child: SizedBox(
+                  height: MediaQuery.of(context).size.height * .7,
+                  child: ListView.builder(
+                    itemCount: postList.length,
+                    itemBuilder: (context, index) {
+                      final post = postList[index];
+                      return CardDiskusi(
+                        nameUser: '${post.user.firstname} ${post.user.lastname}',
+                        title: post.title,
+                        content: post.content,
+                        like: post.postLike.toString(),
+                        comment: post.postComment.toString(),
+                        view: post.views.toString(),
+                        date: post.createdAt,
+                        imagePath: post.user.image,
+                        postId: post.id,
+                        index: index,
+                      );
+                    },
+                  ),
+                                ),
+                );
+              }
             }
           }),
         ],

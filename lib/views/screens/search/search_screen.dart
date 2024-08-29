@@ -26,11 +26,11 @@ class SearchScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 5.h,),
-            SingleChildScrollView(
+            const SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  CardCategories(categoriesName: 'Terbanyak Dilihat', color: kBlack,),
+                  CardCategories(categoriesName: 'Terbanyak Dilihat', isSelected: false,),
                 ],
               ),
             ),
