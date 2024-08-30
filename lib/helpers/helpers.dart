@@ -42,4 +42,11 @@ class Helper{
 
     return formattedDate;
   }
+
+  String formatedDateWtime(String date) {
+    DateTime dateTime = DateTime.parse(date);
+    String formattedDate = DateFormat("dd MMMM yyyy, HH:mm", "id_ID").format(dateTime);
+
+    return formattedDate;
+  }
 }

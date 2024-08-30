@@ -50,7 +50,7 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Fingerspot Library'),
+        title: const Text('Fingerspot Library'),
       ),
       body: Center(
         child: ElevatedButton(
@@ -59,7 +59,7 @@ class MainPage extends StatelessWidget {
             Get.toNamed(Routes.HOME);
           },
           // onPressed: () => Get.toNamed(Routes.ERROR, arguments: {'title': 'Failed'}),
-          child: Text('Open app'),
+          child: const Text('Open app'),
         ),
       ),
     );

@@ -1,7 +1,4 @@
-import 'package:fingerspot_library_app/controllers/auth_controller.dart';
 import 'package:fingerspot_library_app/controllers/post_controller.dart';
-import 'package:fingerspot_library_app/helpers/api.dart';
-import 'package:fingerspot_library_app/models/auth_model.dart';
 import 'package:fingerspot_library_app/views/components/card_categories.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
 import 'package:fingerspot_library_app/views/screens/home/components/card_diskusi.dart';
@@ -21,10 +18,10 @@ class HomeScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.all(16.h),
-            width: MediaQuery.of(context).size.width * 1,
+            padding: EdgeInsets.all(10.h),
+            width: double.infinity,
             decoration: const BoxDecoration(
-                color: kPrimary
+              color: kPrimary, // Make sure to define kPrimary somewhere in your code
             ),
             child: Row(
               children: [
@@ -37,49 +34,47 @@ class HomeScreen extends StatelessWidget {
                   child: Text(
                     "PT. Maju Jaya (Maju Kinerja Bandung)",
                     style: TextStyle(
-                        color: kLight,
-                        fontSize: p1,
-                        fontWeight: FontWeight.w700
+                      color: kLight, // Make sure to define kLight somewhere in your code
+                      fontSize: 16.sp, // Adjust font size with ScreenUtil
+                      fontWeight: FontWeight.w700,
                     ),
-                    overflow: TextOverflow.ellipsis ,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 const Expanded(
-                    flex: 1,
-                    child: Icon(
-                      Icons.work,
-                      color: kSuccess,
-                    )
+                  flex: 1,
+                  child: Icon(
+                    Icons.work,
+                    color: kSuccess, // Make sure to define kSuccess somewhere in your code
+                  ),
                 ),
                 const Expanded(
-                    flex: 1,
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      color: kLight,
-                    )
+                  flex: 1,
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    color: kLight, // Make sure to define kLight somewhere in your code
+                  ),
                 ),
               ],
             ),
           ),
           Obx(() {
-            final catgoryList = postController.categoryList;
-            return Container(
-              height: 40.h,
+            final categoryList = postController.categoryList;
+            return SizedBox(
+              height: 30.0, // Adjust height as needed
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: catgoryList.length,
+                itemCount: categoryList.length,
                 itemBuilder: (context, index) {
-                  final category = catgoryList[index];
+                  final category = categoryList[index];
                   return GestureDetector(
-                    onTap: () async{
+                    onTap: () async {
                       await postController.tappedCategory(category.id);
                     },
-                    child: Obx(() =>
-                      CardCategories(
-                        categoriesName: '${category.name} (${category.postsCount})',
-                        isSelected: postController.selectedCategoryId.value == category.id,
-                      ),
-                    ),
+                    child: Obx(() => CardCategories(
+                      categoriesName: '${category.name}${category.postsCount > 0 ? ' (${category.postsCount})' : ''}',
+                      isSelected: postController.selectedCategoryId.value == category.id,
+                    )),
                   );
                 },
               ),
@@ -87,13 +82,13 @@ class HomeScreen extends StatelessWidget {
           }),
           Obx(() {
             final postList = postController.postList;
-            if(postController.isLoading.value) {
+            if (postController.isLoading.value) {
               return SizedBox(
                 height: MediaQuery.of(context).size.height * .7,
                 child: ListView.builder(
                   itemCount: 5,
                   itemBuilder: (context, index) {
-                    return const ShimmerCard();
+                    return const ShimmerCard(); // Ensure ShimmerCard is properly defined
                   },
                 ),
               );
@@ -104,23 +99,24 @@ class HomeScreen extends StatelessWidget {
                     await postController.getPost(postController.selectedCategoryId.value);
                   },
                   child: SizedBox(
-                  height: MediaQuery.of(context).size.height * .7,
-                  child: Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset('assets/images/no_data.png', width: 100.h,),
-                        Text(
-                          'Belum ada data',
-                          style: TextStyle(
-                              fontSize: defLabel,
-                              fontWeight: heavy
+                    height: MediaQuery.of(context).size.height * .7,
+                    child: Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset('assets/images/no_data.png', width: 100.h),
+                          Text(
+                            'Belum ada data',
+                            style: TextStyle(
+                              fontSize: 16.sp, // Adjust font size with ScreenUtil
+                              fontWeight: FontWeight.bold, // Replace with your preferred weight
+                            ),
                           ),
-                        )
-                      ],
+                        ],
+                      ),
                     ),
-                  )),
+                  ),
                 );
               } else {
                 return RefreshIndicator(
@@ -128,26 +124,26 @@ class HomeScreen extends StatelessWidget {
                     await postController.getPost(postController.selectedCategoryId.value);
                   },
                   child: SizedBox(
-                  height: MediaQuery.of(context).size.height * .7,
-                  child: ListView.builder(
-                    itemCount: postList.length,
-                    itemBuilder: (context, index) {
-                      final post = postList[index];
-                      return CardDiskusi(
-                        nameUser: '${post.user.firstname} ${post.user.lastname}',
-                        title: post.title,
-                        content: post.content,
-                        like: post.postLike.toString(),
-                        comment: post.postComment.toString(),
-                        view: post.views.toString(),
-                        date: post.createdAt,
-                        imagePath: post.user.image,
-                        postId: post.id,
-                        index: index,
-                      );
-                    },
+                    height: MediaQuery.of(context).size.height * .7,
+                    child: ListView.builder(
+                      itemCount: postList.length,
+                      itemBuilder: (context, index) {
+                        final post = postList[index];
+                        return CardDiskusi(
+                          nameUser: '${post.user.firstname} ${post.user.lastname}',
+                          title: post.title,
+                          content: post.content,
+                          like: post.postLike.toString(),
+                          comment: post.postComment,
+                          view: post.views.toString(),
+                          date: post.createdAt,
+                          imagePath: post.user.image,
+                          postId: post.id,
+                          index: index,
+                        );
+                      },
+                    ),
                   ),
-                                ),
                 );
               }
             }

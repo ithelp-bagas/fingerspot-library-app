@@ -24,7 +24,7 @@ class CardSearch extends StatelessWidget {
         ),
         Expanded(
           flex: 9,
-          child: Container(
+          child: SizedBox(
             width: MediaQuery.of(context).size.width * 1,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,7 +118,7 @@ class CardRekomendasi extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width * 1,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

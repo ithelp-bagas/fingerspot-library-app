@@ -1,7 +1,6 @@
 import 'package:fingerspot_library_app/main.dart';
 import 'package:fingerspot_library_app/views/screens/coming_soon.dart';
 import 'package:fingerspot_library_app/views/screens/detail/detail_screen.dart';
-import 'package:fingerspot_library_app/views/screens/home/home_screen.dart';
 import 'package:fingerspot_library_app/views/screens/home_page.dart';
 import 'package:fingerspot_library_app/views/screens/komentar/komentar_screen.dart';
 import 'package:fingerspot_library_app/views/screens/viewers/viewers_screen.dart';

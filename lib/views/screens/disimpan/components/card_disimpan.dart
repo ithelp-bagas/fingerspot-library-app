@@ -7,7 +7,7 @@ class CardDisimpan extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width * 1,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

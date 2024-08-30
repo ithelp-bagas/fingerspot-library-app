@@ -11,6 +11,9 @@ class Comment {
   int view;
   String createdAt;
   User user;
+  int commentLike;
+  bool liked;
+  int countReplies;
 
   Comment({
     required this.id,
@@ -22,7 +25,10 @@ class Comment {
     required this.status,
     required this.view,
     required this.createdAt,
-    required this.user
+    required this.user,
+    required this.commentLike,
+    required this.liked,
+    required this.countReplies
   });
 
   factory Comment.fromJson(Map<String, dynamic> json) {
@@ -41,6 +47,9 @@ class Comment {
         view: (json['id'] ?? 0) as int,
         createdAt: (json['created_at'] ?? '') as String,
         user: user,
+        commentLike: (json['comment_like'] ?? 0) as int,
+        liked: (json['liked'] ?? false) as bool,
+        countReplies: (json['count_replies'] ?? 0) as int
     );
   }
 

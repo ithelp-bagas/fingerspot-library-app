@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-class CardSingleComment extends StatelessWidget {
-  CardSingleComment({super.key, required this.imgPath, required this.name, required this.date, required this.komentar, required this.like, required this.balasan, required this.liked, required this.commentId});
+class CardChildComment extends StatelessWidget {
+  CardChildComment({super.key, required this.imgPath, required this.name, required this.date, required this.komentar, required this.like, required this.balasan, required this.liked, required this.commentId});
   final String imgPath;
   final String name;
   final String date;
@@ -27,9 +27,10 @@ class CardSingleComment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(left: 15.h),
       decoration: BoxDecoration(
         border: Border(
-          left: BorderSide(color: kPrimary, width: 5.h),
+          left: BorderSide(color: kGrey, width: 2.h),
         ),
       ),
       child: Column(
@@ -41,35 +42,21 @@ class CardSingleComment extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Expanded(
-                      flex: 1,
-                      child: imgPath.isNotEmpty
-                          ? CachedNetworkImage(
-                        imageUrl: Api.imgurl + imgPath,
-                        imageBuilder: (context, imageProvider) => Container(
-                          width: 28.h,
-                          height: 28.h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100.h),
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
-                            ),
+                    imgPath.isNotEmpty
+                        ? CachedNetworkImage(
+                      imageUrl: Api.imgurl + imgPath,
+                      imageBuilder: (context, imageProvider) => Container(
+                        width: 28.h,
+                        height: 28.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100.h),
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
                           ),
                         ),
-                        errorWidget: (context, url, error) => Container(
-                          width: 28.h,
-                          height: 28.h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100.h),
-                            image: const DecorationImage(
-                              image: AssetImage('assets/images/profile_large.png'),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      )
-                          : Container(
+                      ),
+                      errorWidget: (context, url, error) => Container(
                         width: 28.h,
                         height: 28.h,
                         decoration: BoxDecoration(
@@ -80,10 +67,25 @@ class CardSingleComment extends StatelessWidget {
                           ),
                         ),
                       ),
+                    )
+                        : Container(
+                      width: 28.h,
+                      height: 28.h,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100.h),
+                        image: imgPath.isNotEmpty
+                            ? DecorationImage(
+                          image: CachedNetworkImageProvider(Api.imgurl + imgPath),
+                          fit: BoxFit.cover,
+                        )
+                            : const DecorationImage(
+                          image: AssetImage('assets/images/profile_large.png'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
-                    SizedBox(width: 10.h,),
+                    SizedBox(width: 10.h),
                     Expanded(
-                      flex: 8,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -108,45 +110,49 @@ class CardSingleComment extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const Expanded(
-                      flex: 1,
-                      child: Icon(
-                        Icons.more_vert,
-                      ),
+                    const Icon(
+                      Icons.more_vert,
                     ),
                   ],
                 ),
-                SizedBox(height: 10.h,),
+                SizedBox(height: 10.h),
                 ExpandableText(
                   text: helper.renderHtmlToString(komentar),
                   style: TextStyle(
-                      fontSize: p2,
-                      fontWeight: regular
+                    fontSize: p2,
+                    fontWeight: regular,
                   ),
                 ),
-                SizedBox(height: 10.h,),
+                SizedBox(height: 10.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
-                        IconHome(icon: liked ? Icons.thumb_up : Icons.thumb_up_alt_outlined, label: '$like'),
-                        balasan > 0 ? GestureDetector(
-                          onTap: () async{
-                            await commentController.toggleReply(commentId);
-                          },
-                          child: IconHome(icon: Icons.message, label: '$balasan Balasan'),
-                        ) : Container()
+                        IconHome(
+                          icon: liked ? Icons.thumb_up : Icons.thumb_up_alt_outlined,
+                          label: '$like',
+                        ),
+                        if (balasan > 0)
+                          GestureDetector(
+                            onTap: () {
+                              commentController.toggleReply(commentId);
+                            },
+                            child: IconHome(
+                              icon: Icons.message,
+                              label: '$balasan Balasan',
+                            ),
+                          ),
                       ],
                     ),
                     GestureDetector(
-                      onTap: (){},
+                      onTap: () {},
                       child: Text(
                         'Balas',
                         style: TextStyle(
-                            fontSize: p2,
-                            fontWeight: heavy,
-                            decoration: TextDecoration.underline
+                          fontSize: p2,
+                          fontWeight: heavy,
+                          decoration: TextDecoration.underline,
                         ),
                       ),
                     ),

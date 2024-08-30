@@ -12,7 +12,7 @@ class DiskusiScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(10.h),
-      child: Container(
+      child: SizedBox(
         height: MediaQuery.of(context).size.height * .9,
         child: SingleChildScrollView(
           child: Column(
@@ -69,7 +69,6 @@ class DiskusiScreen extends StatelessWidget {
               SizedBox(height: 10.h,),
               ElevatedButton(
                 onPressed: (){},
-                child: Text('Selanjutnya'),
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(double.infinity, 50.h),
                   backgroundColor: kPrimary,
@@ -79,6 +78,7 @@ class DiskusiScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10.h)
                   )
                 ),
+                child: const Text('Selanjutnya'),
               )
             ],
           ),

@@ -3,6 +3,7 @@ import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/models/auth_model.dart';
 import 'package:fingerspot_library_app/models/pwa_model.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
@@ -21,7 +22,7 @@ class AuthController extends GetxController {
 
   Future<void> login() async{
     try {
-      var response = await dio.post('${Api.baseUrl}/login?data=${encoded}');
+      var response = await dio.post('${Api.baseUrl}/login?data=$encoded');
 
       var pwaData = response.data['pwa'];
       Pwa pwa = Pwa.fromJson(pwaData);
@@ -35,7 +36,9 @@ class AuthController extends GetxController {
           setAuth(auth);
         } else {
           Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
-          print(response.data['message']);
+          if (kDebugMode) {
+            print(response.data['message']);
+          }
         }
       } else {
         Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});

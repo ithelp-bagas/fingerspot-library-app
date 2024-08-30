@@ -15,12 +15,12 @@ class ViewersScreen extends StatelessWidget {
     postController.getViewers(param['postId']);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dilihat'),
+        title: const Text('Dilihat'),
         centerTitle: true,
       ),
       body: Padding(
         padding: EdgeInsets.all(10.h),
-        child: Container(
+        child: SizedBox(
           height: double.infinity,
           child: Obx(() {
             final viewerList = postController.viewerPost;

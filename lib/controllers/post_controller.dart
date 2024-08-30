@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:ui';
 
 import 'package:dio/dio.dart';
 import 'package:fingerspot_library_app/controllers/auth_controller.dart';
@@ -9,7 +7,7 @@ import 'package:fingerspot_library_app/models/post_model.dart';
 import 'package:fingerspot_library_app/models/user_model.dart';
 import 'package:fingerspot_library_app/models/votes_model.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
-import 'package:fingerspot_library_app/views/constants/color.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class PostController extends GetxController {
@@ -22,7 +20,14 @@ class PostController extends GetxController {
   RxInt selectedCategoryId = 1.obs;
   var detailPost = Rxn<Post>();
   RxBool isLoading = false.obs;
+  final komentarController = TextEditingController();
 
+
+  @override
+  void onClose() {
+    komentarController.dispose();
+    super.onClose();
+  }
 
   @override
   void onInit() async{
@@ -68,7 +73,6 @@ class PostController extends GetxController {
   Future<void> getPost(int categoryId) async {
     try{
       isLoading.value = true;
-      print(authController.userAuth.value!.token);
       var response = await dio.get(
         '${Api.baseUrl}/post/list-post',
         data: {
@@ -137,7 +141,6 @@ class PostController extends GetxController {
             }
           }
         } else {
-          print(response.data['message']);
         }
       } catch (e) {
         throw Exception(e);
@@ -165,7 +168,6 @@ class PostController extends GetxController {
         setDetail(postdetail);
       } else {
         Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
-        print(response.data['message']);
       }
     } catch (e) {
       throw Exception(e);
@@ -196,6 +198,40 @@ class PostController extends GetxController {
       }
     } catch (e) {
       throw Exception(e);
+    }
+  }
+
+
+  Future<void> comment(int postId, String comment, int countComment) async {
+    try {
+      isLoading.value = true;
+      var response = await dio.post(
+        '${Api.baseUrl}/post/comment',
+        data: {
+          'post_id': postId,
+          'comment': comment
+        },
+        options: Options(
+            headers: {
+              "Authorization": "Bearer ${authController.userAuth.value!.token}"
+            }
+        ),
+      );
+
+      if(response.statusCode == 200) {
+        await getDetailPost(postId);
+        detailPost.refresh();
+        Get.offNamed(Routes.KOMENTAR, arguments: {'komentar': countComment, 'postId': postId});
+        komentarController.clear();
+      } else {
+        Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
+        throw Exception('Error');
+      }
+    } catch (e) {
+      throw Exception(e);
+    } finally {
+      FocusScope.of(Get.context!).unfocus();
+      isLoading.value = false;
     }
   }
 }

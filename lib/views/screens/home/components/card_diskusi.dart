@@ -6,7 +6,6 @@ import 'package:fingerspot_library_app/routes/app_routes.dart';
 import 'package:fingerspot_library_app/views/components/expandable_text.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
 import 'package:fingerspot_library_app/views/screens/home/components/icon_home.dart';
-import 'package:fingerspot_library_app/views/screens/viewers/viewers_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -17,7 +16,7 @@ class CardDiskusi extends StatelessWidget {
   final String title;
   final String content;
   final String like;
-  final String comment;
+  final int comment;
   final String view;
   final String date;
   final String imagePath;
@@ -113,17 +112,22 @@ class CardDiskusi extends StatelessWidget {
             ],
           ),
           SizedBox(height: 10.h,),
-          Text(
-            title,
-            style: TextStyle(
-                fontSize: p1,
-                fontWeight: heavy
+          GestureDetector(
+            onTap: () {
+              Get.toNamed(Routes.DETAIL, arguments: {'postId': postId, 'imgPath': imagePath, 'liked': postController.postList[index].liked});
+            },
+            child: Text(
+              title,
+              style: TextStyle(
+                  fontSize: p1,
+                  fontWeight: heavy
+              ),
             ),
           ),
           SizedBox(height: 10.h,),
           GestureDetector(
             onTap: () {
-              Get.toNamed(Routes.DETAIL, arguments: {'postId': postId, 'imgPath': imagePath ?? '', 'liked': postController.postList[index].liked});
+              Get.toNamed(Routes.DETAIL, arguments: {'postId': postId, 'imgPath': imagePath, 'liked': postController.postList[index].liked});
             },
             child: ExpandableText(
               text: helper.renderHtmlToString(content),
@@ -146,7 +150,7 @@ class CardDiskusi extends StatelessWidget {
               }),
               GestureDetector(
                 onTap: () => Get.toNamed(Routes.KOMENTAR, arguments: {'komentar': comment, 'postId': postId}),
-                child: IconHome(icon: Icons.comment_bank_outlined, label: comment),
+                child: IconHome(icon: Icons.comment_bank_outlined, label: '$comment'),
               ),
               GestureDetector(
                 onTap: () => Get.toNamed(Routes.VIEWER, arguments: {'postId': postId}),

@@ -12,7 +12,7 @@ class ProfileSettingScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Edit Profil'),
+        title: const Text('Edit Profil'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -49,15 +49,15 @@ class ProfileSettingScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 10.h,),
-              TextInputFieldCustom(text: 'Nama Depan', icon: Icons.person, useRequired: true,),
-              TextInputFieldCustom(text: 'Nama Belakang', icon: Icons.person, useRequired: true,),
-              TextInputFieldCustom(text: 'Email', icon: Icons.mail, useRequired: true,),
-              TextInputFieldCustom(text: 'No Ponsel', icon: Icons.person, useRequired: true,),
-              TextInputFieldCustom(text: 'Negara', icon: Icons.location_on, useRequired: true,),
-              TextInputFieldCustom(text: 'Provinsi', icon: Icons.person, useRequired: true,),
-              TextInputFieldCustom(text: 'Kabupaten / Kota', icon: Icons.person, useRequired: true,),
-              TextInputFieldCustom(text: 'Kode Pos', icon: Icons.maps_home_work_outlined, useRequired: true,),
-              TextInputFieldCustom(text: 'Alamat', icon: Icons.map_outlined, useRequired: true,),
+              const TextInputFieldCustom(text: 'Nama Depan', icon: Icons.person, useRequired: true,),
+              const TextInputFieldCustom(text: 'Nama Belakang', icon: Icons.person, useRequired: true,),
+              const TextInputFieldCustom(text: 'Email', icon: Icons.mail, useRequired: true,),
+              const TextInputFieldCustom(text: 'No Ponsel', icon: Icons.person, useRequired: true,),
+              const TextInputFieldCustom(text: 'Negara', icon: Icons.location_on, useRequired: true,),
+              const TextInputFieldCustom(text: 'Provinsi', icon: Icons.person, useRequired: true,),
+              const TextInputFieldCustom(text: 'Kabupaten / Kota', icon: Icons.person, useRequired: true,),
+              const TextInputFieldCustom(text: 'Kode Pos', icon: Icons.maps_home_work_outlined, useRequired: true,),
+              const TextInputFieldCustom(text: 'Alamat', icon: Icons.map_outlined, useRequired: true,),
               TextInputFieldCustom(text: 'Instagram', icon: MdiIcons.instagram, useRequired: true,),
               TextInputFieldCustom(text: 'Facebook', icon: MdiIcons.facebook, useRequired: true,),
               TextInputFieldCustom(text: 'Twitter', icon: MdiIcons.twitter, useRequired: true,),
@@ -69,10 +69,9 @@ class ProfileSettingScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 10.h,),
-              TextInputFieldCustom(text: 'Keahlian', icon: Icons.manage_accounts, useRequired: true,),
+              const TextInputFieldCustom(text: 'Keahlian', icon: Icons.manage_accounts, useRequired: true,),
               ElevatedButton(
                 onPressed: (){},
-                child: Text('Simpan'),
                 style: ElevatedButton.styleFrom(
                     minimumSize: Size(double.infinity, 50.h),
                     backgroundColor: kPrimary,
@@ -82,6 +81,7 @@ class ProfileSettingScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10.h)
                     )
                 ),
+                child: const Text('Simpan'),
               )
             ],
           ),

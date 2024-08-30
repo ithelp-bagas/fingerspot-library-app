@@ -1,4 +1,3 @@
-import 'package:fingerspot_library_app/main.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,9 +15,9 @@ class ComingSoon extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/no_data.png', width: 200.h,),
+            Image.asset('assets/images/no_data.png', width: 150.h,),
             Text(
-              param['title'],
+              'Segera Hadir',
               style: TextStyle(
                 fontSize: defLabel,
                 fontWeight: heavy

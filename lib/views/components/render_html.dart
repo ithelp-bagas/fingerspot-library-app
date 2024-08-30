@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 
-Widget RenderHtml(String htmlContent) {
+Widget renderHtml(String htmlContent) {
   return Html(
     data: htmlContent,
     // Optional: Custom styling for HTML elements
     style: {
       "p": Style(
-        fontSize: FontSize(16.0),
+        fontSize: const FontSize(16.0),
         color: Colors.black87,
       ),
       "a": Style(
@@ -29,7 +29,6 @@ Widget RenderHtml(String htmlContent) {
     onLinkTap: (String? url, RenderContext context, Map<String, String> attributes, element) {
       if (url != null) {
         // Handle the URL, e.g., open it in a webview or browser
-        print("Opening $url...");
       }
     },
   );

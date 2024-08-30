@@ -1,6 +1,4 @@
-import 'package:fingerspot_library_app/views/constants/color.dart';
 import 'package:fingerspot_library_app/views/screens/disimpan/components/card_disimpan.dart';
-import 'package:fingerspot_library_app/views/screens/search/components/icon_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -11,9 +9,9 @@ class DisimpanScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(10.h),
-      child: Container(
+      child: SizedBox(
         height: MediaQuery.of(context).size.height * .9,
-        child: SingleChildScrollView(
+        child: const SingleChildScrollView(
           child: Column(
             children: [
               CardDisimpan(),

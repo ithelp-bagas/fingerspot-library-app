@@ -11,22 +11,28 @@ class CardCategories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10.h),
-      child: Text(
-        categoriesName,
-        style: TextStyle(
-          // color: isSelected ? kPrimary : kBlack,
-          color: Colors.transparent,
-          fontWeight: isSelected ? heavy : regular,
-          fontSize: smLabel,
-          shadows: [
-            Shadow(
-                color: isSelected ? kPrimary : kBlack,
-                offset: const Offset(0, -8))
-          ],
-          decoration: isSelected ? TextDecoration.underline : TextDecoration.none,
-          decorationColor: kPrimary,
-          decorationThickness: 3.h,
+      padding: EdgeInsets.symmetric(horizontal: 10.h),
+      child: Align(
+        alignment: Alignment.center,
+        child: Padding(
+          padding: EdgeInsets.only(top: 8.h),
+          child: Text(
+            categoriesName,
+            style: TextStyle(
+              // color: isSelected ? kPrimary : kBlack,
+              color: Colors.transparent,
+              fontWeight: isSelected ? heavy : regular,
+              fontSize: smLabel,
+              shadows: [
+                Shadow(
+                    color: isSelected ? kPrimary : kBlack,
+                    offset: const Offset(0, -8))
+              ],
+              decoration: isSelected ? TextDecoration.underline : TextDecoration.none,
+              decorationColor: kPrimary,
+              decorationThickness: 3.h,
+            ),
+          ),
         ),
       ),
     );

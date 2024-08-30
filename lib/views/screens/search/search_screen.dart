@@ -21,7 +21,7 @@ class SearchScreen extends StatelessWidget {
                 ),
                 prefixIcon: GestureDetector(
                   onTap: (){},
-                  child: Icon(Icons.search),
+                  child: const Icon(Icons.search),
                 ),
               ),
             ),
@@ -34,18 +34,18 @@ class SearchScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
+            SizedBox(
               height: MediaQuery.of(context).size.height * .69,
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CardSearch(),
-                    CardSearch(),
-                    CardSearch(),
-                    CardSearch(),
-                    CardSearch(),
+                    const CardSearch(),
+                    const CardSearch(),
+                    const CardSearch(),
+                    const CardSearch(),
+                    const CardSearch(),
                     SizedBox(height: 10.h,),
                     Text(
                       "Rekomendasi Informasi Untukmu".toUpperCase(),
@@ -56,10 +56,10 @@ class SearchScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 10.h,),
-                    CardRekomendasi(),
-                    CardRekomendasi(),
-                    CardRekomendasi(),
-                    CardRekomendasi(),
+                    const CardRekomendasi(),
+                    const CardRekomendasi(),
+                    const CardRekomendasi(),
+                    const CardRekomendasi(),
                   ],
                 ),
               ),
