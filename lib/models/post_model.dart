@@ -9,6 +9,7 @@ class Post {
   int userId;
   int categoryId;
   int subcategoryId;
+  String categoryName;
   String title;
   String content;
   int postLike;
@@ -22,6 +23,8 @@ class Post {
   List<Tag> tags;
   int views;
   bool liked;
+  bool saved;
+  String link;
 
   Post({
     required this.id,
@@ -40,7 +43,10 @@ class Post {
     required this.tags,
     required this.createdAt,
     required this.views,
-    required this.liked
+    required this.liked,
+    required this.saved,
+    required this.link,
+    required this.categoryName
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -73,7 +79,10 @@ class Post {
       bookmarks: bookmarks,
       tags: tags,
       views: (json['views'] ?? 0) as int,
-      liked: (json['liked'] ?? false) as bool
+      liked: (json['liked'] ?? false) as bool,
+      saved: (json['saved'] ?? false) as bool,
+      link: (json['link'] ?? '') as String,
+      categoryName: (json['category_name'] ?? '') as String
     );
   }
 }

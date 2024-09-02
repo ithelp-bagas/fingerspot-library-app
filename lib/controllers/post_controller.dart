@@ -7,7 +7,9 @@ import 'package:fingerspot_library_app/models/post_model.dart';
 import 'package:fingerspot_library_app/models/user_model.dart';
 import 'package:fingerspot_library_app/models/votes_model.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
+import 'package:fingerspot_library_app/views/constants/color.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class PostController extends GetxController {
@@ -21,11 +23,14 @@ class PostController extends GetxController {
   var detailPost = Rxn<Post>();
   RxBool isLoading = false.obs;
   final komentarController = TextEditingController();
+  final reasonController = TextEditingController();
+  var charCount = 0.obs;
 
 
   @override
   void onClose() {
     komentarController.dispose();
+    reasonController.dispose();
     super.onClose();
   }
 
@@ -34,6 +39,19 @@ class PostController extends GetxController {
     super.onInit();
     await getCategory();
     await getPost(selectedCategoryId.value);
+    reasonController.addListener(_updateCharCount);
+  }
+
+  void _updateCharCount() {
+    if (reasonController.text.length <= 300) {
+      charCount.value = reasonController.text.length;
+    } else {
+      // Prevent the text from exceeding 300 characters
+      reasonController.text = reasonController.text.substring(0, 300);
+      reasonController.selection = TextSelection.fromPosition(
+        TextPosition(offset: reasonController.text.length),
+      );
+    }
   }
 
   void setDetail(Post newdetailpost) {
@@ -141,6 +159,8 @@ class PostController extends GetxController {
             }
           }
         } else {
+          Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
+          throw Exception('error');
         }
       } catch (e) {
         throw Exception(e);
@@ -206,7 +226,7 @@ class PostController extends GetxController {
     try {
       isLoading.value = true;
       var response = await dio.post(
-        '${Api.baseUrl}/post/comment',
+        '${Api.baseUrl}/comment/comment',
         data: {
           'post_id': postId,
           'comment': comment
@@ -233,5 +253,81 @@ class PostController extends GetxController {
       FocusScope.of(Get.context!).unfocus();
       isLoading.value = false;
     }
+  }
+
+  Future<void> addBookmark(int postId) async{
+    try{
+      var response = await dio.post(
+        '${Api.baseUrl}/post/add-bookmark',
+        data: {
+          'post_id': postId
+        },
+        options: Options(
+            headers: {
+              "Authorization": "Bearer ${authController.userAuth.value!.token}"
+            }
+        ),
+      );
+
+      if(response.statusCode == 200) {
+
+
+        detailPost.value?.saved = !detailPost.value!.saved;
+        detailPost.refresh();
+
+
+        int postIndex = postList.indexWhere((post) => post.id == postId);
+        if(postIndex != -1) {
+          postList[postIndex].saved = !postList[postIndex].saved;
+          postList.refresh();
+        }
+      } else {
+        Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
+        throw Exception('error');
+      }
+    }catch(e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<void> reportPost(int postId, String reason) async{
+    try {
+      isLoading.value = true;
+      var response = await dio.post(
+        '${Api.baseUrl}/post/report-post',
+        data: {
+          'post_id': postId,
+          'reason': reason
+        },
+        options: Options(
+            headers: {
+              "Authorization": "Bearer ${authController.userAuth.value!.token}"
+            }
+        ),
+      );
+
+      if(response.statusCode == 200) {
+        Map<String, dynamic> responseData = response.data;
+        var isSuccess = responseData['success'];
+        if(isSuccess){
+          Get.snackbar('Success', 'Postingan berhasil dilaporkan!', backgroundColor: kSuccess, colorText: kLight);
+        } else {
+          Get.snackbar('Failed', 'Anda telah melaporkan postingan ini sebelumnya!', backgroundColor: kDanger, colorText: kLight);
+        }
+      } else {
+        Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
+        throw Exception('error');
+      }
+    } catch (e) {
+      throw Exception(e);
+    } finally{
+      isLoading.value = false;
+    }
+  }
+
+
+  void copyLink(String link) {
+    Clipboard.setData(ClipboardData(text: link));
+    Get.snackbar('Success', 'Tautan berhasil disalin!', backgroundColor: kSuccess, colorText: kLight);
   }
 }

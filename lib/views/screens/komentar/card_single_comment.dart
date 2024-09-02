@@ -10,7 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class CardSingleComment extends StatelessWidget {
-  CardSingleComment({super.key, required this.imgPath, required this.name, required this.date, required this.komentar, required this.like, required this.balasan, required this.liked, required this.commentId});
+  CardSingleComment({super.key, required this.imgPath, required this.name, required this.date, required this.komentar, required this.like, required this.balasan, required this.liked, required this.commentId, required this.commentUserId, required this.postUserId, required this.postId});
   final String imgPath;
   final String name;
   final String date;
@@ -19,6 +19,9 @@ class CardSingleComment extends StatelessWidget {
   final int balasan;
   final bool liked;
   final int commentId;
+  final int commentUserId;
+  final int postUserId;
+  final int postId;
 
   final CommentController commentController = Get.put(CommentController());
 
@@ -87,14 +90,35 @@ class CardSingleComment extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            name,
-                            style: TextStyle(
-                              color: kBlack,
-                              fontSize: p2,
-                              fontWeight: heavy,
-                            ),
-                            overflow: TextOverflow.ellipsis,
+                          Row(
+                            children: [
+                              Text(
+                                name,
+                                style: TextStyle(
+                                  color: kBlack,
+                                  fontSize: p2,
+                                  fontWeight: heavy,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              SizedBox(width: 5.w,),
+                              commentUserId == postUserId ?
+                              Container(
+                                padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 5.h),
+                                decoration: BoxDecoration(
+                                  color: kPrimary,
+                                  borderRadius: BorderRadius.circular(3.h)
+                                ),
+                                child: Text(
+                                  'Pemilik',
+                                  style: TextStyle(
+                                    fontSize: xsLabel,
+                                    fontWeight: regular,
+                                    color: kLight
+                                  ),
+                                ),
+                              ) : Container()
+                            ],
                           ),
                           Text(
                             helper.formatedDate(date),
@@ -130,17 +154,28 @@ class CardSingleComment extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        IconHome(icon: liked ? Icons.thumb_up : Icons.thumb_up_alt_outlined, label: '$like'),
+                        GestureDetector(
+                          onTap: () async {
+                            await commentController.likeComment(commentId, postId);
+                          },
+                          child: IconHome(
+                            icon: liked ? Icons.thumb_up : Icons.thumb_up_alt_outlined,
+                            label: '$like',
+                            color: liked ? kPrimary : kBlack,
+                          ),
+                        ),
                         balasan > 0 ? GestureDetector(
                           onTap: () async{
                             await commentController.toggleReply(commentId);
                           },
-                          child: IconHome(icon: Icons.message, label: '$balasan Balasan'),
+                          child: IconHome(icon: Icons.message, label: commentController.isTappedChild[commentId] == true ? 'Sembunyikan Balasan' : '$balasan Balasan'),
                         ) : Container()
                       ],
                     ),
                     GestureDetector(
-                      onTap: (){},
+                      onTap: (){
+                        commentController.toggleUserCommentReply(imgPath, name, komentar, commentId);
+                      },
                       child: Text(
                         'Balas',
                         style: TextStyle(

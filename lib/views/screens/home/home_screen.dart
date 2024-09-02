@@ -61,7 +61,7 @@ class HomeScreen extends StatelessWidget {
           Obx(() {
             final categoryList = postController.categoryList;
             return SizedBox(
-              height: 30.0, // Adjust height as needed
+              height: 50.0, // Adjust height as needed
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: categoryList.length,

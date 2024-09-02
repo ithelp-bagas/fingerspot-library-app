@@ -2,6 +2,7 @@ import 'package:fingerspot_library_app/controllers/comment_controller.dart';
 import 'package:fingerspot_library_app/controllers/post_controller.dart';
 import 'package:fingerspot_library_app/helpers/helpers.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
+import 'package:fingerspot_library_app/views/screens/komentar/components/card_comment_replies.dart';
 import 'package:fingerspot_library_app/views/screens/komentar/components/comment_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -62,7 +63,7 @@ class KomentarScreen extends StatelessWidget {
                   ),
                   const Spacer(),
                   Container(
-                    height: MediaQuery.of(context).size.height * .07,
+                    height: 60.h,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -126,12 +127,15 @@ class KomentarScreen extends StatelessWidget {
                       onTapReply: (commentId) async {
                         await commentController.toggleReply(commentId);
                       },
+                      postUserId: post.userId,
                     );
                   },
                 ),
               ),
+              commentController.repliedTap.value ? CardCommentReplies(imgPath: commentController.imgPathUser.value, name: commentController.nameUser.value, comment: commentController.commentUser.value)
+              : Container(),
               Container(
-                height: MediaQuery.of(context).size.height * .06,
+                height: 60.h,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
@@ -160,7 +164,12 @@ class KomentarScreen extends StatelessWidget {
                               if (postController.komentarController.text == '') {
                                 Get.snackbar('Warning', 'Komentar harus diisi!', backgroundColor: kWarning);
                               } else {
-                                await postController.comment(postId, postController.komentarController.text, komentar);
+                                if(commentController.repliedTap.value) {
+                                  await commentController.replyComment(postController.komentarController.text, commentController.commentIdUser.value, postId, komentar);
+                                } else {
+                                  await postController.comment(postId, postController.komentarController.text, komentar);
+                                }
+                                Get.snackbar('Success', 'Berhasil menambahkan komentar!', backgroundColor: kSuccess);
                               }
                             },
                             icon: const Icon(Icons.send, color: kPrimary),
