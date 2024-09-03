@@ -7,6 +7,26 @@ class SharedPref {
     preference.setString('pwa', pwa);
   }
 
+  Future<void> storeToken(String token) async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('token', token);
+  }
+
+  Future<String?> getToken() async {
+    SharedPreferences preference = await SharedPreferences.getInstance();
+    return preference.getString('token');
+  }
+
+  Future<void> storeEncodedData(String encoded) async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('encoded', encoded);
+  }
+
+  Future<String?> getEncoded() async {
+    SharedPreferences preference = await SharedPreferences.getInstance();
+    return preference.getString('encoded');
+  }
+
   Future<String?> getPwa() async {
     SharedPreferences preference = await SharedPreferences.getInstance();
     return preference.getString('pwa');

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:fingerspot_library_app/controllers/auth_controller.dart';
 import 'package:fingerspot_library_app/helpers/api.dart';
+import 'package:fingerspot_library_app/helpers/shared_pref.dart';
 import 'package:fingerspot_library_app/models/category_model.dart';
 import 'package:fingerspot_library_app/models/post_model.dart';
 import 'package:fingerspot_library_app/models/user_model.dart';
@@ -45,7 +46,11 @@ class PostController extends GetxController {
   final komentarController = TextEditingController();
   final reasonController = TextEditingController();
   var charCount = 0.obs;
+  String? token;
 
+  Future<void> getToken() async {
+    token = await SharedPref().getToken();
+  }
 
   @override
   void onClose() {
@@ -57,6 +62,7 @@ class PostController extends GetxController {
   @override
   void onInit() async{
     super.onInit();
+    await getToken();
     await getCategory();
     await getPost(selectedCategoryId.value);
     reasonController.addListener(_updateCharCount);
@@ -94,7 +100,7 @@ class PostController extends GetxController {
         '${Api.baseUrl}/post/list-category',
         options: Options(
             headers: {
-              "Authorization": "Bearer ${authController.userAuth.value!.token}"
+              "Authorization": "Bearer $token"
             }
         ),
       );
@@ -107,7 +113,6 @@ class PostController extends GetxController {
         Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
         throw Exception('error');
       }
-
     } catch(e) {
       throw Exception(e);
     }
@@ -123,7 +128,7 @@ class PostController extends GetxController {
         },
         options: Options(
             headers: {
-              "Authorization": "Bearer ${authController.userAuth.value!.token}"
+              "Authorization": "Bearer ${token}"
             }
         ),
       );
@@ -153,7 +158,7 @@ class PostController extends GetxController {
           },
           options: Options(
               headers: {
-                "Authorization": "Bearer ${authController.userAuth.value!.token}"
+                "Authorization": "Bearer ${token}"
               }
           ),
         );
@@ -201,7 +206,7 @@ class PostController extends GetxController {
         },
         options: Options(
             headers: {
-              "Authorization": "Bearer ${authController.userAuth.value!.token}"
+              "Authorization": "Bearer ${token}"
             }
         ),
       );
@@ -228,7 +233,7 @@ class PostController extends GetxController {
         },
         options: Options(
             headers: {
-              "Authorization": "Bearer ${authController.userAuth.value!.token}"
+              "Authorization": "Bearer ${token}"
             }
         ),
       );
@@ -257,7 +262,7 @@ class PostController extends GetxController {
         },
         options: Options(
             headers: {
-              "Authorization": "Bearer ${authController.userAuth.value!.token}"
+              "Authorization": "Bearer ${token}"
             }
         ),
       );
@@ -288,7 +293,7 @@ class PostController extends GetxController {
         },
         options: Options(
             headers: {
-              "Authorization": "Bearer ${authController.userAuth.value!.token}"
+              "Authorization": "Bearer ${token}"
             }
         ),
       );
@@ -336,7 +341,7 @@ class PostController extends GetxController {
         },
         options: Options(
             headers: {
-              "Authorization": "Bearer ${authController.userAuth.value!.token}"
+              "Authorization": "Bearer ${token}"
             }
         ),
       );
@@ -370,7 +375,7 @@ class PostController extends GetxController {
         },
         options: Options(
             headers: {
-              "Authorization": "Bearer ${authController.userAuth.value!.token}"
+              "Authorization": "Bearer ${token}"
             }
         ),
       );
@@ -396,7 +401,7 @@ class PostController extends GetxController {
         '${Api.baseUrl}/post/saved-post',
         options: Options(
             headers: {
-              "Authorization": "Bearer ${authController.userAuth.value!.token}"
+              "Authorization": "Bearer ${token}"
             }
         ),
       );

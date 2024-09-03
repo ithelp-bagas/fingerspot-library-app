@@ -16,6 +16,14 @@ class AuthController extends GetxController {
   var userAuth = Rxn<Auth>();
   var pwa = Rxn<Pwa>();
 
+  @override
+  void onInit() async{
+    // TODO: implement onInit
+    super.onInit();
+    String? encodedToken = await SharedPref().getEncoded();
+    login(encodedToken!);
+  }
+
   void setAuth(Auth newAuth) {
     userAuth.value = newAuth;
   }
@@ -28,7 +36,7 @@ class AuthController extends GetxController {
     var pwa = await SharedPref().getPwa();
   }
 
-  Future<void> login() async{
+  Future<void> login(String encoded) async{
     try {
       var response = await dio.post('${Api.baseUrl}/login?data=$encoded');
 
@@ -42,6 +50,8 @@ class AuthController extends GetxController {
         bool success = response.data['success'];
         if(success) {
           var data = response.data['data'];
+          var token = response.data['data']['token'];
+          await SharedPref().storeToken(token);
           Auth auth = Auth.fromJson(data);
           setAuth(auth);
         } else {
@@ -52,6 +62,7 @@ class AuthController extends GetxController {
         }
       } else {
         Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
+        print(response.data);
       }
     } catch(e){
       Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});

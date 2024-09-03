@@ -1,8 +1,10 @@
 import 'package:fingerspot_library_app/controllers/auth_controller.dart';
+import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/shared_pref.dart';
 import 'package:fingerspot_library_app/routes/app_pages.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
+import 'package:fingerspot_library_app/views/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -35,13 +37,21 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       builder: (context, child) => GetMaterialApp(
         title: 'Fingerspot Library',
-        initialRoute: Routes.MAIN, // Define your initial route here
         getPages: AppPages.routes,
         theme: lightMode,
         darkTheme: darkMode,
         themeMode: themeMode,
         debugShowCheckedModeBanner: false,
-        home: MainPage(),
+        // home: MainPage(),
+        routingCallback: (value) async{
+          String uri = Api.defaultUrl + '/login?data=' + Api.encodedData;
+          final uriData = Uri.parse(uri);
+          final data = uriData.queryParameters['data'];
+          if(data != null) {
+            await SharedPref().storeEncodedData(data);
+            String? encoded = await SharedPref().getEncoded();
+          }
+        },
       ),
     );
   }
@@ -51,22 +61,22 @@ class MainPage extends StatelessWidget {
   MainPage({super.key});
   final AuthController authController = Get.put(AuthController());
 
+  Future<void> login() async{
+    String? encoded = await SharedPref().getEncoded();
+    await authController.login(encoded!);
+  }
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Fingerspot Library'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () async{
-            await authController.login();
-            Get.toNamed(Routes.HOME);
-          },
-          // onPressed: () => Get.toNamed(Routes.ERROR, arguments: {'title': 'Failed'}),
-          child: const Text('Open app'),
-        ),
-      ),
+  Widget build(BuildContext context){
+    return FutureBuilder(
+      future: login(),
+      builder: (builder, snapshot){
+        if(snapshot.hasError ) {
+          return Text('Error');
+        } else {
+          return MyHomePage();
+        }
+      },
     );
   }
 }
