@@ -1,4 +1,5 @@
 import 'package:fingerspot_library_app/controllers/auth_controller.dart';
+import 'package:fingerspot_library_app/helpers/shared_pref.dart';
 import 'package:fingerspot_library_app/routes/app_pages.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
@@ -7,14 +8,26 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
+
+Future<ThemeMode> getThemeMode() async {
+  String? pwaTheme = await SharedPref().getPwa();
+  pwaTheme = pwaTheme?.replaceAll('"', '');
+  if (pwaTheme == null) {
+    return ThemeMode.system; // Return system default if no theme is set
+  }
+  return pwaTheme == 'light' ? ThemeMode.light : ThemeMode.dark;
+}
+
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('id_ID', null);
-  runApp(const MyApp());
+  ThemeMode themeMode = await getThemeMode();
+  runApp(MyApp(themeMode: themeMode,));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.themeMode});
+  final ThemeMode themeMode;
 
   // This widget is the root of your application.
   @override
@@ -24,16 +37,9 @@ class MyApp extends StatelessWidget {
         title: 'Fingerspot Library',
         initialRoute: Routes.MAIN, // Define your initial route here
         getPages: AppPages.routes,
-        theme: ThemeData(
-          textTheme: TextTheme(
-            titleLarge: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16.h
-            ),
-          ),
-          colorScheme: ColorScheme.fromSeed(seedColor: kPrimary),
-          useMaterial3: true,
-        ),
+        theme: lightMode,
+        darkTheme: darkMode,
+        themeMode: themeMode,
         debugShowCheckedModeBanner: false,
         home: MainPage(),
       ),

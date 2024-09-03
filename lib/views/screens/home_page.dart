@@ -51,8 +51,7 @@ class MyHomePage extends StatelessWidget {
         onTap: (index) {
           bottomNavController.changeIndex(index);
         },
-        backgroundColor: kLight,
-        unselectedItemColor: kBlack,
+        unselectedItemColor: Theme.of(context).primaryColorLight,
         selectedItemColor: kPrimary,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

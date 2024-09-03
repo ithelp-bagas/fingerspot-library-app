@@ -15,7 +15,7 @@ class ComingSoon extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/no_data.png', width: 150.h,),
+            Image.asset('assets/images/no_data.png', width: 100.h,),
             Text(
               'Segera Hadir',
               style: TextStyle(

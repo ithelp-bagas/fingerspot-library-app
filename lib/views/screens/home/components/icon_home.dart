@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class IconHome extends StatelessWidget {
-  const IconHome({super.key, required this.icon, required this.label, this.color = kGrey});
+  IconHome({super.key, required this.icon, required this.label, this.color});
   final IconData icon;
   final String label;
-  final Color color;
+  final Color? color ;
 
 
   @override
@@ -17,14 +17,13 @@ class IconHome extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color: color,
+            color: color ?? Theme.of(context).iconTheme.color,
             size: p1,
           ),
           SizedBox(width: 5.h,),
           Text(
             label,
             style: TextStyle(
-                color: kBlack,
                 fontSize: p2,
                 fontWeight: regular
             ),

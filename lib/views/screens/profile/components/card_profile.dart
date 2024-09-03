@@ -89,7 +89,7 @@ class CardProfile extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10.h,),
-          const Row(
+          Row(
             children: [
               IconHome(icon: Icons.thumb_up_alt_outlined, label: "15,8k"),
               IconHome(icon: Icons.comment_bank_outlined, label: "10,8k"),

@@ -17,6 +17,7 @@ class CardTags extends StatelessWidget {
       child: Text(
         tagsName,
         style: TextStyle(
+            color: Theme.of(context).textTheme.labelMedium?.color,
             fontSize: xsLabel,
             fontWeight: regular
         ),

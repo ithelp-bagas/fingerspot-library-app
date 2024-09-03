@@ -29,14 +29,14 @@ class Pwa {
 
   factory Pwa.fromJson(Map<String, dynamic> json) {
     return Pwa(
-      userId: (json['userId'] ?? 0) as int,
+      userId: (json['user_id'] ?? 0) as int,
       type: (json['type'] ?? 0) as int,
-      companyId: (json['companyId'] ?? 0) as int,
-      packageId: (json['packageId'] ?? 0) as int,
-      empId: (json['empId'] ?? 0) as int,
-      empPin: (json['empPin'] ?? '') as String,
-      moduleId: (json['moduleId'] ?? 0) as int,
-      ipAddress: (json['userId'] ?? '') as String,
+      companyId: (json['company_id'] ?? 0) as int,
+      packageId: (json['package_id'] ?? 0) as int,
+      empId: (json['emp_id'] ?? 0) as int,
+      empPin: (json['emp_pin'] ?? '') as String,
+      moduleId: (json['module_id'] ?? 0) as int,
+      ipAddress: (json['ip_address'] ?? '') as String,
       platform: (json['platform'] ?? '') as String,
       language: (json['language'] ?? '') as String,
       theme: (json['theme'] ?? '') as String,
@@ -44,4 +44,20 @@ class Pwa {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'user_id': userId,
+      'type': type,
+      'company_id': companyId,
+      'package_id': packageId,
+      'emp_id': empId,
+      'emp_pin': empPin,
+      'module_id': moduleId,
+      'ip_address': ipAddress,
+      'platform': platform,
+      'language': language,
+      'theme': theme,
+      'email': email,
+    };
+  }
 }

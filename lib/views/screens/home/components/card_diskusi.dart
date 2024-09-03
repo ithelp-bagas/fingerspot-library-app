@@ -82,10 +82,10 @@ class CardDiskusi extends StatelessWidget {
                 flex: 5,
                 child: Text(
                   nameUser,
-                  style: TextStyle(
-                      color: kPrimary,
-                      fontSize: p1,
-                      fontWeight: heavy
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: kPrimary,
+                    fontSize: p1,
+                    fontWeight: heavy,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -95,8 +95,7 @@ class CardDiskusi extends StatelessWidget {
                 child: Text(
                   helper.formatedDate(date),
                   textAlign: TextAlign.end,
-                  style: TextStyle(
-                      color: kGrey,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       fontSize: p2,
                       fontWeight: regular
                   ),
@@ -303,7 +302,7 @@ class CardDiskusi extends StatelessWidget {
             children: [
               Obx(() {
                 return GestureDetector(
-                  child: IconHome(icon: postController.postList[index].liked ? Icons.thumb_up : Icons.thumb_up_alt_outlined, label: like, color: postController.postList[index].liked ? kPrimary : kGrey,),
+                  child: IconHome(icon: postController.postList[index].liked ? Icons.thumb_up : Icons.thumb_up_alt_outlined, label: like, color: postController.postList[index].liked ? kPrimary : Theme.of(context).iconTheme.color,),
                   onTap: () async{
                     await postController.likePost(postId, true, false);
                   },

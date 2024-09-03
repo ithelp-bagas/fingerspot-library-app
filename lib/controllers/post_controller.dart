@@ -281,6 +281,8 @@ class PostController extends GetxController {
           postList[postIndex].saved = !postList[postIndex].saved;
           postList.refresh();
         }
+
+        Get.snackbar('Success', 'Berhasil ${postList[postIndex].saved ? 'menambahkan' : 'menghapus' } postingan ${postList[postIndex].saved ? 'ke' : 'dari' } daftar bookmark', backgroundColor: kSuccess, colorText: kLight);
       } else {
         Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
         throw Exception('error');

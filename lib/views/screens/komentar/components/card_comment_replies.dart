@@ -21,8 +21,8 @@ class CardCommentReplies extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(10.h),
       width: double.infinity,
-      decoration: const BoxDecoration(
-          color: kDisabled
+      decoration: BoxDecoration(
+          color: Theme.of(context).primaryColorDark
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,8 +78,8 @@ class CardCommentReplies extends StatelessWidget {
                     Text(
                       name,
                       style: TextStyle(
-                        color: kBlack,
-                        fontSize: p2,
+                        color: kPrimary,
+                        fontSize: p1,
                         fontWeight: heavy,
                       ),
                       overflow: TextOverflow.ellipsis,

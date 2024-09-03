@@ -60,7 +60,7 @@ class DetailScreen extends StatelessWidget {
                           IconButton(
                             icon: Icon(
                               post!.liked ? Icons.thumb_up : Icons.thumb_up_alt_outlined,
-                              color: post.liked ? kPrimary : kGrey,
+                              color: post.liked ? kPrimary : Theme.of(context).iconTheme.color,
                             ),
                             onPressed: () async {
                               await postController.likePost(postId, true, true);
@@ -91,7 +91,7 @@ class DetailScreen extends StatelessWidget {
                           IconButton(
                             icon: Icon(
                               post!.saved ? Icons.bookmark : Icons.bookmark_add_outlined,
-                              color:  post.saved ? kPrimary : kBlack,
+                              color:  post.saved ? kPrimary : Theme.of(context).iconTheme.color,
                             ),
                             onPressed: () async{
                               await postController.addBookmark(postId);
@@ -172,8 +172,7 @@ class DetailScreen extends StatelessWidget {
                                 Text(
                                   helper.dayDiff(post.createdAt),
                                   textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                    color: kGrey,
+                                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
                                     fontSize: p2,
                                     fontWeight: regular,
                                   ),
@@ -192,7 +191,7 @@ class DetailScreen extends StatelessWidget {
                                   "Topik ${post.categoryName}",
                                   textAlign: TextAlign.end,
                                   style: TextStyle(
-                                    color: kGrey,
+                                    color: kPrimary,
                                     fontSize: p2,
                                     fontWeight: regular,
                                   ),
@@ -378,14 +377,17 @@ class DetailScreen extends StatelessWidget {
                       SizedBox(height: 10.h),
                       Row(
                         children: [
-                          const Icon(FluentIcons.person_note_16_filled, color: kGrey),
+                          Icon(
+                              FluentIcons.person_note_16_filled,
+                              color: Theme.of(context).iconTheme.color
+                          ),
                           SizedBox(width: 5.h),
                           Text(
                             'Diposting pada tanggal ${helper.formatedDateWtime(post.createdAt)}',
                             style: TextStyle(
                               fontSize: p2,
                               fontWeight: regular,
-                              color: kGrey,
+                              color: Theme.of(context).textTheme.labelSmall?.color,
                             ),
                           ),
                         ],

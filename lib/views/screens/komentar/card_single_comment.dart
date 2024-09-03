@@ -10,7 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class CardSingleComment extends StatelessWidget {
-  CardSingleComment({super.key, required this.imgPath, required this.name, required this.date, required this.komentar, required this.like, required this.balasan, required this.liked, required this.commentId, required this.commentUserId, required this.postUserId, required this.postId});
+  CardSingleComment({super.key, required this.imgPath, required this.name, required this.date, required this.komentar, required this.like, required this.balasan, required this.liked, required this.commentId, required this.commentUserId, required this.postUserId, required this.postId, required this.parentCommentId, required this.isFirst});
   final String imgPath;
   final String name;
   final String date;
@@ -22,6 +22,8 @@ class CardSingleComment extends StatelessWidget {
   final int commentUserId;
   final int postUserId;
   final int postId;
+  final int parentCommentId;
+  final bool isFirst;
 
   final CommentController commentController = Get.put(CommentController());
 
@@ -32,7 +34,9 @@ class CardSingleComment extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border(
-          left: BorderSide(color: kPrimary, width: 5.h),
+          left: BorderSide(color: kGrey, width: parentCommentId != 0 ? 1.h : 0),
+          bottom: BorderSide(color: kGrey, width: parentCommentId == 0 ? .5.h : 0),
+          top: BorderSide(color: kGrey, width: isFirst || parentCommentId != 0 ? 0 : .5.h),
         ),
       ),
       child: Column(
@@ -95,7 +99,7 @@ class CardSingleComment extends StatelessWidget {
                               Text(
                                 name,
                                 style: TextStyle(
-                                  color: kBlack,
+                                  color: Theme.of(context).textTheme.labelSmall?.color,
                                   fontSize: p2,
                                   fontWeight: heavy,
                                 ),
@@ -123,7 +127,7 @@ class CardSingleComment extends StatelessWidget {
                           Text(
                             helper.formatedDate(date),
                             style: TextStyle(
-                              color: kGrey,
+                              color: Theme.of(context).textTheme.labelSmall?.color,
                               fontSize: p2,
                               fontWeight: regular,
                             ),
@@ -161,7 +165,7 @@ class CardSingleComment extends StatelessWidget {
                           child: IconHome(
                             icon: liked ? Icons.thumb_up : Icons.thumb_up_alt_outlined,
                             label: '$like',
-                            color: liked ? kPrimary : kBlack,
+                            color: liked ? kPrimary : Theme.of(context).iconTheme.color,
                           ),
                         ),
                         balasan > 0 ? GestureDetector(
@@ -190,10 +194,6 @@ class CardSingleComment extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            height: 1.h,
-            color: kGrey,
-          )
         ],
       ),
     );

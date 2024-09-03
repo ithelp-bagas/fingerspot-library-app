@@ -128,6 +128,7 @@ class KomentarScreen extends StatelessWidget {
                         await commentController.toggleReply(commentId);
                       },
                       postUserId: post.userId,
+                      index: index,
                     );
                   },
                 ),

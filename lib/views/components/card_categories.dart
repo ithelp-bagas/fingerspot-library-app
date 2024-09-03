@@ -25,7 +25,7 @@ class CardCategories extends StatelessWidget {
               fontSize: smLabel,
               shadows: [
                 Shadow(
-                    color: isSelected ? kPrimary : kBlack,
+                    color: isSelected ? kPrimary : (Theme.of(context).textTheme.labelSmall?.color ?? kBlack),
                     offset: const Offset(0, -8))
               ],
               decoration: isSelected ? TextDecoration.underline : TextDecoration.none,

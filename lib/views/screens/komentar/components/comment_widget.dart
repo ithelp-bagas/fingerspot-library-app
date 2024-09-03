@@ -5,12 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class CommentWidget extends StatelessWidget {
-  const CommentWidget({super.key, required this.comment, required this.isTappedChild, required this.allComments, required this.onTapReply, required this.postUserId});
+  const CommentWidget({super.key, required this.comment, required this.isTappedChild, required this.allComments, required this.onTapReply, required this.postUserId, required this.index});
   final Comment comment;
   final Map<int, bool> isTappedChild;
   final List<Comment> allComments;
   final Function(int) onTapReply;
   final int postUserId;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +33,8 @@ class CommentWidget extends StatelessWidget {
             commentUserId: comment.userId,
             postUserId: postUserId,
             postId: comment.postId,
+            parentCommentId: comment.parentCommentId!,
+            isFirst: index == 0,
           ),
           if (isTappedChild[comment.id] == true)
             Container(
@@ -45,6 +48,7 @@ class CommentWidget extends StatelessWidget {
                     allComments: allComments,
                     onTapReply: onTapReply,
                     postUserId: postUserId,
+                    index: index,
                   );
                 }).toList(),
               ),
