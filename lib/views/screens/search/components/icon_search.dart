@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class IconSearch extends StatelessWidget {
-  const IconSearch({super.key, required this.icon, required this.label});
+  const IconSearch({super.key, required this.icon, required this.label, this.color});
   final IconData icon;
   final String label;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -16,13 +17,12 @@ class IconSearch extends StatelessWidget {
           Icon(
             icon,
             size: p3,
-            color: kGrey,
+            color: color ?? Theme.of(context).iconTheme.color,
           ),
           SizedBox(width: 5.h,),
           Text(
             label,
             style: TextStyle(
-                color: kBlack,
                 fontSize: p3,
                 fontWeight: regular
             ),

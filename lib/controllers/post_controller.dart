@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:fingerspot_library_app/controllers/auth_controller.dart';
 import 'package:fingerspot_library_app/helpers/api.dart';
@@ -16,10 +18,28 @@ class PostController extends GetxController {
   final AuthController authController = Get.put(AuthController());
   Dio dio = Dio();
   RxList<Post> postList = RxList<Post>([]);
+  RxList<Post> searchPostList = RxList<Post>([]);
+  RxList<Post> recommendedList = RxList<Post>([]);
+  RxList<Post> bookmarkPostList = RxList<Post>([]);
   RxList<User> viewerPost = RxList<User>([]);
   RxList<Category> categoryList = RxList<Category>([]);
+  RxList searchList = RxList([
+    {
+      'id' : 1,
+      'name': 'Terbanyak Dilihat',
+    },
+    {
+      'id' : 2,
+      'name': 'Komentar Terbanyak',
+    },
+    {
+      'id' : 3,
+      'name': 'Paling Membantu',
+    }
+  ]);
   RxList<Votes> votesList = RxList<Votes>([]);
   RxInt selectedCategoryId = 1.obs;
+  RxInt selectedSearchId = 1.obs;
   var detailPost = Rxn<Post>();
   RxBool isLoading = false.obs;
   final komentarController = TextEditingController();
@@ -61,6 +81,11 @@ class PostController extends GetxController {
   Future<void> tappedCategory(int categoryId) async {
     selectedCategoryId.value = categoryId;
     await getPost(categoryId);
+  }
+
+  Future<void> tappedSearchCategory(int searchCategoryId) async{
+    selectedSearchId.value = searchCategoryId;
+    await getSearchPost(searchCategoryId);
   }
 
   Future<void> getCategory() async {
@@ -221,7 +246,6 @@ class PostController extends GetxController {
     }
   }
 
-
   Future<void> comment(int postId, String comment, int countComment) async {
     try {
       isLoading.value = true;
@@ -277,12 +301,21 @@ class PostController extends GetxController {
 
 
         int postIndex = postList.indexWhere((post) => post.id == postId);
+        int bookmarkIndex = bookmarkPostList.indexWhere((bookmark) => bookmark.id == postId);
+
         if(postIndex != -1) {
           postList[postIndex].saved = !postList[postIndex].saved;
           postList.refresh();
         }
 
-        Get.snackbar('Success', 'Berhasil ${postList[postIndex].saved ? 'menambahkan' : 'menghapus' } postingan ${postList[postIndex].saved ? 'ke' : 'dari' } daftar bookmark', backgroundColor: kSuccess, colorText: kLight);
+        if(bookmarkIndex != -1) {
+          bookmarkPostList[bookmarkIndex].saved = !bookmarkPostList[bookmarkIndex].saved;
+          bookmarkPostList.refresh();
+          await getBookmarkPost();
+          Get.back();
+        }
+
+        Get.snackbar('Success', 'Berhasil ${postList[postIndex].saved ? 'menambahkan' : 'menghapus' } postingan ${postList[postIndex].saved ? 'ke' : 'dari' } daftar bookmark', backgroundColor: kPrimary, colorText: kLight, snackPosition: SnackPosition.BOTTOM);
       } else {
         Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
         throw Exception('error');
@@ -312,6 +345,7 @@ class PostController extends GetxController {
         Map<String, dynamic> responseData = response.data;
         var isSuccess = responseData['success'];
         if(isSuccess){
+          Get.back();
           Get.snackbar('Success', 'Postingan berhasil dilaporkan!', backgroundColor: kSuccess, colorText: kLight);
         } else {
           Get.snackbar('Failed', 'Anda telah melaporkan postingan ini sebelumnya!', backgroundColor: kDanger, colorText: kLight);
@@ -324,6 +358,59 @@ class PostController extends GetxController {
       throw Exception(e);
     } finally{
       isLoading.value = false;
+    }
+  }
+
+  Future<void> getSearchPost(int searchId) async {
+    try {
+      var response = await dio.post(
+        '${Api.baseUrl}/post/search-post',
+        data: {
+          'search_id': searchId
+        },
+        options: Options(
+            headers: {
+              "Authorization": "Bearer ${authController.userAuth.value!.token}"
+            }
+        ),
+      );
+
+      if(response.statusCode == 200) {
+        Map<String, dynamic> responseData = response.data;
+        List<dynamic> data = responseData['data']['posts'];
+        List<dynamic> recommended = responseData['data']['recommended'];
+        searchPostList.value = data.map((json) => Post.fromJson(json)).toList();
+        recommendedList.value = recommended.map((json) => Post.fromJson(json)).toList();
+      } else {
+        Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
+        throw Exception('error');
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<void> getBookmarkPost() async {
+    try {
+      var response = await dio.get(
+        '${Api.baseUrl}/post/saved-post',
+        options: Options(
+            headers: {
+              "Authorization": "Bearer ${authController.userAuth.value!.token}"
+            }
+        ),
+      );
+
+      if(response.statusCode == 200) {
+        Map<String, dynamic> responseData = response.data;
+        List<dynamic> data = responseData['data'];
+        bookmarkPostList.value = data.map((json) => Post.fromJson(json)).toList();
+      } else {
+        Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
+        throw Exception('error');
+      }
+    } catch (e) {
+      throw Exception(e);
     }
   }
 

@@ -27,6 +27,7 @@ class UserAuth {
   int office;
   int role;
   int department;
+  String officeName;
 
   UserAuth({
     required this.firstname,
@@ -37,6 +38,7 @@ class UserAuth {
     required this.office,
     required this.role,
     required this.department,
+    required this.officeName
   });
 
   factory UserAuth.fromJson(Map<String, dynamic> json) {
@@ -49,6 +51,7 @@ class UserAuth {
       office: (json['office']??'') as int,
       role: (json['role']??'') as int,
       department: (json['department']??'') as int,
+      officeName: (json['office_name'] ?? '') as String
     );
   }
 }

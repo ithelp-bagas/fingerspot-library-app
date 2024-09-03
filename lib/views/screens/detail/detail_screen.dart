@@ -17,8 +17,6 @@ class DetailScreen extends StatelessWidget {
 
   final PostController postController = Get.put(PostController());
   final Helper helper = Helper();
-  final List<String> items = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 4", "Item 4", "Item 4", "Item 4", "Item 4", "Item 4", "Item 4", "Item 4", "Item 4", "Item 4", "Item 4", "Item 4", "Item 4", "Item 4", "Item 4"];
-
 
   Future<void> _fetchPostDetails(int postId) async {
     await postController.getDetailPost(postId);

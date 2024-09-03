@@ -54,6 +54,7 @@ class AuthController extends GetxController {
         Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
       }
     } catch(e){
+      Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
       throw Exception(e);
     }
   }

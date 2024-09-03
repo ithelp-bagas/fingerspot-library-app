@@ -1,10 +1,27 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fingerspot_library_app/helpers/api.dart';
+import 'package:fingerspot_library_app/helpers/helpers.dart';
+import 'package:fingerspot_library_app/routes/app_routes.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
 import 'package:fingerspot_library_app/views/screens/search/components/icon_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 class CardSearch extends StatelessWidget {
-  const CardSearch({super.key});
+  CardSearch({super.key, required this.index, required this.namaUser, required this.imgPath, required this.categoryName, required this.title, required this.date, required this.viewed, required this.commented, required this.postId});
+  final int index;
+  final String namaUser;
+  final String imgPath;
+  final String categoryName;
+  final String title;
+  final String date;
+  final int viewed;
+  final int commented;
+  final int postId;
+
+
+  Helper helper = Helper();
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +31,7 @@ class CardSearch extends StatelessWidget {
         Expanded(
           flex: 1,
           child: Text(
-            '01',
+            '0$index',
             style: TextStyle(
                 color: kThird,
                 fontSize: h2,
@@ -33,18 +50,49 @@ class CardSearch extends StatelessWidget {
                   children: [
                     Expanded(
                       flex: 1,
-                      child: Image.asset(
+                      child: imgPath.isNotEmpty
+                          ? CachedNetworkImage(
+                        imageUrl: Api.imgurl + imgPath,
+                        imageBuilder: (context, imageProvider) => Container(
+                          width: 28.h,
+                          height: 28.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100.h),
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          width: 28.h,
+                          height: 28.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100.h),
+                            image: const DecorationImage(
+                              image: AssetImage('assets/images/profile_large.png'),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      )
+                          : Container(
+                        width: 28.h,
                         height: 28.h,
-                        width: 28.w,
-                        fit: BoxFit.contain,
-                        "assets/images/profile.png",
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100.h),
+                          image: const DecorationImage(
+                            image: AssetImage('assets/images/profile_large.png'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(width: 10.h,),
                     Expanded(
                       flex: 6,
                       child: Text(
-                        "Nama User",
+                        namaUser,
                         style: TextStyle(
                             fontSize: p2,
                             fontWeight: regular
@@ -59,7 +107,7 @@ class CardSearch extends StatelessWidget {
                           Icon(Icons.chat, size: p2, color: kPrimary,),
                           SizedBox(width: 5.w,),
                           Text(
-                            "Topik Umum",
+                            "Topik $categoryName",
                             textAlign: TextAlign.end,
                             style: TextStyle(
                                 color: kPrimary,
@@ -75,7 +123,7 @@ class CardSearch extends StatelessWidget {
                 ),
                 SizedBox(height: 10.h,),
                 Text(
-                  "Lorem ipsum dolor sit amet consectetur.",
+                  title,
                   style: TextStyle(
                       fontSize: p1,
                       fontWeight: heavy
@@ -84,16 +132,22 @@ class CardSearch extends StatelessWidget {
                 SizedBox(height: 10.h,),
                 Row(
                   children: [
-                    const IconSearch(icon: Icons.remove_red_eye_outlined, label: "15,8k Dilihat"),
-                    const IconSearch(icon: Icons.comment_bank_outlined, label: "10,8k Komentar"),
+                    GestureDetector(
+                        onTap: (){
+                          Get.toNamed(Routes.VIEWER, arguments: {'postId': postId});
+                        },
+                        child: IconSearch(icon: Icons.remove_red_eye_outlined, label: "$viewed Dilihat")
+                    ),
+                    GestureDetector(
+                        onTap: () => Get.toNamed(Routes.KOMENTAR, arguments: {'komentar': commented, 'postId': postId}),
+                        child: IconSearch(icon: Icons.comment_bank_outlined, label: "$commented Komentar")),
                     Icon(
                       Icons.circle,
                       size: 4.sp,
-                      color: kGrey,
                     ),
                     SizedBox(width: 10.h),
                     Text(
-                      'Dibuat 3 Hari yang lalu',
+                      'Dibuat ${helper.dayDiff(date)}',
                       style: TextStyle(
                           fontSize: p3
                       ),
@@ -114,7 +168,17 @@ class CardSearch extends StatelessWidget {
 }
 
 class CardRekomendasi extends StatelessWidget {
-  const CardRekomendasi({super.key});
+  CardRekomendasi({super.key, required this.imgPath, required this.nameUser, required this.categoryName, required this.title, required this.viewed, required this.commented, required this.date, required this.postId});
+  final String imgPath;
+  final String nameUser;
+  final String categoryName;
+  final String title;
+  final int viewed;
+  final int commented;
+  final String date;
+  final int postId;
+  
+  Helper helper = Helper();
 
   @override
   Widget build(BuildContext context) {
@@ -127,18 +191,49 @@ class CardRekomendasi extends StatelessWidget {
             children: [
               Expanded(
                 flex: 1,
-                child: Image.asset(
+                child: imgPath.isNotEmpty
+                    ? CachedNetworkImage(
+                  imageUrl: Api.imgurl + imgPath,
+                  imageBuilder: (context, imageProvider) => Container(
+                    width: 28.h,
+                    height: 28.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100.h),
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    width: 28.h,
+                    height: 28.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100.h),
+                      image: const DecorationImage(
+                        image: AssetImage('assets/images/profile_large.png'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                )
+                    : Container(
+                  width: 28.h,
                   height: 28.h,
-                  width: 28.w,
-                  fit: BoxFit.contain,
-                  "assets/images/profile.png",
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100.h),
+                    image: const DecorationImage(
+                      image: AssetImage('assets/images/profile_large.png'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
               SizedBox(width: 10.h,),
               Expanded(
                 flex: 6,
                 child: Text(
-                  "Nama User",
+                  nameUser,
                   style: TextStyle(
                       fontSize: p2,
                       fontWeight: regular
@@ -153,7 +248,7 @@ class CardRekomendasi extends StatelessWidget {
                     Icon(Icons.chat, size: p2, color: kPrimary,),
                     SizedBox(width: 5.w,),
                     Text(
-                      "Topik Umum",
+                      "Topik $categoryName",
                       textAlign: TextAlign.end,
                       style: TextStyle(
                           color: kPrimary,
@@ -169,7 +264,7 @@ class CardRekomendasi extends StatelessWidget {
           ),
           SizedBox(height: 10.h,),
           Text(
-            "Lorem ipsum dolor sit amet consectetur.",
+            title,
             style: TextStyle(
                 fontSize: p1,
                 fontWeight: heavy
@@ -178,8 +273,15 @@ class CardRekomendasi extends StatelessWidget {
           SizedBox(height: 10.h,),
           Row(
             children: [
-              const IconSearch(icon: Icons.remove_red_eye_outlined, label: "15,8k Dilihat"),
-              const IconSearch(icon: Icons.comment_bank_outlined, label: "10,8k Komentar"),
+              GestureDetector(
+                  onTap: (){
+                    Get.toNamed(Routes.VIEWER, arguments: {'postId': postId});
+                  },
+                  child: IconSearch(icon: Icons.remove_red_eye_outlined, label: "$viewed Dilihat")
+              ),
+              GestureDetector(
+                  onTap: () => Get.toNamed(Routes.KOMENTAR, arguments: {'komentar': commented, 'postId': postId}),
+                  child: IconSearch(icon: Icons.comment_bank_outlined, label: "$commented Komentar")),
               Icon(
                 Icons.circle,
                 size: 4.sp,
@@ -187,7 +289,7 @@ class CardRekomendasi extends StatelessWidget {
               ),
               SizedBox(width: 10.h),
               Text(
-                'Dibuat 3 Hari yang lalu',
+                'Dibuat ${helper.dayDiff(date)}',
                 style: TextStyle(
                     fontSize: p3
                 ),

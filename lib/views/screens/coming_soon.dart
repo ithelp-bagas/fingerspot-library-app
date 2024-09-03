@@ -8,7 +8,7 @@ class ComingSoon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var param = Get.arguments;
+    var param = Get.arguments ?? {'title': 'Coming soon'};
     return Scaffold(
       body: Center(
         child: Column(
@@ -17,7 +17,7 @@ class ComingSoon extends StatelessWidget {
           children: [
             Image.asset('assets/images/no_data.png', width: 100.h,),
             Text(
-              'Segera Hadir',
+              param['title'],
               style: TextStyle(
                 fontSize: defLabel,
                 fontWeight: heavy

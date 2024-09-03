@@ -114,7 +114,7 @@ class CardDiskusi extends StatelessWidget {
                           children: [
                             Icon(
                               postController.postList[index].saved ? Icons.bookmark : Icons.bookmark_add_outlined,
-                              color: postController.postList[index].saved ? kPrimary : kBlack,
+                              color: postController.postList[index].saved ? kPrimary : Theme.of(context).iconTheme.color,
                             ),
                             SizedBox(width: 5.w,),
                             Text(

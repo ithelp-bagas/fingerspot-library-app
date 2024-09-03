@@ -1,3 +1,4 @@
+import 'package:fingerspot_library_app/controllers/auth_controller.dart';
 import 'package:fingerspot_library_app/controllers/post_controller.dart';
 import 'package:fingerspot_library_app/views/components/card_categories.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
@@ -10,6 +11,7 @@ import 'package:get/get.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
   final PostController postController = Get.put(PostController());
+  final AuthController authController = Get.put(AuthController());
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class HomeScreen extends StatelessWidget {
                 Expanded(
                   flex: 7,
                   child: Text(
-                    "PT. Maju Jaya (Maju Kinerja Bandung)",
+                    authController.userAuth.value!.user.officeName,
                     style: TextStyle(
                       color: kLight, // Make sure to define kLight somewhere in your code
                       fontSize: 16.sp, // Adjust font size with ScreenUtil

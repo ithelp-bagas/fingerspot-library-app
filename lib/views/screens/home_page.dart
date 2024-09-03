@@ -17,9 +17,9 @@ class MyHomePage extends StatelessWidget {
 
   final List<Widget> pages = [
     HomeScreen(),
-    Api.isDebug ? const ComingSoon() : const SearchScreen(),
+    SearchScreen(),
     Api.isDebug ? const ComingSoon() : const DiskusiScreen(),
-    Api.isDebug ? const ComingSoon() : const DisimpanScreen(),
+    DisimpanScreen(),
     Api.isDebug ? const ComingSoon() : const ProfileScreen(),
   ];
 

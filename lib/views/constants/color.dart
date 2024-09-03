@@ -9,6 +9,18 @@ ThemeData darkMode = ThemeData(
     canvasColor: kBlack,
   scaffoldBackgroundColor: kBlack,
   brightness: Brightness.dark,
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: kDark
+    ),
+    bottomAppBarTheme: const BottomAppBarTheme(
+        color: kDark
+    ),
+    dialogTheme: const DialogTheme(
+        backgroundColor: kDark
+    ),
+    popupMenuTheme: const PopupMenuThemeData(
+        color: kDark
+    ),
   iconTheme: const IconThemeData(
     color: kLight
   ),
@@ -39,10 +51,10 @@ ThemeData lightMode = ThemeData(
       color: kLight
     ),
     primaryColor: kPrimary,
-    canvasColor: kLight,
+    canvasColor: kLighted,
     primaryColorDark: kLight,
     primaryColorLight: kBlack,
-    scaffoldBackgroundColor: kLight,
+    scaffoldBackgroundColor: kLighted,
     brightness: Brightness.light,
     iconTheme: const IconThemeData(
         color: kGrey
@@ -62,10 +74,11 @@ const kPrimary = Color(0xff3F87B9);
 const kSecondary = Color(0xff75B7EC);
 const kThird = Color(0xffC3DAE9);
 const kLight = Color(0xffFFFFFF);
+const kLighted = Color(0xffF3F3F3);
 const kGrey = Color(0xff5D6A75);
 const kDisabled = Color(0xffe8e7e7);
 const kBlack = Color(0xff263238);
-const kDark = Color(0xff12191a);
+const kDark = Color(0xff141218);
 const kSuccess = Color(0xff02A859);
 const kDanger = Color(0xffF04747);
 const kWarning = Color(0xffFEBD15);

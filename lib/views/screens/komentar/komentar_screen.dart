@@ -93,7 +93,7 @@ class KomentarScreen extends StatelessWidget {
                                 } else {
                                   await postController.comment(postId, postController.komentarController.text, komentar);
                                   postController.komentarController.clear();
-                                  Get.snackbar('Success', 'Berhasil menambahkan komentar!', backgroundColor: kSuccess);
+                                  Get.snackbar('Success', 'Berhasil menambahkan komentar!', backgroundColor: kSuccess, colorText: kLight);
                                 }
                               },
                               icon: const Icon(Icons.send, color: kPrimary),
@@ -170,7 +170,7 @@ class KomentarScreen extends StatelessWidget {
                                 } else {
                                   await postController.comment(postId, postController.komentarController.text, komentar);
                                 }
-                                Get.snackbar('Success', 'Berhasil menambahkan komentar!', backgroundColor: kSuccess);
+                                Get.snackbar('Success', 'Berhasil menambahkan komentar!', backgroundColor: kSuccess, colorText: kLight);
                               }
                             },
                             icon: const Icon(Icons.send, color: kPrimary),
