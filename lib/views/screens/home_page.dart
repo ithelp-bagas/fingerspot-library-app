@@ -1,6 +1,9 @@
 import 'dart:ui';
 
+import 'package:fingerspot_library_app/controllers/auth_controller.dart';
+import 'package:fingerspot_library_app/controllers/post_controller.dart';
 import 'package:fingerspot_library_app/helpers/api.dart';
+import 'package:fingerspot_library_app/helpers/shared_pref.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
 import 'package:fingerspot_library_app/views/screens/coming_soon.dart';
 import 'package:fingerspot_library_app/views/screens/disimpan/disimpan_screen.dart';
@@ -18,12 +21,13 @@ import 'dart:js' as js;
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
   final BottomNavController bottomNavController = Get.put(BottomNavController());
+  final PostController postController = Get.put(PostController());
 
   final List<Widget> pages = [
     HomeScreen(),
     Api.isDebug ? const ComingSoon() : SearchScreen(),
     Api.isDebug ? const ComingSoon() : const DiskusiScreen(),
-    Api.isDebug ? const ComingSoon() : DisimpanScreen(),
+    DisimpanScreen(),
     Api.isDebug ? const ComingSoon() : const ProfileScreen(),
   ];
 
@@ -88,6 +92,13 @@ class MyHomePage extends StatelessWidget {
 
 class BottomNavController extends GetxController {
   var selectedIndex = 0.obs;
+
+
+  @override
+  void onInit() async{
+    super.onInit();
+    await SharedPref().getToken();
+  }
 
   void changeIndex(int index) {
     selectedIndex.value = index;

@@ -11,8 +11,9 @@ import 'app_routes.dart';
 class AppPages{
   static final routes = [
     GetPage(name: Routes.ERROR, page: () => const ComingSoon()),
-    GetPage(name: Routes.HOME, page: () => MainPage()),
-    GetPage(name: Routes.MAIN, page: () => MyHomePage()),
+    GetPage(name: Routes.MAIN, page: () => Wrapper()),
+    GetPage(name: Routes.HOME, page: () => MyHomePage()),
+    // GetPage(name: Routes.HOME, page: () => MainPage()),
     GetPage(name: Routes.DETAIL, page: () => DetailScreen()),
     GetPage(name: Routes.VIEWER, page: () => ViewersScreen()),
     GetPage(name: Routes.KOMENTAR, page: () => KomentarScreen()),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:fingerspot_library_app/controllers/post_controller.dart';
 import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/shared_pref.dart';
 import 'package:fingerspot_library_app/models/auth_model.dart';
@@ -14,14 +15,8 @@ class AuthController extends GetxController {
   Dio dio = Dio();
   var userAuth = Rxn<Auth>();
   var pwa = Rxn<Pwa>();
-
-  @override
-  void onInit() async{
-    // TODO: implement onInit
-    super.onInit();
-    String? encodedToken = await SharedPref().getEncoded();
-    login(encodedToken!);
-  }
+  RxBool isSuccess = false.obs;
+  RxString responsed = ''.obs;
 
   void setAuth(Auth newAuth) {
     userAuth.value = newAuth;
@@ -31,13 +26,12 @@ class AuthController extends GetxController {
     pwa.value = newPwa;
   }
 
-  checkPwaConfig() async {
-    var pwa = await SharedPref().getPwa();
-  }
-
-  Future<void> login(String encoded) async{
+  Future<void> login() async{
     try {
-      var response = await dio.post('${Api.baseUrl}/login?data=$encoded');
+      String? encodedData = await SharedPref().getEncoded();
+      var response = await dio.post(
+          '${Api.baseUrl}/login?data=$encodedData'
+      );
 
       var pwaData = response.data['pwa'];
       Pwa pwaConfig = Pwa.fromJson(pwaData);
@@ -53,6 +47,13 @@ class AuthController extends GetxController {
           await SharedPref().storeToken(token);
           Auth auth = Auth.fromJson(data);
           setAuth(auth);
+          isSuccess.value = true;
+          String? tokenAuth = await SharedPref().getToken();
+          if(tokenAuth == null) {
+            return;
+          }
+          print('token: $tokenAuth');
+          responsed.value = response.data['data'].toString();
         } else {
           Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
           if (kDebugMode) {

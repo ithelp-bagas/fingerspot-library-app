@@ -11,7 +11,7 @@ import 'package:get/get.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
   final PostController postController = Get.put(PostController());
-  final AuthController authController = Get.put(AuthController());
+  // final AuthController authController = Get.put(AuthController());
 
   @override
   Widget build(BuildContext context) {
@@ -31,17 +31,17 @@ class HomeScreen extends StatelessWidget {
                   flex: 1,
                   child: Image.asset("assets/icons/company.png"),
                 ),
-                Obx(() => Expanded(
-                    flex: 7,
-                    child: Text(
-                      authController.userAuth.value?.user.officeName ?? '',
-                      style: TextStyle(
-                        color: kLight, // Make sure to define kLight somewhere in your code
-                        fontSize: 16.sp, // Adjust font size with ScreenUtil
-                        fontWeight: FontWeight.w700,
-                      ),
-                      overflow: TextOverflow.ellipsis,
+                Expanded(
+                  flex: 7,
+                  child: Text(
+                    // authController.userAuth.value?.user.officeName ?? '',
+                    '',
+                    style: TextStyle(
+                      color: kLight, // Make sure to define kLight somewhere in your code
+                      fontSize: 16.sp, // Adjust font size with ScreenUtil
+                      fontWeight: FontWeight.w700,
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 const Expanded(
@@ -96,7 +96,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               );
             } else {
-              if (postList.isEmpty) {
+              if (postList.value.isEmpty) {
                 return RefreshIndicator(
                   onRefresh: () async {
                     await postController.getPost(postController.selectedCategoryId.value);

@@ -42,14 +42,19 @@ class MyApp extends StatelessWidget {
         themeMode: themeMode,
         debugShowCheckedModeBanner: false,
         // home: MainPage(),
-        routingCallback: (value) async{
-          // String uri = '${Api.defaultUrl}/?data=${Api.encodedData}';
-          // final uriData = Uri.parse(uri);
-          final uriData = Uri.parse(value!.current);
-          final data = uriData.queryParameters['data'];
-          if(data != null) {
+        routingCallback: (routing) async {
+          // Get the current full URL using Uri.base
+          Uri currentUri = Uri.base;
+
+          // Extract the 'data' parameter from the URL
+          String? data = currentUri.queryParameters['data'];
+
+          if (data != null) {
             await SharedPref().storeEncodedData(data);
             String? encoded = await SharedPref().getEncoded();
+            print('Stored Encoded Data: $encoded');
+          } else {
+            print('No data parameter found in URL');
           }
         },
       ),
@@ -57,26 +62,37 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MainPage extends StatelessWidget {
-  MainPage({super.key});
+class Wrapper extends StatefulWidget {
+  Wrapper({super.key});
+
+  @override
+  State<Wrapper> createState() => _WrapperState();
+}
+
+class _WrapperState extends State<Wrapper> {
+
   final AuthController authController = Get.put(AuthController());
 
-  Future<void> login() async{
-    String? encoded = await SharedPref().getEncoded();
-    await authController.login(encoded!);
+  Future<void> auth() async {
+    await authController.login();
+    await SharedPref().getToken();
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    auth();
   }
 
   @override
-  Widget build(BuildContext context){
-    return FutureBuilder(
-      future: login(),
-      builder: (builder, snapshot){
-        if(snapshot.hasError ) {
-          return const Text('Error');
-        } else {
-          return MyHomePage();
-        }
-      },
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+        builder: (context, constraints) => OrientationBuilder(
+            builder: (context, Orientation orientation) {
+              return MyHomePage();
+            }
+        )
     );
   }
 }

@@ -1,7 +1,9 @@
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:fingerspot_library_app/controllers/auth_controller.dart';
 import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/shared_pref.dart';
@@ -16,8 +18,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class PostController extends GetxController {
-  final AuthController authController = Get.put(AuthController());
   Dio dio = Dio();
+
   RxList<Post> postList = RxList<Post>([]);
   RxList<Post> searchPostList = RxList<Post>([]);
   RxList<Post> recommendedList = RxList<Post>([]);
@@ -46,10 +48,13 @@ class PostController extends GetxController {
   final komentarController = TextEditingController();
   final reasonController = TextEditingController();
   var charCount = 0.obs;
-  String? token;
+  // String? token;
+  RxString token = ''.obs;
 
   Future<void> getToken() async {
-    token = await SharedPref().getToken();
+    token.value = (await SharedPref().getToken())!;
+    await getCategory();
+    await getPost(selectedCategoryId.value);
   }
 
   @override
@@ -63,8 +68,6 @@ class PostController extends GetxController {
   void onInit() async{
     super.onInit();
     await getToken();
-    await getCategory();
-    await getPost(selectedCategoryId.value);
     reasonController.addListener(_updateCharCount);
   }
 
@@ -95,12 +98,13 @@ class PostController extends GetxController {
   }
 
   Future<void> getCategory() async {
+      String? tokenAuth = await SharedPref().getToken();
     try {
       var response = await dio.get(
         '${Api.baseUrl}/post/list-category',
         options: Options(
             headers: {
-              "Authorization": "Bearer $token"
+              "Authorization": "Bearer $token",
             }
         ),
       );
@@ -119,8 +123,10 @@ class PostController extends GetxController {
   }
 
   Future<void> getPost(int categoryId) async {
+      String? tokenAuth = await SharedPref().getToken();
     try{
       isLoading.value = true;
+
       var response = await dio.post(
         '${Api.baseUrl}/post/list-post',
         data: {
@@ -128,7 +134,7 @@ class PostController extends GetxController {
         },
         options: Options(
             headers: {
-              "Authorization": "Bearer $token"
+              "Authorization": "Bearer $tokenAuth",
             }
         ),
       );
@@ -141,7 +147,13 @@ class PostController extends GetxController {
         Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
         throw Exception('error');
       }
+
+      print('postlis: ${postList.value}');
     } catch(e) {
+      if (e is DioError) {
+        print('DioError: ${e.message}');
+        print('Response: ${e.response}');
+      }
       throw Exception(e);
     } finally {
       isLoading.value = false;
