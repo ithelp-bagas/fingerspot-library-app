@@ -18,83 +18,82 @@ class DisimpanScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => FutureBuilder(
-        future: _getBookmarkData(),
-        builder: (builder, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return _buildShimmer(context);
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            final bookmarkList = postController.bookmarkPostList;
-            if(postController.bookmarkPostList.isEmpty) {
-              return Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset('assets/images/no_data.png', width: 100.h,),
-                    Text(
-                      'Belum ada postingan yang disimpan',
-                      style: TextStyle(
-                          fontSize: defLabel,
-                          fontWeight: heavy
-                      ),
-                    )
-                  ],
-                ),
-              );
-            }
-            return Obx(() => RefreshIndicator(
-              onRefresh: _getBookmarkData,
-              child: Padding(
-                  padding: EdgeInsets.all(10.h),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * .9,
-                    child: ListView.builder(
-                      itemCount: bookmarkList.length,
-                      itemBuilder: (builder, index){
-                        final bookmark = bookmarkList[index];
-                        if(bookmarkList.isEmpty) {
-                          return Center(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset('assets/images/no_data.png', width: 100.h,),
-                                Text(
-                                  'Belum ada postingan yang disimpan',
-                                  style: TextStyle(
-                                      fontSize: defLabel,
-                                      fontWeight: heavy
-                                  ),
-                                )
-                              ],
-                            ),
-                          );
-                        } else {
-                          return GestureDetector(
-                            onTap: () => Get.toNamed(Routes.DETAIL, arguments: {'postId': bookmark.id, 'imgPath': bookmark.user.image, 'liked': bookmark.liked}),
-                            child: CardDisimpan(
-                                postId: bookmark.id,
-                                nameUser: '${bookmark.user.firstname} ${bookmark.user.lastname}',
-                                imgPath: bookmark.user.image,
-                                date: bookmark.createdAt,
-                                categoryName: bookmark.categoryName,
-                                title: bookmark.title,
-                                index: index
-                            ),
-                          );
-                        }
-                      },
+    return FutureBuilder(
+      future: _getBookmarkData(),
+      builder: (builder, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return _buildShimmer(context);
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          final bookmarkList = postController.bookmarkPostList;
+          if(postController.bookmarkPostList.isEmpty) {
+            return Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset('assets/images/no_data.png', width: 100.h,),
+                  Text(
+                    'Belum ada postingan yang disimpan',
+                    style: TextStyle(
+                        fontSize: defLabel,
+                        fontWeight: heavy
                     ),
-                  ),
-                ),
-            ),
+                  )
+                ],
+              ),
             );
           }
-        },
-      ),
+          return Obx(() => RefreshIndicator(
+            onRefresh: _getBookmarkData,
+            child: Padding(
+              padding: EdgeInsets.all(10.h),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * .9,
+                child: ListView.builder(
+                  itemCount: bookmarkList.length,
+                  itemBuilder: (builder, index){
+                    final bookmark = bookmarkList[index];
+                    if(bookmarkList.isEmpty) {
+                      return Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset('assets/images/no_data.png', width: 100.h,),
+                            Text(
+                              'Belum ada postingan yang disimpan',
+                              style: TextStyle(
+                                  fontSize: defLabel,
+                                  fontWeight: heavy
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    } else {
+                      return GestureDetector(
+                        onTap: () => Get.toNamed(Routes.DETAIL, arguments: {'postId': bookmark.id, 'imgPath': bookmark.user.image, 'liked': bookmark.liked}),
+                        child: CardDisimpan(
+                            postId: bookmark.id,
+                            nameUser: '${bookmark.user.firstname} ${bookmark.user.lastname}',
+                            imgPath: bookmark.user.image,
+                            date: bookmark.createdAt,
+                            categoryName: bookmark.categoryName,
+                            title: bookmark.title,
+                            index: index
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ),
+            ),
+          ),
+          );
+        }
+      },
     );
   }
 }

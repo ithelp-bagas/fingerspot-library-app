@@ -2,7 +2,6 @@ import 'package:fingerspot_library_app/controllers/auth_controller.dart';
 import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/shared_pref.dart';
 import 'package:fingerspot_library_app/routes/app_pages.dart';
-import 'package:fingerspot_library_app/routes/app_routes.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
 import 'package:fingerspot_library_app/views/screens/home_page.dart';
 import 'package:flutter/material.dart';
@@ -44,8 +43,9 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         // home: MainPage(),
         routingCallback: (value) async{
-          String uri = Api.defaultUrl + '/login?data=' + Api.encodedData;
-          final uriData = Uri.parse(uri);
+          // String uri = '${Api.defaultUrl}/?data=${Api.encodedData}';
+          // final uriData = Uri.parse(uri);
+          final uriData = Uri.parse(value!.current);
           final data = uriData.queryParameters['data'];
           if(data != null) {
             await SharedPref().storeEncodedData(data);
@@ -72,7 +72,7 @@ class MainPage extends StatelessWidget {
       future: login(),
       builder: (builder, snapshot){
         if(snapshot.hasError ) {
-          return Text('Error');
+          return const Text('Error');
         } else {
           return MyHomePage();
         }

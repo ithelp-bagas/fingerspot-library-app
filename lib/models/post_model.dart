@@ -1,5 +1,6 @@
 import 'package:fingerspot_library_app/models/bookmark_model.dart';
 import 'package:fingerspot_library_app/models/comment_model.dart';
+import 'package:fingerspot_library_app/models/images_model.dart';
 import 'package:fingerspot_library_app/models/tag_model.dart';
 import 'package:fingerspot_library_app/models/user_model.dart';
 import 'package:fingerspot_library_app/models/votes_model.dart';
@@ -25,6 +26,7 @@ class Post {
   bool liked;
   bool saved;
   String link;
+  List<Images> images;
 
   Post({
     required this.id,
@@ -46,7 +48,8 @@ class Post {
     required this.liked,
     required this.saved,
     required this.link,
-    required this.categoryName
+    required this.categoryName,
+    required this.images
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -55,12 +58,14 @@ class Post {
     List<dynamic> votesJson = (json['votes'] ?? []) as List;
     List<dynamic> bookmarkJson = (json['bookmark'] ?? []) as List;
     List<dynamic> tagsJson = (json['tags'] ?? []) as List;
+    List<dynamic> imagesJson = (json['images'] ?? []) as List;
 
     User user = User.fromJson(userJson);
     List<Comment> comments = commentJson.map((comJson) => Comment.fromJson(comJson)).toList();
     List<Votes> votes = votesJson.map((votJson) => Votes.fromJson(votJson)).toList();
     List<Bookmark> bookmarks = bookmarkJson.map((bookJson) => Bookmark.fromJson(bookJson)).toList();
     List<Tag> tags = tagsJson.map((tagJson) => Tag.fromJson(tagJson)).toList();
+    List<Images> images = imagesJson.map((imagesJson) => Images.fromJson(imagesJson)).toList();
 
     return Post(
       id: (json['id'] ?? 0) as int,
@@ -82,7 +87,8 @@ class Post {
       liked: (json['liked'] ?? false) as bool,
       saved: (json['saved'] ?? false) as bool,
       link: (json['link'] ?? '') as String,
-      categoryName: (json['category_name'] ?? '') as String
+      categoryName: (json['category_name'] ?? '') as String,
+      images: images
     );
   }
 }

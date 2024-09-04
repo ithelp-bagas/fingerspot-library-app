@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
 import 'package:fingerspot_library_app/views/screens/coming_soon.dart';
@@ -7,9 +9,11 @@ import 'package:fingerspot_library_app/views/screens/home/home_screen.dart';
 import 'package:fingerspot_library_app/views/screens/profile/profile_screen.dart';
 import 'package:fingerspot_library_app/views/screens/profile/profile_setting_screen.dart';
 import 'package:fingerspot_library_app/views/screens/search/search_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'dart:js' as js;
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
@@ -17,9 +21,9 @@ class MyHomePage extends StatelessWidget {
 
   final List<Widget> pages = [
     HomeScreen(),
-    SearchScreen(),
+    Api.isDebug ? const ComingSoon() : SearchScreen(),
     Api.isDebug ? const ComingSoon() : const DiskusiScreen(),
-    DisimpanScreen(),
+    Api.isDebug ? const ComingSoon() : DisimpanScreen(),
     Api.isDebug ? const ComingSoon() : const ProfileScreen(),
   ];
 
@@ -37,7 +41,9 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Obx(()=> Text(titles[bottomNavController.selectedIndex.value])),
-        leading: IconButton(onPressed: (){}, icon: const Icon(Icons.arrow_back_ios_new)),
+        leading: IconButton(onPressed: (){
+            js.context.callMethod('backToMainApp');
+        }, icon: const Icon(Icons.arrow_back_ios_new)),
         actions: [ Obx(() => bottomNavController.selectedIndex.value == 4
             ? IconButton(onPressed: () => Get.to(() => const ProfileSettingScreen()), icon: const Icon(Icons.settings))
             : IconButton(onPressed: (){}, icon: Icon(MdiIcons.heart)))

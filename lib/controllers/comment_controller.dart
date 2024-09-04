@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:fingerspot_library_app/controllers/auth_controller.dart';
 import 'package:fingerspot_library_app/controllers/post_controller.dart';
 import 'package:fingerspot_library_app/helpers/api.dart';
+import 'package:fingerspot_library_app/helpers/shared_pref.dart';
 import 'package:fingerspot_library_app/models/comment_model.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,19 @@ class CommentController extends GetxController {
   RxString commentUser = ''.obs;
   RxInt commentIdUser = 0.obs;
   RxBool isLoading = false.obs;
+
+  String? token;
+
+  Future<void> getToken() async {
+    token = await SharedPref().getToken();
+  }
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+    getToken();
+  }
 
 
   void toggleUserCommentReply(String imgPath, String name, String comment, int commentId) {
@@ -51,7 +65,7 @@ class CommentController extends GetxController {
         },
         options: Options(
             headers: {
-              "Authorization": "Bearer ${authController.userAuth.value!.token}"
+              "Authorization": "Bearer $token"
             }
         ),
       );
@@ -81,7 +95,7 @@ class CommentController extends GetxController {
         },
         options: Options(
             headers: {
-              "Authorization": "Bearer ${authController.userAuth.value!.token}"
+              "Authorization": "Bearer $token"
             }
         ),
       );
@@ -114,7 +128,7 @@ class CommentController extends GetxController {
         },
         options: Options(
             headers: {
-              "Authorization": "Bearer ${authController.userAuth.value!.token}"
+              "Authorization": "Bearer $token"
             }
         ),
       );

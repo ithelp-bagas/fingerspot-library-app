@@ -12,7 +12,6 @@ import 'package:get/get.dart';
 
 class AuthController extends GetxController {
   Dio dio = Dio();
-  String encoded = Api.encodedData;
   var userAuth = Rxn<Auth>();
   var pwa = Rxn<Pwa>();
 

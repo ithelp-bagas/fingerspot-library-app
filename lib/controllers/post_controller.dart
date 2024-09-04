@@ -121,14 +121,14 @@ class PostController extends GetxController {
   Future<void> getPost(int categoryId) async {
     try{
       isLoading.value = true;
-      var response = await dio.get(
+      var response = await dio.post(
         '${Api.baseUrl}/post/list-post',
         data: {
           'category_id': categoryId
         },
         options: Options(
             headers: {
-              "Authorization": "Bearer ${token}"
+              "Authorization": "Bearer $token"
             }
         ),
       );

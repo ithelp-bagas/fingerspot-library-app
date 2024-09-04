@@ -31,16 +31,17 @@ class HomeScreen extends StatelessWidget {
                   flex: 1,
                   child: Image.asset("assets/icons/company.png"),
                 ),
-                Expanded(
-                  flex: 7,
-                  child: Text(
-                    authController.userAuth.value!.user.officeName,
-                    style: TextStyle(
-                      color: kLight, // Make sure to define kLight somewhere in your code
-                      fontSize: 16.sp, // Adjust font size with ScreenUtil
-                      fontWeight: FontWeight.w700,
+                Obx(() => Expanded(
+                    flex: 7,
+                    child: Text(
+                      authController.userAuth.value?.user.officeName ?? '',
+                      style: TextStyle(
+                        color: kLight, // Make sure to define kLight somewhere in your code
+                        fontSize: 16.sp, // Adjust font size with ScreenUtil
+                        fontWeight: FontWeight.w700,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 const Expanded(
@@ -109,7 +110,7 @@ class HomeScreen extends StatelessWidget {
                         children: [
                           Image.asset('assets/images/no_data.png', width: 100.h),
                           Text(
-                            'Belum ada data',
+                            'Tidak ada data ditemukan',
                             style: TextStyle(
                               fontSize: 16.sp, // Adjust font size with ScreenUtil
                               fontWeight: FontWeight.bold, // Replace with your preferred weight
