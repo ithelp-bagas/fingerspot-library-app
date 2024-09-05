@@ -50,11 +50,13 @@ class PostController extends GetxController {
   var charCount = 0.obs;
   // String? token;
   RxString token = ''.obs;
+  final AuthController authController = Get.put(AuthController());
+
 
   Future<void> getToken() async {
-    token.value = (await SharedPref().getToken())!;
-    await getCategory();
-    await getPost(selectedCategoryId.value);
+    // token.value = (await SharedPref().getToken())!;
+    // await getCategory();
+    // await getPost(selectedCategoryId.value);
   }
 
   @override
@@ -98,13 +100,14 @@ class PostController extends GetxController {
   }
 
   Future<void> getCategory() async {
-      String? tokenAuth = await SharedPref().getToken();
+    String? tokenLocal = await SharedPref().getToken();
+    String? tokenAuth = tokenLocal ?? '';
     try {
       var response = await dio.get(
         '${Api.baseUrl}/post/list-category',
         options: Options(
             headers: {
-              "Authorization": "Bearer $token",
+              "Authorization": "Bearer $tokenAuth",
             }
         ),
       );
@@ -123,7 +126,8 @@ class PostController extends GetxController {
   }
 
   Future<void> getPost(int categoryId) async {
-      String? tokenAuth = await SharedPref().getToken();
+      String? token = await SharedPref().getToken();
+      String? tokenAuth = token ?? '';
     try{
       isLoading.value = true;
 

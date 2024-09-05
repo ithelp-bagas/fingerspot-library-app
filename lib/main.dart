@@ -52,7 +52,9 @@ class MyApp extends StatelessWidget {
           if (data != null) {
             await SharedPref().storeEncodedData(data);
             String? encoded = await SharedPref().getEncoded();
+            String? token = await SharedPref().getToken();
             print('Stored Encoded Data: $encoded');
+            print('Stored Token Data: $token');
           } else {
             print('No data parameter found in URL');
           }
@@ -75,13 +77,13 @@ class _WrapperState extends State<Wrapper> {
 
   Future<void> auth() async {
     await authController.login();
-    await SharedPref().getToken();
   }
 
 
   @override
   void initState() {
     super.initState();
+    print('init state');
     auth();
   }
 
