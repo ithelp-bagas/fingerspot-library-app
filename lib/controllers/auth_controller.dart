@@ -8,6 +8,7 @@ import 'package:fingerspot_library_app/models/auth_model.dart';
 import 'package:fingerspot_library_app/models/pwa_model.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 
@@ -27,40 +28,35 @@ class AuthController extends GetxController {
   }
 
   Future<void> login() async{
-    print('masuk');
+    bool canGetData = false;
     try {
       String? encodedData = await SharedPref().getEncoded();
-      print('encoded data auth: $encodedData');
-      print('url: ${Api.baseUrl}/login?data=$encodedData');
       var response = await dio.post(
           '${Api.baseUrl}/login?data=$encodedData'
       );
 
       var pwaData = response.data['pwa'];
-      print('pwaData : $pwaData');
       Pwa pwaConfig = Pwa.fromJson(pwaData);
       setPwa(pwaConfig);
-      await SharedPref().storePwa(json.encode(pwaConfig.theme));
-      // await SharedPref().storePwa(json.encode(pwaConfig.toJson()));
+      await SharedPref().storePwa(json.encode(pwaData['theme']));
 
-      print('response : ${response.statusCode}');
+      if (pwaConfig.theme == 'light') {
+        Get.changeThemeMode(ThemeMode.light);
+      } else if (pwaConfig.theme == 'dark') {
+        Get.changeThemeMode(ThemeMode.dark);
+      }
+
+      // print('response code : ${response.statusCode}');
 
       if(response.statusCode == 200) {
         bool success = response.data['success'];
         if(success) {
           var data = response.data['data'];
-          print('data: $data');
           var token = response.data['data']['token'];
-          print('token json: $token');
+          await SharedPref().storeToken(token);
           Auth auth = Auth.fromJson(data);
           setAuth(auth);
-          await SharedPref().storeToken(token);
           isSuccess.value = true;
-          String? tokenAuth = await SharedPref().getToken();
-          // if(tokenAuth == null) {
-          //   return;
-          // }
-          print('token: $tokenAuth');
           responsed.value = response.data['data'].toString();
         } else {
           Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
@@ -70,11 +66,12 @@ class AuthController extends GetxController {
         }
       } else {
         Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
-        print(response.data);
+        isSuccess.value = false;
       }
     } catch(e){
       print(e);
       Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
+      isSuccess.value = false;
       throw Exception(e);
     }
   }

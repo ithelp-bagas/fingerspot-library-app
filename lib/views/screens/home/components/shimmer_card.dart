@@ -8,16 +8,16 @@ class ShimmerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey[100]!,
-      child: Container(
-        padding: EdgeInsets.all(10.h),
-        width: MediaQuery.of(context).size.width * 1,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+    return Container(
+      padding: EdgeInsets.all(10.h),
+      width: MediaQuery.of(context).size.width * 1,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Row(
               children: [
                 Expanded(
                   flex: 1,
@@ -54,45 +54,65 @@ class ShimmerCard extends StatelessWidget {
                 )
               ],
             ),
-            SizedBox(height: 10.h,),
-            Container(
-              height: 16.h,
+          ),
+          SizedBox(height: 10.h,),
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.white,
+            child: Container(
+              height: 25.h,
               color: Colors.white,
             ),
-            SizedBox(height: 10.h,),
-            Container(
-              height: 14.h,
+          ),
+          SizedBox(height: 10.h,),
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.white,
+            child: Container(
+              height: 25.h,
               color: Colors.white,
             ),
-            SizedBox(height: 10.h,),
-            Row(
-              children: [
-                Container(
+          ),
+          SizedBox(height: 10.h,),
+          Row(
+            children: [
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.white,
+                child: Container(
                   width: 50.h,
                   height: 14.h,
                   color: Colors.white,
                 ),
-                SizedBox(width: 10.h,),
-                Container(
+              ),
+              SizedBox(width: 10.h,),
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.white,
+                child: Container(
                   width: 50.h,
                   height: 14.h,
                   color: Colors.white,
                 ),
-                SizedBox(width: 10.h,),
-                Container(
+              ),
+              SizedBox(width: 10.h,),
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.white,
+                child: Container(
                   width: 50.h,
                   height: 14.h,
                   color: Colors.white,
                 ),
-              ],
-            ),
-            SizedBox(height: 10.h,),
-            const Divider(
-              color: kGrey,
-              thickness: 1,
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+          SizedBox(height: 10.h,),
+          const Divider(
+            color: kGrey,
+            thickness: 1,
+          ),
+        ],
       ),
     );
   }

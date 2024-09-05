@@ -88,9 +88,9 @@ class CardSearch extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(width: 10.h,),
+                    SizedBox(width: 5.h,),
                     Expanded(
-                      flex: 6,
+                      flex: 5,
                       child: Text(
                         namaUser,
                         style: TextStyle(
@@ -101,8 +101,9 @@ class CardSearch extends StatelessWidget {
                       ),
                     ),
                     Expanded(
-                      flex: 3,
+                      flex: 4,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Icon(Icons.chat, size: p2, color: kPrimary,),
                           SizedBox(width: 5.w,),

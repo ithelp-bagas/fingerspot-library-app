@@ -25,17 +25,10 @@ class CommentController extends GetxController {
   RxInt commentIdUser = 0.obs;
   RxBool isLoading = false.obs;
 
-  String? token;
-
-  Future<void> getToken() async {
-    token = await SharedPref().getToken();
-  }
-
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    getToken();
   }
 
 
@@ -56,6 +49,8 @@ class CommentController extends GetxController {
 
 
   Future<void> toggleReply(int commentId) async {
+    String? token = await SharedPref().getToken();
+
     try {
       isTappedChild[commentId] = !(isTappedChild[commentId] ?? false);
       var response = await dio.post(
@@ -84,6 +79,8 @@ class CommentController extends GetxController {
   }
 
   Future<void> replyComment(String comment, int commentId, int postId, int commentCount) async {
+    String? token = await SharedPref().getToken();
+
     try {
       postController.isLoading.value = true;
       var response = await dio.post(
@@ -119,6 +116,8 @@ class CommentController extends GetxController {
   }
 
   Future<void> likeComment(int commentId, int postId) async {
+    String? token = await SharedPref().getToken();
+
     try {
       var response = await dio.post(
         '${Api.baseUrl}/comment/comment-like',

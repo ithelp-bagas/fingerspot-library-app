@@ -36,6 +36,7 @@ class SearchScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     TextField(
+                      controller: postController.searchController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15.h)
@@ -45,6 +46,9 @@ class SearchScreen extends StatelessWidget {
                           child: const Icon(Icons.search),
                         ),
                       ),
+                      onChanged: (value) {
+                        postController.searchingPost(value);
+                      },
                     ),
                     SizedBox(height: 5.h,),
                     Obx(() {
@@ -86,7 +90,7 @@ class SearchScreen extends StatelessWidget {
                                 ListView.builder(
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: postList.length,
+                                  itemCount: 5,
                                   itemBuilder: (builder, index) {
                                     final post = postList[index];
                                     return GestureDetector(

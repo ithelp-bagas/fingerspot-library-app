@@ -47,16 +47,18 @@ class PostController extends GetxController {
   RxBool isLoading = false.obs;
   final komentarController = TextEditingController();
   final reasonController = TextEditingController();
+  final searchController = TextEditingController();
   var charCount = 0.obs;
   // String? token;
-  RxString token = ''.obs;
+  String? tokenVariable = '';
   final AuthController authController = Get.put(AuthController());
+  RxBool isSearchResultAvailable = false.obs;
+  RxList<Post> searchPost = RxList<Post>([]);
 
 
   Future<void> getToken() async {
-    // token.value = (await SharedPref().getToken())!;
-    // await getCategory();
-    // await getPost(selectedCategoryId.value);
+    await getCategory();
+    await getPost(selectedCategoryId.value);
   }
 
   @override
@@ -69,8 +71,24 @@ class PostController extends GetxController {
   @override
   void onInit() async{
     super.onInit();
-    await getToken();
+    // await getToken();
     reasonController.addListener(_updateCharCount);
+  }
+
+  void searchingPost(String query) {
+    searchPost.clear();
+
+    var result = postList.where(
+            (post) => post.title.toLowerCase().contains(query.toLowerCase()) ||
+            post.user.firstname.toLowerCase().contains(query.toLowerCase()) ||
+            post.user.lastname.toLowerCase().contains(query.toLowerCase()) ||
+            post.categoryName.toLowerCase().contains(query.toLowerCase())
+    ).toList();
+
+    searchPost.addAll(result);
+    searchPostList = searchPost;
+
+    isSearchResultAvailable.value = result.isNotEmpty;
   }
 
   void _updateCharCount() {
@@ -100,34 +118,53 @@ class PostController extends GetxController {
   }
 
   Future<void> getCategory() async {
-    String? tokenLocal = await SharedPref().getToken();
-    String? tokenAuth = tokenLocal ?? '';
-    try {
-      var response = await dio.get(
-        '${Api.baseUrl}/post/list-category',
-        options: Options(
-            headers: {
-              "Authorization": "Bearer $tokenAuth",
-            }
-        ),
-      );
+    String? token = await SharedPref().getToken();
+    if(token != null) {
+      try {
+        var response = await dio.get(
+          '${Api.baseUrl}/post/list-category',
+          options: Options(
+              headers: {
+                "Authorization": "Bearer $token",
+              }
+          ),
+        );
 
-      if(response.statusCode == 200) {
-        Map<String, dynamic> responseData = response.data;
-        List<dynamic> data = responseData['data'];
-        categoryList.value = data.map((json) => Category.fromJson(json)).toList();
-      } else {
-        Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
-        throw Exception('error');
+        if (response.statusCode == 200) {
+          Map<String, dynamic> responseData = response.data;
+          List<dynamic> data = responseData['data'];
+          categoryList.value = data.map((json) => Category.fromJson(json)).toList();
+        } else {
+          Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
+          throw Exception('error');
+        }
+      } catch (e) {
+        if (e is DioError) {
+          // Handle Dio-specific error and extract status code
+          final statusCode = e.response?.statusCode;
+          // print('Dio error occurred with status code: $statusCode');
+          // print('Error message: ${e.message}');/**/
+
+          // You can handle different status codes here
+          if (statusCode == 401) {
+            Get.toNamed(Routes.ERROR, arguments: {'title': 'Unauthorized'});
+          } else {
+            Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
+          }
+        } else {
+          // Handle any other errors
+          print(e);
+        }
+        throw Exception(e);
       }
-    } catch(e) {
-      throw Exception(e);
+    } else {
+      print('token null');
     }
   }
 
+
   Future<void> getPost(int categoryId) async {
       String? token = await SharedPref().getToken();
-      String? tokenAuth = token ?? '';
     try{
       isLoading.value = true;
 
@@ -138,7 +175,7 @@ class PostController extends GetxController {
         },
         options: Options(
             headers: {
-              "Authorization": "Bearer $tokenAuth",
+              "Authorization": "Bearer $token",
             }
         ),
       );
@@ -151,8 +188,6 @@ class PostController extends GetxController {
         Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
         throw Exception('error');
       }
-
-      print('postlis: ${postList.value}');
     } catch(e) {
       if (e is DioError) {
         print('DioError: ${e.message}');
@@ -165,6 +200,8 @@ class PostController extends GetxController {
   }
 
   Future<void> likePost(int postId, bool vote, bool isDetail) async{
+    String? token = await SharedPref().getToken();
+
       try {
         var response = await dio.post(
           '${Api.baseUrl}/post/like',
@@ -174,7 +211,7 @@ class PostController extends GetxController {
           },
           options: Options(
               headers: {
-                "Authorization": "Bearer ${token}"
+                "Authorization": "Bearer $token"
               }
           ),
         );
@@ -214,6 +251,7 @@ class PostController extends GetxController {
   }
 
   Future<void> getDetailPost(int postId) async{
+    String? token = await SharedPref().getToken();
     try {
       var response = await dio.post(
         '${Api.baseUrl}/post/detail-post',
@@ -222,7 +260,7 @@ class PostController extends GetxController {
         },
         options: Options(
             headers: {
-              "Authorization": "Bearer ${token}"
+              "Authorization": "Bearer $token"
             }
         ),
       );
@@ -241,6 +279,8 @@ class PostController extends GetxController {
   }
 
   Future<void> getViewers(int postId) async {
+    String? token = await SharedPref().getToken();
+
     try{
       var response = await dio.post(
         '${Api.baseUrl}/post/detail-postview',
@@ -249,7 +289,7 @@ class PostController extends GetxController {
         },
         options: Options(
             headers: {
-              "Authorization": "Bearer ${token}"
+              "Authorization": "Bearer $token"
             }
         ),
       );
@@ -268,6 +308,8 @@ class PostController extends GetxController {
   }
 
   Future<void> comment(int postId, String comment, int countComment) async {
+    String? token = await SharedPref().getToken();
+
     try {
       isLoading.value = true;
       var response = await dio.post(
@@ -278,7 +320,7 @@ class PostController extends GetxController {
         },
         options: Options(
             headers: {
-              "Authorization": "Bearer ${token}"
+              "Authorization": "Bearer $token"
             }
         ),
       );
@@ -301,6 +343,8 @@ class PostController extends GetxController {
   }
 
   Future<void> addBookmark(int postId) async{
+    String? token = await SharedPref().getToken();
+
     try{
       var response = await dio.post(
         '${Api.baseUrl}/post/add-bookmark',
@@ -309,7 +353,7 @@ class PostController extends GetxController {
         },
         options: Options(
             headers: {
-              "Authorization": "Bearer ${token}"
+              "Authorization": "Bearer $token"
             }
         ),
       );
@@ -347,6 +391,8 @@ class PostController extends GetxController {
   }
 
   Future<void> reportPost(int postId, String reason) async{
+    String? token = await SharedPref().getToken();
+
     try {
       isLoading.value = true;
       var response = await dio.post(
@@ -357,7 +403,7 @@ class PostController extends GetxController {
         },
         options: Options(
             headers: {
-              "Authorization": "Bearer ${token}"
+              "Authorization": "Bearer $token"
             }
         ),
       );
@@ -383,6 +429,8 @@ class PostController extends GetxController {
   }
 
   Future<void> getSearchPost(int searchId) async {
+    String? token = await SharedPref().getToken();
+
     try {
       var response = await dio.post(
         '${Api.baseUrl}/post/search-post',
@@ -391,7 +439,7 @@ class PostController extends GetxController {
         },
         options: Options(
             headers: {
-              "Authorization": "Bearer ${token}"
+              "Authorization": "Bearer $token"
             }
         ),
       );
@@ -412,12 +460,14 @@ class PostController extends GetxController {
   }
 
   Future<void> getBookmarkPost() async {
+    String? token = await SharedPref().getToken();
+
     try {
       var response = await dio.get(
         '${Api.baseUrl}/post/saved-post',
         options: Options(
             headers: {
-              "Authorization": "Bearer ${token}"
+              "Authorization": "Bearer $token"
             }
         ),
       );

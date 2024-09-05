@@ -3,11 +3,14 @@ import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/shared_pref.dart';
 import 'package:fingerspot_library_app/routes/app_pages.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
+import 'package:fingerspot_library_app/views/screens/coming_soon.dart';
+import 'package:fingerspot_library_app/views/screens/home/components/shimmer_card.dart';
 import 'package:fingerspot_library_app/views/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:shimmer/shimmer.dart';
 
 
 Future<ThemeMode> getThemeMode() async {
@@ -48,13 +51,13 @@ class MyApp extends StatelessWidget {
 
           // Extract the 'data' parameter from the URL
           String? data = currentUri.queryParameters['data'];
+          // String? data = Api.encodedData;
+          // print('data: $data');
 
           if (data != null) {
             await SharedPref().storeEncodedData(data);
             String? encoded = await SharedPref().getEncoded();
             String? token = await SharedPref().getToken();
-            print('Stored Encoded Data: $encoded');
-            print('Stored Token Data: $token');
           } else {
             print('No data parameter found in URL');
           }
@@ -64,38 +67,4 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class Wrapper extends StatefulWidget {
-  Wrapper({super.key});
-
-  @override
-  State<Wrapper> createState() => _WrapperState();
-}
-
-class _WrapperState extends State<Wrapper> {
-
-  final AuthController authController = Get.put(AuthController());
-
-  Future<void> auth() async {
-    await authController.login();
-  }
-
-
-  @override
-  void initState() {
-    super.initState();
-    print('init state');
-    auth();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-        builder: (context, constraints) => OrientationBuilder(
-            builder: (context, Orientation orientation) {
-              return MyHomePage();
-            }
-        )
-    );
-  }
-}
 

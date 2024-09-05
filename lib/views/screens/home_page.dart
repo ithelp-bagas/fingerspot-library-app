@@ -25,7 +25,7 @@ class MyHomePage extends StatelessWidget {
 
   final List<Widget> pages = [
     HomeScreen(),
-    Api.isDebug ? const ComingSoon() : SearchScreen(),
+    SearchScreen(),
     Api.isDebug ? const ComingSoon() : const DiskusiScreen(),
     DisimpanScreen(),
     Api.isDebug ? const ComingSoon() : const ProfileScreen(),
@@ -48,10 +48,6 @@ class MyHomePage extends StatelessWidget {
         leading: IconButton(onPressed: (){
             js.context.callMethod('backToMainApp');
         }, icon: const Icon(Icons.arrow_back_ios_new)),
-        actions: [ Obx(() => bottomNavController.selectedIndex.value == 4
-            ? IconButton(onPressed: () => Get.to(() => const ProfileSettingScreen()), icon: const Icon(Icons.settings))
-            : IconButton(onPressed: (){}, icon: Icon(MdiIcons.heart)))
-        ],
       ),
       body: Obx(() => pages[bottomNavController.selectedIndex.value]),
       bottomNavigationBar: Obx( () => BottomNavigationBar(

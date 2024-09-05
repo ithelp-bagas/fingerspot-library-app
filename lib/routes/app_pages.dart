@@ -4,6 +4,7 @@ import 'package:fingerspot_library_app/views/screens/detail/detail_screen.dart';
 import 'package:fingerspot_library_app/views/screens/home_page.dart';
 import 'package:fingerspot_library_app/views/screens/komentar/komentar_screen.dart';
 import 'package:fingerspot_library_app/views/screens/viewers/viewers_screen.dart';
+import 'package:fingerspot_library_app/views/wrapper.dart';
 import 'package:get/get.dart';
 
 import 'app_routes.dart';

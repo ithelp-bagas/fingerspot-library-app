@@ -16,21 +16,21 @@ class CardCategories extends StatelessWidget {
         alignment: Alignment.center,
         child: Padding(
           padding: EdgeInsets.only(top: 8.h),
-          child: Text(
-            categoriesName,
-            style: TextStyle(
-              // color: isSelected ? kPrimary : kBlack,
-              color: Colors.transparent,
-              fontWeight: isSelected ? heavy : regular,
-              fontSize: smLabel,
-              shadows: [
-                Shadow(
-                    color: isSelected ? kPrimary : (Theme.of(context).textTheme.labelSmall?.color ?? kBlack),
-                    offset: const Offset(0, -8))
-              ],
-              decoration: isSelected ? TextDecoration.underline : TextDecoration.none,
-              decorationColor: kPrimary,
-              decorationThickness: 3.h,
+          child: Container(
+            padding: EdgeInsets.only(bottom: 2.h),
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: isSelected ? kPrimary : Colors.transparent, width: 1.5.w)
+              )
+            ),
+            child: Text(
+              categoriesName,
+              style: TextStyle(
+                color: isSelected ? kPrimary : (Theme.of(context).textTheme.labelSmall?.color ?? kBlack),
+                // color: Colors.transparent,
+                fontWeight: isSelected ? heavy : regular,
+                fontSize: smLabel,
+              ),
             ),
           ),
         ),
