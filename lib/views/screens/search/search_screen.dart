@@ -1,5 +1,4 @@
 import 'package:fingerspot_library_app/controllers/post_controller.dart';
-import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
 import 'package:fingerspot_library_app/views/components/card_categories.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
@@ -9,7 +8,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 
-import 'components/icon_search.dart';
 
 class SearchScreen extends StatelessWidget {
   SearchScreen({super.key});
@@ -123,7 +121,7 @@ class SearchScreen extends StatelessWidget {
                                 SizedBox(height: 10.h,),
                                 ListView.builder(
                                   shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
+                                  physics: const NeverScrollableScrollPhysics(),
                                   itemCount: recommendedlist.length,
                                   itemBuilder: (builder, index){
                                     final recommended = recommendedlist[index];

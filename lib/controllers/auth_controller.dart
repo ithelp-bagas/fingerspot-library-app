@@ -1,16 +1,15 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:fingerspot_library_app/controllers/post_controller.dart';
 import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/shared_pref.dart';
 import 'package:fingerspot_library_app/models/auth_model.dart';
 import 'package:fingerspot_library_app/models/pwa_model.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
-import 'package:fingerspot_library_app/views/screens/coming_soon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/main.dart';
 
 
 class AuthController extends GetxController {
@@ -55,7 +54,6 @@ class AuthController extends GetxController {
           Auth auth = Auth.fromJson(data);
           setAuth(auth);
           await SharedPref().storeToken(auth.token);
-          String? tokenSaved = await SharedPref().getToken();
           String? token = await SharedPref().getToken();
           if (token != null) {
             tokenSavedAuth.value = token;
@@ -67,20 +65,22 @@ class AuthController extends GetxController {
           isSuccess.value = true;
           responsed.value = response.data['data'].toString();
         } else {
-          Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
-          if (kDebugMode) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
+          });
             print(response.data['message']);
-          }
         }
       } else {
-        Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
+        });
         isSuccess.value = false;
       }
     } catch(e){
-      if (kDebugMode) {
-        print(e);
-      }
-      Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
+        Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
+
+      // WidgetsBinding.instance.addPostFrameCallback((_) {
+      // });
       isSuccess.value = false;
       throw Exception(e);
     }

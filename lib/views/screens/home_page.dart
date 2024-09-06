@@ -1,18 +1,13 @@
-import 'dart:ui';
 
-import 'package:fingerspot_library_app/controllers/auth_controller.dart';
-import 'package:fingerspot_library_app/controllers/post_controller.dart';
 import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/shared_pref.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
-import 'package:fingerspot_library_app/views/screens/coming_soon.dart';
+import 'package:fingerspot_library_app/views/screens/default_screen.dart';
 import 'package:fingerspot_library_app/views/screens/disimpan/disimpan_screen.dart';
 import 'package:fingerspot_library_app/views/screens/diskusi/diskusi_screen.dart';
 import 'package:fingerspot_library_app/views/screens/home/home_screen.dart';
 import 'package:fingerspot_library_app/views/screens/profile/profile_screen.dart';
-import 'package:fingerspot_library_app/views/screens/profile/profile_setting_screen.dart';
 import 'package:fingerspot_library_app/views/screens/search/search_screen.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -25,9 +20,9 @@ class MyHomePage extends StatelessWidget {
   final List<Widget> pages = [
     HomeScreen(),
     SearchScreen(),
-    Api.isDebug ? const ComingSoon() : const DiskusiScreen(),
+    Api.isDebug ? const DefaultScreen() : const DiskusiScreen(),
     DisimpanScreen(),
-    Api.isDebug ? const ComingSoon() : const ProfileScreen(),
+    Api.isDebug ? const DefaultScreen() : const ProfileScreen(),
   ];
 
   final List<String> titles = [

@@ -129,7 +129,7 @@ class CardDisimpan extends StatelessWidget {
                                 child: Container(
                                   decoration: BoxDecoration(
                                     color: Theme.of(context).canvasColor,
-                                    borderRadius: BorderRadius.all(
+                                    borderRadius: const BorderRadius.all(
                                       Radius.circular(20),
                                     ),
                                   ),

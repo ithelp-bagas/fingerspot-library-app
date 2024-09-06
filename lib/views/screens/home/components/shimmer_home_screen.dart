@@ -1,8 +1,6 @@
-import 'package:fingerspot_library_app/views/constants/color.dart';
 import 'package:fingerspot_library_app/views/screens/home/components/shimmer_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shimmer/shimmer.dart';
 
 class ShimmerHomeScreen extends StatelessWidget {
   const ShimmerHomeScreen({super.key});
@@ -19,7 +17,7 @@ class ShimmerHomeScreen extends StatelessWidget {
             child: ListView.builder(
                 itemCount: 10,
                 itemBuilder: (builder, index) {
-                  return ShimmerCard();
+                  return const ShimmerCard();
                 }),
           ),
         ],

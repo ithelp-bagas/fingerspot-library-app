@@ -1,6 +1,8 @@
 class Api {
   Api._();
 
+  String mode = 'dev';
+
   // Production
   static const String defaultUrl = 'http://library.fingerspot.net';
   static const String baseUrl = '$defaultUrl/api';

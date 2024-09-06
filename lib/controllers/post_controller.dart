@@ -1,10 +1,6 @@
 
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
-import 'package:fingerspot_library_app/controllers/auth_controller.dart';
 import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/shared_pref.dart';
 import 'package:fingerspot_library_app/models/category_model.dart';
@@ -13,7 +9,6 @@ import 'package:fingerspot_library_app/models/user_model.dart';
 import 'package:fingerspot_library_app/models/votes_model.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
-import 'package:fingerspot_library_app/views/screens/coming_soon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -50,7 +45,6 @@ class PostController extends GetxController {
   final reasonController = TextEditingController();
   final searchController = TextEditingController();
   var charCount = 0.obs;
-  // String? token;
   String? tokenVariable = '';
   RxBool isSearchResultAvailable = false.obs;
   RxList<Post> searchPost = RxList<Post>([]);

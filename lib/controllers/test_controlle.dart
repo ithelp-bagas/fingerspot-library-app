@@ -18,7 +18,7 @@ class TestController extends GetxController {
     String? token = await SharedPref().getToken();
     // String token = authController.tokenSavedAuth.value;
     print('token from auth category : ($token)');
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
 
     try {
       var response = await dio.get(
@@ -39,7 +39,7 @@ class TestController extends GetxController {
         throw Exception('error');
       }
     } catch (e) {
-      if (e is DioError) {
+      if (e is DioException) {
         final statusCode = e.response?.statusCode;
         print("status code + $statusCode" );
         if (statusCode == 401) {

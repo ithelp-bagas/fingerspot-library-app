@@ -44,6 +44,150 @@ class DetailScreen extends StatelessWidget {
             appBar: AppBar(
               title: const Text('Diskusi'),
               centerTitle: true,
+              actions: [
+                PopupMenuButton(
+                  itemBuilder:  (context) => [
+                    PopupMenuItem(
+                      onTap: () {
+                        Get.dialog(
+                          Dialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Material(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min, // This makes the dialog take only as much space as needed
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 10),
+                                    Center(
+                                      child: Text(
+                                        "Laporkan",
+                                        style: TextStyle(
+                                          fontSize: p1,
+                                          fontWeight: heavy,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    SizedBox(height: 10.h),
+                                    Text(
+                                      "Alasan : ",
+                                      style: TextStyle(
+                                        fontSize: p2,
+                                        fontWeight: regular,
+                                      ),
+                                      textAlign: TextAlign.start,
+                                    ),
+                                    SizedBox(height: 10.h),
+                                    TextFormField(
+                                      controller: postController.reasonController,
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10.h),
+                                        ),
+                                      ),
+                                      minLines: 3,
+                                      keyboardType: TextInputType.multiline,
+                                      maxLines: null,
+                                    ),
+                                    const SizedBox(height: 20),
+                                    //Buttons
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Obx(
+                                              () => Expanded(
+                                            child: Text(
+                                              '${postController.charCount.value}/300',
+                                              style: TextStyle(
+                                                fontSize: p3,
+                                                fontWeight: regular,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Expanded(
+                                          child: Obx(
+                                                () => ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                foregroundColor: kLight,
+                                                backgroundColor: postController.charCount.value < 1 ? kGrey : kPrimary,
+                                                minimumSize: const Size(0, 45),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(8),
+                                                ),
+                                              ),
+                                              onPressed: postController.charCount.value < 1
+                                                  ? () {}
+                                                  : () async {
+                                                if (!postController.isLoading.value) {
+                                                  postController.isLoading.value = true;
+
+                                                  // Execute the report function
+                                                  await postController.reportPost(postId, postController.reasonController.text);
+
+                                                  // Reset loading state
+                                                  postController.isLoading.value = false;
+
+                                                  // Clear the controller and reset the count
+                                                  postController.reasonController.clear();
+                                                  postController.charCount.value = 0;
+                                                }
+                                              },
+                                              child: postController.isLoading.value
+                                                  ? const CircularProgressIndicator()
+                                                  : const Text('KIRIM'),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          const Icon(Icons.report_outlined),
+                          SizedBox(width: 5.w,),
+                          Text(
+                            'Laporkan',
+                            style: TextStyle(
+                                fontSize: smLabel,
+                                fontWeight: regular
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      onTap: (){
+                        postController.copyLink(Api.defaultUrl + post.link);
+                      },
+                      child: Row(
+                        children: [
+                          const Icon(Icons.link_rounded),
+                          SizedBox(width: 5.w,),
+                          Text(
+                            'Salin Tautan',
+                            style: TextStyle(
+                                fontSize: smLabel,
+                                fontWeight: regular
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
             bottomNavigationBar: BottomAppBar(
               shape: const CircularNotchedRectangle(),
@@ -179,8 +323,9 @@ class DetailScreen extends StatelessWidget {
                           ),
                         ),
                         Expanded(
-                          flex: 3,
+                          flex: 4,
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Icon(MdiIcons.chat, color: kPrimary,),
                               SizedBox(width: 5.w,),
@@ -193,151 +338,6 @@ class DetailScreen extends StatelessWidget {
                                   fontWeight: regular,
                                 ),
                                 overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: PopupMenuButton(
-                            itemBuilder:  (context) => [
-                              PopupMenuItem(
-                                onTap: () {
-                                  Get.dialog(
-                                    Dialog(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(20.0),
-                                        child: Material(
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min, // This makes the dialog take only as much space as needed
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              const SizedBox(height: 10),
-                                              Center(
-                                                child: Text(
-                                                  "Laporkan",
-                                                  style: TextStyle(
-                                                    fontSize: p1,
-                                                    fontWeight: heavy,
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                              SizedBox(height: 10.h),
-                                              Text(
-                                                "Alasan : ",
-                                                style: TextStyle(
-                                                  fontSize: p2,
-                                                  fontWeight: regular,
-                                                ),
-                                                textAlign: TextAlign.start,
-                                              ),
-                                              SizedBox(height: 10.h),
-                                              TextFormField(
-                                                controller: postController.reasonController,
-                                                decoration: InputDecoration(
-                                                  border: OutlineInputBorder(
-                                                    borderRadius: BorderRadius.circular(10.h),
-                                                  ),
-                                                ),
-                                                minLines: 3,
-                                                keyboardType: TextInputType.multiline,
-                                                maxLines: null,
-                                              ),
-                                              const SizedBox(height: 20),
-                                              //Buttons
-                                              Row(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Obx(
-                                                        () => Expanded(
-                                                      child: Text(
-                                                        '${postController.charCount.value}/300',
-                                                        style: TextStyle(
-                                                          fontSize: p3,
-                                                          fontWeight: regular,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(width: 10),
-                                                  Expanded(
-                                                    child: Obx(
-                                                          () => ElevatedButton(
-                                                        style: ElevatedButton.styleFrom(
-                                                          foregroundColor: kLight,
-                                                          backgroundColor: postController.charCount.value < 1 ? kGrey : kPrimary,
-                                                          minimumSize: const Size(0, 45),
-                                                          shape: RoundedRectangleBorder(
-                                                            borderRadius: BorderRadius.circular(8),
-                                                          ),
-                                                        ),
-                                                        onPressed: postController.charCount.value < 1
-                                                            ? () {}
-                                                            : () async {
-                                                          if (!postController.isLoading.value) {
-                                                            postController.isLoading.value = true;
-
-                                                            // Execute the report function
-                                                            await postController.reportPost(postId, postController.reasonController.text);
-
-                                                            // Reset loading state
-                                                            postController.isLoading.value = false;
-
-                                                            // Clear the controller and reset the count
-                                                            postController.reasonController.clear();
-                                                            postController.charCount.value = 0;
-                                                          }
-                                                        },
-                                                        child: postController.isLoading.value
-                                                            ? const CircularProgressIndicator()
-                                                            : const Text('KIRIM'),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.report_outlined),
-                                    SizedBox(width: 5.w,),
-                                    Text(
-                                      'Laporkan',
-                                      style: TextStyle(
-                                          fontSize: smLabel,
-                                          fontWeight: regular
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              PopupMenuItem(
-                                onTap: (){
-                                  postController.copyLink(Api.defaultUrl + post.link);
-                                },
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.link_rounded),
-                                    SizedBox(width: 5.w,),
-                                    Text(
-                                      'Salin Tautan',
-                                      style: TextStyle(
-                                          fontSize: smLabel,
-                                          fontWeight: regular
-                                      ),
-                                    ),
-                                  ],
-                                ),
                               ),
                             ],
                           ),

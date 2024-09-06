@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class IconHome extends StatelessWidget {
-  IconHome({super.key, required this.icon, required this.label, this.color});
+  const IconHome({super.key, required this.icon, required this.label, this.color});
   final IconData icon;
   final String label;
   final Color? color ;

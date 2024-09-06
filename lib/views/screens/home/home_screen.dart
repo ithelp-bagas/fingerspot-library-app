@@ -1,13 +1,10 @@
 import 'package:fingerspot_library_app/controllers/auth_controller.dart';
 import 'package:fingerspot_library_app/controllers/post_controller.dart';
-import 'package:fingerspot_library_app/controllers/test_controlle.dart';
 import 'package:fingerspot_library_app/helpers/shared_pref.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
 import 'package:fingerspot_library_app/views/components/card_categories.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
-import 'package:fingerspot_library_app/views/screens/coming_soon.dart';
 import 'package:fingerspot_library_app/views/screens/home/components/card_diskusi.dart';
-import 'package:fingerspot_library_app/views/screens/home/components/shimmer_card.dart';
 import 'package:fingerspot_library_app/views/screens/home/components/shimmer_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -40,7 +37,7 @@ class HomeScreen extends StatelessWidget {
           Future.microtask(() => Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'}));
           return Container();
         } else if(snapshot.connectionState == ConnectionState.waiting) {
-          return  ShimmerHomeScreen();
+          return const ShimmerHomeScreen();
         } else {
           return FutureBuilder<bool>(
             future: cekToken(),
