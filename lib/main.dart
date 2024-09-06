@@ -31,22 +31,7 @@ Future<void> main() async {
   await SharedPreferences.getInstance();
   await initializeDateFormatting('id_ID', null);
   Api.initializeApi('dev');
-
-  // Extract the 'data' parameter from the URL before the app runs
-  Uri currentUri = Uri.base;
-  String? data = currentUri.queryParameters['data'];
-
-  // Register the AuthController lazily
-  Get.lazyPut<AuthController>(() => AuthController());
-
-  if (data != null) {
-    await SharedPref().storeEncodedData(data);
-    AuthController authController = Get.find<AuthController>();
-
-    await authController.login(); // Assuming login fetches and stores the token
-  } else {
-    print('No data parameter found in URL');
-  }
+  Get.put(AuthController(), permanent: true);
 
   // Initialize other necessary items like theme mode
   ThemeMode themeMode = await getThemeMode();

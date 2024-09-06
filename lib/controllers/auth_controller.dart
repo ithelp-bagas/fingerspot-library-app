@@ -28,7 +28,7 @@ class AuthController extends GetxController {
     pwa.value = newPwa;
   }
 
-  Future<void> login() async{
+  Future<bool> login() async{
     try {
       String? encodedData = await SharedPref().getEncoded();
       print(encodedData);
@@ -64,25 +64,18 @@ class AuthController extends GetxController {
 
           isSuccess.value = true;
           responsed.value = response.data['data'].toString();
+          return true;
         } else {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
-          });
             print(response.data['message']);
+            return false;
         }
       } else {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
-        });
         isSuccess.value = false;
+        return false;
       }
     } catch(e){
-        Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
-
-      // WidgetsBinding.instance.addPostFrameCallback((_) {
-      // });
       isSuccess.value = false;
-      throw Exception(e);
+      return false;
     }
   }
 }
