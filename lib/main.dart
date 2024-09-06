@@ -30,6 +30,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPreferences.getInstance();
   await initializeDateFormatting('id_ID', null);
+  Api.initializeApi('dev');
 
   // Extract the 'data' parameter from the URL before the app runs
   Uri currentUri = Uri.base;

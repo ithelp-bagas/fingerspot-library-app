@@ -47,6 +47,7 @@ dependencies:
   shimmer: ^3.0.0
   fluentui_system_icons: ^1.1.255
   shared_preferences: ^2.3.2
+  get_storage: ^2.1.1
 
 dev_dependencies:
   flutter_test:
