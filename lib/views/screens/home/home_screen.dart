@@ -1,9 +1,11 @@
 import 'package:fingerspot_library_app/controllers/auth_controller.dart';
 import 'package:fingerspot_library_app/controllers/post_controller.dart';
+import 'package:fingerspot_library_app/controllers/test_controlle.dart';
 import 'package:fingerspot_library_app/helpers/shared_pref.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
 import 'package:fingerspot_library_app/views/components/card_categories.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
+import 'package:fingerspot_library_app/views/screens/coming_soon.dart';
 import 'package:fingerspot_library_app/views/screens/home/components/card_diskusi.dart';
 import 'package:fingerspot_library_app/views/screens/home/components/shimmer_card.dart';
 import 'package:fingerspot_library_app/views/screens/home/components/shimmer_home_screen.dart';
@@ -13,8 +15,8 @@ import 'package:get/get.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
-  final PostController postController = Get.put(PostController());
   final AuthController authController = Get.put(AuthController());
+  final PostController postController = Get.put(PostController());
 
   Future<bool> cekToken() async{
     String? token = await SharedPref().getToken();
@@ -88,14 +90,15 @@ class HomeScreen extends StatelessWidget {
                             itemCount: categoryList.length,
                             itemBuilder: (context, index) {
                               final category = categoryList[index];
-                              return GestureDetector(
-                                onTap: () async {
-                                  await postController.tappedCategory(category.id);
-                                },
-                                child: Obx(() => CardCategories(
-                                  categoriesName: '${category.name}${category.postsCount > 0 ? ' (${category.postsCount})' : ''}',
-                                  isSelected: postController.selectedCategoryId.value == category.id,
-                                )),
+                              return Obx(() => GestureDetector(
+                                  onTap: () async {
+                                    await postController.tappedCategory(category.id);
+                                  },
+                                  child: CardCategories(
+                                    categoriesName: '${category.name}${category.postsCount > 0 ? ' (${category.postsCount})' : ''}',
+                                    isSelected: postController.selectedCategoryId.value == category.id,
+                                  ),
+                                ),
                               );
                             },
                           ),
@@ -137,7 +140,7 @@ class HomeScreen extends StatelessWidget {
                                 await postController.getPost(postController.selectedCategoryId.value);
                               },
                               child: SizedBox(
-                                height: MediaQuery.of(context).size.height * .7,
+                                height: MediaQuery.of(context).size.height * 1,
                                 child: ListView.builder(
                                   itemCount: postList.length,
                                   itemBuilder: (context, index) {
@@ -165,7 +168,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                 );
               } else {
-                Future.microtask(() => Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur screen'}));
+                Future.microtask(() => Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'}));
                 return Container(); // Return an empty container or other appropriate placeholder
               }
             },

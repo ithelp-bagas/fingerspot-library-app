@@ -9,6 +9,7 @@ import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/shared_pref.dart';
 import 'package:fingerspot_library_app/models/comment_model.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
+import 'package:fingerspot_library_app/views/screens/coming_soon.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

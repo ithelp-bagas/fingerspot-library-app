@@ -21,7 +21,6 @@ import 'dart:js' as js;
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
   final BottomNavController bottomNavController = Get.put(BottomNavController());
-  final PostController postController = Get.put(PostController());
 
   final List<Widget> pages = [
     HomeScreen(),

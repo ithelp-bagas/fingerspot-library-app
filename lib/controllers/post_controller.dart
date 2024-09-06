@@ -13,6 +13,7 @@ import 'package:fingerspot_library_app/models/user_model.dart';
 import 'package:fingerspot_library_app/models/votes_model.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
+import 'package:fingerspot_library_app/views/screens/coming_soon.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -51,15 +52,8 @@ class PostController extends GetxController {
   var charCount = 0.obs;
   // String? token;
   String? tokenVariable = '';
-  final AuthController authController = Get.put(AuthController());
   RxBool isSearchResultAvailable = false.obs;
   RxList<Post> searchPost = RxList<Post>([]);
-
-
-  Future<void> getToken() async {
-    await getCategory();
-    await getPost(selectedCategoryId.value);
-  }
 
   @override
   void onClose() {
@@ -71,7 +65,6 @@ class PostController extends GetxController {
   @override
   void onInit() async{
     super.onInit();
-    // await getToken();
     reasonController.addListener(_updateCharCount);
   }
 
@@ -118,53 +111,53 @@ class PostController extends GetxController {
   }
 
   Future<void> getCategory() async {
+    // String? token = await SharedPref().getToken();
+
     String? token = await SharedPref().getToken();
-    if(token != null) {
-      try {
-        var response = await dio.get(
-          '${Api.baseUrl}/post/list-category',
-          options: Options(
-              headers: {
-                "Authorization": "Bearer $token",
-              }
-          ),
-        );
+    // String token = authController.tokenSavedAuth.value;
+    // print('token from auth category : ($token)');
+    // await Future.delayed(Duration(seconds: 1));
 
-        if (response.statusCode == 200) {
-          Map<String, dynamic> responseData = response.data;
-          List<dynamic> data = responseData['data'];
-          categoryList.value = data.map((json) => Category.fromJson(json)).toList();
-        } else {
-          Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
-          throw Exception('error');
-        }
-      } catch (e) {
-        if (e is DioError) {
-          // Handle Dio-specific error and extract status code
-          final statusCode = e.response?.statusCode;
-          // print('Dio error occurred with status code: $statusCode');
-          // print('Error message: ${e.message}');/**/
+    try {
+      var response = await dio.get(
+        '${Api.baseUrl}/post/list-category',
+        options: Options(
+            headers: {
+              "Authorization": "Bearer $token",
+            }
+        ),
+      );
 
-          // You can handle different status codes here
-          if (statusCode == 401) {
-            Get.toNamed(Routes.ERROR, arguments: {'title': 'Unauthorized'});
-          } else {
-            Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
-          }
-        } else {
-          // Handle any other errors
-          print(e);
-        }
-        throw Exception(e);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = response.data;
+        List<dynamic> data = responseData['data'];
+        categoryList.value = data.map((json) => Category.fromJson(json)).toList();
+      } else {
+        Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
+        throw Exception('error');
       }
-    } else {
-      print('token null');
+    } catch (e) {
+      if (e is DioError) {
+        final statusCode = e.response?.statusCode;
+        if (statusCode == 401) {
+          Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
+        } else {
+          Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
+        }
+      } else {
+        // Handle any other errors
+        print(e);
+      }
+      throw Exception(e);
     }
   }
 
 
   Future<void> getPost(int categoryId) async {
-      String? token = await SharedPref().getToken();
+    String? token = await SharedPref().getToken();
+    // String token = authController.tokenSavedAuth.value;
+    // print('token from auth category : ($token)');
+    // await Future.delayed(Duration(seconds: 1));
     try{
       isLoading.value = true;
 
@@ -185,7 +178,7 @@ class PostController extends GetxController {
         List<dynamic> data = responseData['data'];
         postList.value = data.map((json) => Post.fromJson(json)).toList();
       } else {
-        Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
+        Get.toNamed(Routes.ERROR, arguments: {'title': 'Belum ada data post'});
         throw Exception('error');
       }
     } catch(e) {

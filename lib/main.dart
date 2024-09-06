@@ -2,6 +2,7 @@ import 'package:fingerspot_library_app/controllers/auth_controller.dart';
 import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/shared_pref.dart';
 import 'package:fingerspot_library_app/routes/app_pages.dart';
+import 'package:fingerspot_library_app/routes/app_routes.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
 import 'package:fingerspot_library_app/views/screens/coming_soon.dart';
 import 'package:fingerspot_library_app/views/screens/home/components/shimmer_card.dart';
@@ -10,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:shimmer/shimmer.dart';
 
 
@@ -22,18 +25,38 @@ Future<ThemeMode> getThemeMode() async {
   return pwaTheme == 'light' ? ThemeMode.light : ThemeMode.dark;
 }
 
-void main() async{
+Future<void> main() async {
+  usePathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
+  await SharedPreferences.getInstance();
   await initializeDateFormatting('id_ID', null);
+
+  // Extract the 'data' parameter from the URL before the app runs
+  Uri currentUri = Uri.base;
+  String? data = currentUri.queryParameters['data'];
+
+  // Register the AuthController lazily
+  Get.lazyPut<AuthController>(() => AuthController());
+
+  if (data != null) {
+    await SharedPref().storeEncodedData(data);
+    AuthController authController = Get.find<AuthController>();
+
+    await authController.login(); // Assuming login fetches and stores the token
+  } else {
+    print('No data parameter found in URL');
+  }
+
+  // Initialize other necessary items like theme mode
   ThemeMode themeMode = await getThemeMode();
-  runApp(MyApp(themeMode: themeMode,));
+
+  runApp(MyApp(themeMode: themeMode));
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key, required this.themeMode});
   final ThemeMode themeMode;
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -44,24 +67,6 @@ class MyApp extends StatelessWidget {
         darkTheme: darkMode,
         themeMode: themeMode,
         debugShowCheckedModeBanner: false,
-        // home: MainPage(),
-        routingCallback: (routing) async {
-          // Get the current full URL using Uri.base
-          Uri currentUri = Uri.base;
-
-          // Extract the 'data' parameter from the URL
-          String? data = currentUri.queryParameters['data'];
-          // String? data = Api.encodedData;
-          // print('data: $data');
-
-          if (data != null) {
-            await SharedPref().storeEncodedData(data);
-            String? encoded = await SharedPref().getEncoded();
-            String? token = await SharedPref().getToken();
-          } else {
-            print('No data parameter found in URL');
-          }
-        },
       ),
     );
   }

@@ -7,6 +7,7 @@ import 'package:fingerspot_library_app/helpers/shared_pref.dart';
 import 'package:fingerspot_library_app/models/auth_model.dart';
 import 'package:fingerspot_library_app/models/pwa_model.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
+import 'package:fingerspot_library_app/views/screens/coming_soon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,6 +19,7 @@ class AuthController extends GetxController {
   var pwa = Rxn<Pwa>();
   RxBool isSuccess = false.obs;
   RxString responsed = ''.obs;
+  RxString tokenSavedAuth = ''.obs;
 
   void setAuth(Auth newAuth) {
     userAuth.value = newAuth;
@@ -28,9 +30,9 @@ class AuthController extends GetxController {
   }
 
   Future<void> login() async{
-    bool canGetData = false;
     try {
       String? encodedData = await SharedPref().getEncoded();
+      print(encodedData);
       var response = await dio.post(
           '${Api.baseUrl}/login?data=$encodedData'
       );
@@ -46,16 +48,22 @@ class AuthController extends GetxController {
         Get.changeThemeMode(ThemeMode.dark);
       }
 
-      // print('response code : ${response.statusCode}');
-
       if(response.statusCode == 200) {
         bool success = response.data['success'];
         if(success) {
           var data = response.data['data'];
-          var token = response.data['data']['token'];
-          await SharedPref().storeToken(token);
           Auth auth = Auth.fromJson(data);
           setAuth(auth);
+          await SharedPref().storeToken(auth.token);
+          String? tokenSaved = await SharedPref().getToken();
+          String? token = await SharedPref().getToken();
+          if (token != null) {
+            tokenSavedAuth.value = token;
+            isSuccess.value = true;
+          } else {
+            isSuccess.value = false;
+          }
+
           isSuccess.value = true;
           responsed.value = response.data['data'].toString();
         } else {
@@ -69,7 +77,9 @@ class AuthController extends GetxController {
         isSuccess.value = false;
       }
     } catch(e){
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
       isSuccess.value = false;
       throw Exception(e);
