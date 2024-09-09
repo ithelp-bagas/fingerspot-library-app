@@ -5,4 +5,5 @@ abstract class Routes{
   static const ERROR = '/unauthorized';
   static const VIEWER = '/viewer';
   static const KOMENTAR = '/komentar';
+  static const PROFILE = '/profile';
 }

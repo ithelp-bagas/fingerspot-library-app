@@ -5,6 +5,7 @@ import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/shared_pref.dart';
 import 'package:fingerspot_library_app/models/category_model.dart';
 import 'package:fingerspot_library_app/models/post_model.dart';
+import 'package:fingerspot_library_app/models/tag_model.dart';
 import 'package:fingerspot_library_app/models/user_model.dart';
 import 'package:fingerspot_library_app/models/votes_model.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
@@ -46,8 +47,11 @@ class PostController extends GetxController {
   final searchController = TextEditingController();
   var charCount = 0.obs;
   String? tokenVariable = '';
-  RxBool isSearchResultAvailable = false.obs;
+  RxBool isSearchResultAvailable = true.obs;
   RxList<Post> searchPost = RxList<Post>([]);
+  RxList<Tag> allTags = RxList<Tag>([]);
+  RxList<Tag> searchTag = RxList<Tag>([]);
+  RxString searchText = ''.obs;
 
   @override
   void onClose() {
@@ -64,19 +68,60 @@ class PostController extends GetxController {
 
   void searchingPost(String query) {
     searchPost.clear();
+    searchTag.clear();
 
-    var result = postList.where(
-            (post) => post.title.toLowerCase().contains(query.toLowerCase()) ||
-            post.user.firstname.toLowerCase().contains(query.toLowerCase()) ||
-            post.user.lastname.toLowerCase().contains(query.toLowerCase()) ||
-            post.categoryName.toLowerCase().contains(query.toLowerCase())
-    ).toList();
+    if (query.isEmpty) {
+      // When the query is empty, show all posts and tags
+      searchPost.addAll(searchPostList);
+      searchTag.addAll(allTags);
+      isSearchResultAvailable.value = true;
+    } else {
+      searchText.value = query;
 
-    searchPost.addAll(result);
-    searchPostList = searchPost;
+      // Search tags
+      var resultTag = allTags.where((tag) {
+        bool nameMatch = tag.name.toLowerCase().contains(query.toLowerCase());
+        return nameMatch;
+      }).toList();
 
-    isSearchResultAvailable.value = result.isNotEmpty;
+      // Search posts
+      var resultPost = searchPostList.where((post) {
+        bool titleMatch = post.title.toLowerCase().contains(query.toLowerCase());
+        bool userFirstNameMatch = post.user.firstname.toLowerCase().contains(query.toLowerCase());
+        bool userLastNameMatch = post.user.lastname.toLowerCase().contains(query.toLowerCase());
+        bool categoryNameMatch = post.categoryName.toLowerCase().contains(query.toLowerCase());
+
+        return titleMatch || userFirstNameMatch || userLastNameMatch || categoryNameMatch;
+      }).toList();
+
+      // Add the filtered tags and posts
+      searchTag.addAll(resultTag);
+      searchPost.addAll(resultPost);
+
+      // Check if there are any search results
+      isSearchResultAvailable.value = resultPost.isNotEmpty || resultTag.isNotEmpty;
+    }
   }
+
+  void searchByTags(List<String> tags) {
+    searchPost.clear();
+
+    if (tags.isEmpty) {
+      searchPost.addAll(searchPostList);
+      isSearchResultAvailable.value = true;
+    } else {
+      final filteredPosts = searchPostList.where((post) {
+        // Check if any tag in the post's tags list matches any of the tags in the filter list
+        return tags.any((tag) => post.tags.any((postTag) => postTag.name == tag));
+      }).toList();
+
+      searchPost.addAll(filteredPosts);
+      isSearchResultAvailable.value = filteredPosts.isNotEmpty;
+    }
+  }
+
+
+
 
   void _updateCharCount() {
     if (reasonController.text.length <= 300) {
@@ -105,9 +150,9 @@ class PostController extends GetxController {
   }
 
   Future<void> getCategory() async {
-    // String? token = await SharedPref().getToken();
-
     String? token = await SharedPref().getToken();
+
+    // String? token = await SharedPref().getToken();
     // String token = authController.tokenSavedAuth.value;
     // print('token from auth category : ($token)');
     // await Future.delayed(Duration(seconds: 1));
@@ -150,7 +195,7 @@ class PostController extends GetxController {
   Future<void> getPost(int categoryId) async {
     String? token = await SharedPref().getToken();
     // String token = authController.tokenSavedAuth.value;
-    // print('token from auth category : ($token)');
+    // print('token from auth category : ($token)');g
     // await Future.delayed(Duration(seconds: 1));
     try{
       isLoading.value = true;
@@ -237,7 +282,7 @@ class PostController extends GetxController {
       }
   }
 
-  Future<void> getDetailPost(int postId) async{
+  Future<void> getDetailPost(int postId) async  {
     String? token = await SharedPref().getToken();
     try {
       var response = await dio.post(
@@ -436,6 +481,7 @@ class PostController extends GetxController {
         List<dynamic> data = responseData['data']['posts'];
         List<dynamic> recommended = responseData['data']['recommended'];
         searchPostList.value = data.map((json) => Post.fromJson(json)).toList();
+        searchPost.value = data.map((e) => Post.fromJson(e)).toList();
         recommendedList.value = recommended.map((json) => Post.fromJson(json)).toList();
       } else {
         Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
@@ -468,6 +514,34 @@ class PostController extends GetxController {
         throw Exception('error');
       }
     } catch (e) {
+      throw Exception(e);
+    }
+  }
+  
+  Future<void> getAllTags() async{
+    String? token = await SharedPref().getToken();
+    
+    try {
+      var response = await dio.get(
+        '${Api.baseUrl}/post/getAllTags',
+        options: Options(
+            headers: {
+              "Authorization": "Bearer $token",
+            }
+        ),
+      );
+
+      if(response.statusCode == 200) {
+        Map<String, dynamic> responseData = response.data;
+        List<dynamic> data = responseData['data'];
+        allTags.value = data.map((json) => Tag.fromJson(json)).toList();
+        searchTag.value = data.map((json) => Tag.fromJson(json)).toList();
+      } else {
+        Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
+        throw Exception('error');
+      }
+    } catch (e) {
+      print(e);
       throw Exception(e);
     }
   }

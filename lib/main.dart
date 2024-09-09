@@ -18,7 +18,6 @@ import 'package:shimmer/shimmer.dart';
 
 Future<ThemeMode> getThemeMode() async {
   String? pwaTheme = await SharedPref().getPwa();
-  pwaTheme = pwaTheme?.replaceAll('"', '');
   if (pwaTheme == null) {
     return ThemeMode.system; // Return system default if no theme is set
   }

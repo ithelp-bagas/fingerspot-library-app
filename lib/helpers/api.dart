@@ -1,7 +1,7 @@
 class Api {
   Api._();
 
-  String mode = 'dev'; // Set the mode here ('dev', 'prod', or 'dev-of')
+  static const String runMode = 'mobile';
 
   static late String defaultUrl;
   static late String baseUrl;
@@ -35,9 +35,10 @@ class Api {
       case 'dev':
       default:
       // Local development environment
-        defaultUrl = 'http://192.168.18.76/fingerspot-library';
+        defaultUrl = 'http://192.168.1.141/fingerspot-library';
         baseUrl = '$defaultUrl/api';
         imgurl = '$defaultUrl/';
+        // encodedData = 'FINfQ==c2VyX2lkIjogMzY0NzMsInR5cGUiOiAyLCJjb21wYW55X2lkIjogMTI3NzYsInBhY2thZ2VfaWQiOiA2LCJlbXBfaWQiOiA5OTc4NSwiZW1wX3BpbiI6ICIxIiwibW9kdWxlX2lkIjogMywiaXBfYWRkcmVzcyI6ICIxOTIuMTY4LjEuOTEiLCJwbGF0Zm9ybSI6ICJhbmRyb2lkIiwibGFuZ3VhZ2UiOiAiZW4iLCJ0aGVtZSI6ICJsaWdodCIsImVtYWlsIjogImhlcnUuZmluZ2Vyc3BvdEBnbWFpbC5jb20ieyJ1SPOT';
         encodedData = 'FINfQ==c2VyX2lkIjogMzY0NzMsInR5cGUiOiAyLCJjb21wYW55X2lkIjogMTI3NzYsInBhY2thZ2VfaWQiOiA2LCJlbXBfaWQiOiA5OTc4NSwiZW1wX3BpbiI6ICIxIiwibW9kdWxlX2lkIjogMywiaXBfYWRkcmVzcyI6ICIxOTIuMTY4LjEuOTEiLCJwbGF0Zm9ybSI6ICJhbmRyb2lkIiwibGFuZ3VhZ2UiOiAiZW4iLCJ0aGVtZSI6ICJsaWdodCIsImVtYWlsIjogImhlcnUuZmluZ2Vyc3BvdEBnbWFpbC5jb20ieyJ1SPOT';
         break;
     }

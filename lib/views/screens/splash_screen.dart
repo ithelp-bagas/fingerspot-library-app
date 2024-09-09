@@ -1,4 +1,5 @@
 import 'package:fingerspot_library_app/controllers/auth_controller.dart';
+import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/shared_pref.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,9 @@ class SplashScreenController extends GetxController {
     super.onReady();
 
     Uri currentUri = Uri.base;
+    if(Api.runMode == 'mobile'){
+      currentUri = Uri.parse('${Api.baseUrl}/?data=${Api.encodedData}');
+    }
     String? data = currentUri.queryParameters['data'];
 
     if (data != null) {

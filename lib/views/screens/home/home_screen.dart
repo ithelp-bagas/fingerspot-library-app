@@ -1,6 +1,7 @@
 import 'package:fingerspot_library_app/controllers/auth_controller.dart';
 import 'package:fingerspot_library_app/controllers/post_controller.dart';
 import 'package:fingerspot_library_app/helpers/shared_pref.dart';
+import 'package:fingerspot_library_app/models/auth_model.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
 import 'package:fingerspot_library_app/views/components/card_categories.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
@@ -14,6 +15,7 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
   final AuthController authController = Get.put(AuthController());
   final PostController postController = Get.put(PostController());
+  RxString officeName = ''.obs;
 
   Future<bool> cekToken() async{
     String? token = await SharedPref().getToken();
@@ -26,6 +28,7 @@ class HomeScreen extends StatelessWidget {
   Future<void> getData() async{
     await postController.getCategory();
     await postController.getPost(postController.selectedCategoryId.value);
+    officeName.value = (await SharedPref().getOfficeName())!;
   }
 
   @override
@@ -65,7 +68,7 @@ class HomeScreen extends StatelessWidget {
                             Expanded(
                               flex: 7,
                               child: Text(
-                                authController.userAuth.value?.user.officeName ?? '',
+                                officeName.value ?? '',
                                 // '',
                                 style: TextStyle(
                                   color: kLight, // Make sure to define kLight somewhere in your code

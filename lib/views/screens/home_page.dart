@@ -11,7 +11,7 @@ import 'package:fingerspot_library_app/views/screens/search/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'dart:js' as js;
+// import 'dart:js' as js;
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
@@ -22,7 +22,7 @@ class MyHomePage extends StatelessWidget {
     SearchScreen(),
     Api.isDebug ? const DefaultScreen() : const DiskusiScreen(),
     DisimpanScreen(),
-    Api.isDebug ? const DefaultScreen() : const ProfileScreen(),
+    ProfileScreen(),
   ];
 
   final List<String> titles = [
@@ -40,7 +40,7 @@ class MyHomePage extends StatelessWidget {
         centerTitle: true,
         title: Obx(()=> Text(titles[bottomNavController.selectedIndex.value])),
         leading: IconButton(onPressed: (){
-            js.context.callMethod('backToMainApp');
+            // js.context.callMethod('backToMainApp');
         }, icon: const Icon(Icons.arrow_back_ios_new)),
       ),
       body: Obx(() => pages[bottomNavController.selectedIndex.value]),

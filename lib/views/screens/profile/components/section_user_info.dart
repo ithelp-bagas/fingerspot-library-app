@@ -1,9 +1,20 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SectionUserInfo extends StatelessWidget {
-  const SectionUserInfo({super.key});
+  const SectionUserInfo({super.key, required this.activityPoint, required this.totalTopics, required this.totalPost, required this.name, required this.email, required this.officeName, required this.department, required this.role, required this.imgPath});
+  final String activityPoint;
+  final int totalTopics;
+  final int totalPost;
+  final String name;
+  final String email;
+  final String officeName;
+  final String department;
+  final String role;
+  final String imgPath;
 
   @override
   Widget build(BuildContext context) {
@@ -18,22 +29,55 @@ class SectionUserInfo extends StatelessWidget {
             children: [
               Expanded(
                 flex: 2,
-                child: Image.asset(
-                  'assets/images/profile_large.png',
+                child: imgPath.isNotEmpty
+                    ? CachedNetworkImage(
+                  imageUrl: Api.imgurl + imgPath,
+                  imageBuilder: (context, imageProvider) => Container(
+                    width: 55.h,
+                    height: 55.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100.h),
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    width: 55.h,
+                    height: 55.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100.h),
+                      image: const DecorationImage(
+                        image: AssetImage('assets/images/profile_large.png'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                )
+                    : Container(
+                  width: 55.h,
                   height: 55.h,
-                  fit: BoxFit.cover,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100.h),
+                    image: const DecorationImage(
+                      image: AssetImage('assets/images/profile_large.png'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
+              SizedBox(width: 2.h,),
               Expanded(
-                flex: 9,
+                flex: 8,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          '4.00',
+                          activityPoint,
                           style: TextStyle(
                               fontSize: p1,
                               fontWeight: heavy
@@ -52,14 +96,14 @@ class SectionUserInfo extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          '4.00',
+                          '$totalTopics',
                           style: TextStyle(
                               fontSize: p1,
                               fontWeight: heavy
                           ),
                         ),
                         Text(
-                          'Activity Point ',
+                          'Total Topics',
                           style: TextStyle(
                               fontSize: p2,
                               fontWeight: regular
@@ -71,14 +115,14 @@ class SectionUserInfo extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          '4.00',
+                          '$totalPost',
                           style: TextStyle(
                               fontSize: p1,
                               fontWeight: heavy
                           ),
                         ),
                         Text(
-                          'Activity Point ',
+                          'Total Post',
                           style: TextStyle(
                               fontSize: p2,
                               fontWeight: regular
@@ -94,28 +138,28 @@ class SectionUserInfo extends StatelessWidget {
         ),
         SizedBox(height: 10.h,),
         Text(
-          'Nama',
+          name,
           style: TextStyle(
               fontSize: p2,
               fontWeight: bold
           ),
         ),
         Text(
-          'Email',
+          email,
           style: TextStyle(
               fontSize: p2,
               fontWeight: regular
           ),
         ),
         Text(
-          'Perusahaan',
+          officeName,
           style: TextStyle(
               fontSize: p2,
               fontWeight: regular
           ),
         ),
         Text(
-          'Departemen',
+          '$department / $role',
           style: TextStyle(
               fontSize: p2,
               fontWeight: regular

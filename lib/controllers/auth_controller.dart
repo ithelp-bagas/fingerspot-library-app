@@ -31,7 +31,9 @@ class AuthController extends GetxController {
   Future<bool> login() async{
     try {
       String? encodedData = await SharedPref().getEncoded();
-      print(encodedData);
+      if (kDebugMode) {
+        print(encodedData);
+      }
       var response = await dio.post(
           '${Api.baseUrl}/login?data=$encodedData'
       );
@@ -39,7 +41,7 @@ class AuthController extends GetxController {
       var pwaData = response.data['pwa'];
       Pwa pwaConfig = Pwa.fromJson(pwaData);
       setPwa(pwaConfig);
-      await SharedPref().storePwa(json.encode(pwaData['theme']));
+      await SharedPref().storePwa(pwaData['theme']);
 
       if (pwaConfig.theme == 'light') {
         Get.changeThemeMode(ThemeMode.light);
@@ -54,6 +56,7 @@ class AuthController extends GetxController {
           Auth auth = Auth.fromJson(data);
           setAuth(auth);
           await SharedPref().storeToken(auth.token);
+          await SharedPref().storeOfficeName(auth.user.officeName);
           String? token = await SharedPref().getToken();
           if (token != null) {
             tokenSavedAuth.value = token;
@@ -66,7 +69,9 @@ class AuthController extends GetxController {
           responsed.value = response.data['data'].toString();
           return true;
         } else {
-            print(response.data['message']);
+            if (kDebugMode) {
+              print(response.data['message']);
+            }
             return false;
         }
       } else {
