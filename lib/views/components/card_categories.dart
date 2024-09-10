@@ -20,13 +20,13 @@ class CardCategories extends StatelessWidget {
             padding: EdgeInsets.only(bottom: 2.h),
             decoration: BoxDecoration(
               border: Border(
-                bottom: BorderSide(color: isSelected ? kPrimary : Colors.transparent, width: 1.5.w)
+                bottom: BorderSide(color: isSelected ? Theme.of(context).primaryColor : Colors.transparent, width: 1.5.w)
               )
             ),
             child: Text(
               categoriesName,
               style: TextStyle(
-                color: isSelected ? kPrimary : (Theme.of(context).textTheme.labelSmall?.color ?? kBlack),
+                color: isSelected ? Theme.of(context).primaryColor : (Theme.of(context).textTheme.labelSmall?.color ?? kBlack),
                 // color: Colors.transparent,
                 fontWeight: isSelected ? heavy : regular,
                 fontSize: smLabel,

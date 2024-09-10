@@ -38,10 +38,16 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Obx(()=> Text(titles[bottomNavController.selectedIndex.value])),
-        leading: IconButton(onPressed: (){
-            // js.context.callMethod('backToMainApp');
-        }, icon: const Icon(Icons.arrow_back_ios_new)),
+        title: Obx(()=> Text(
+          titles[bottomNavController.selectedIndex.value],
+          style: TextStyle(
+            fontSize: h4,
+            fontWeight: heavy
+          ),
+        )),
+        leading: Obx(() => bottomNavController.selectedIndex.value == 0 ? IconButton(onPressed: (){
+          // js.context.callMethod('backToMainApp');
+        }, icon: const Icon(Icons.arrow_back_ios_new)) : Container()),
       ),
       body: Obx(() => pages[bottomNavController.selectedIndex.value]),
       bottomNavigationBar: Obx( () => BottomNavigationBar(
@@ -51,8 +57,8 @@ class MyHomePage extends StatelessWidget {
         onTap: (index) {
           bottomNavController.changeIndex(index);
         },
-        unselectedItemColor: Theme.of(context).primaryColorLight,
-        selectedItemColor: kPrimary,
+        unselectedItemColor: Theme.of(context).hintColor,
+        selectedItemColor: Theme.of(context).primaryColor,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(MdiIcons.bookOpenVariant),

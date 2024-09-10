@@ -9,6 +9,7 @@ class User {
   int department;
   String image;
   String officeName;
+  int userId;
 
   User({
     required this.id,
@@ -20,7 +21,8 @@ class User {
     required this.role,
     required this.department,
     required this.image,
-    required this.officeName
+    required this.officeName,
+    required this.userId
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -34,7 +36,8 @@ class User {
       role: (json['role']??0) as int,
       department: (json['department']??0) as int,
       image: (json['image']??'') as String,
-      officeName: (json['office_name'] ?? '') as String
+      officeName: (json['office_name'] ?? '') as String,
+      userId: (json['user_id'] ?? 0) as int,
     );
   }
 }

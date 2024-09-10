@@ -2,13 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fingerspot_library_app/controllers/post_controller.dart';
 import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/helpers.dart';
+import 'package:fingerspot_library_app/views/components/name_user_card.dart';
+import 'package:fingerspot_library_app/views/components/profile_image_card.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class CardDisimpan extends StatelessWidget {
-  CardDisimpan({super.key, required this.postId, required this.nameUser, required this.imgPath, required this.date, required this.categoryName, required this.title, required this.index});
+  CardDisimpan({super.key, required this.postId, required this.nameUser, required this.imgPath, required this.date, required this.categoryName, required this.title, required this.index, required this.userId});
   final int postId;
   final String nameUser;
   final String imgPath;
@@ -16,6 +18,7 @@ class CardDisimpan extends StatelessWidget {
   final String categoryName;
   final String title;
   final int index;
+  final int userId;
 
   final PostController postController = Get.put(PostController());
 
@@ -32,43 +35,7 @@ class CardDisimpan extends StatelessWidget {
             children: [
               Expanded(
                 flex: 1,
-                child: imgPath.isNotEmpty
-                    ? CachedNetworkImage(
-                  imageUrl: Api.imgurl + imgPath,
-                  imageBuilder: (context, imageProvider) => Container(
-                    width: 28.h,
-                    height: 28.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100.h),
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    width: 28.h,
-                    height: 28.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100.h),
-                      image: const DecorationImage(
-                        image: AssetImage('assets/images/profile_large.png'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                )
-                    : Container(
-                  width: 28.h,
-                  height: 28.h,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100.h),
-                    image: const DecorationImage(
-                      image: AssetImage('assets/images/profile_large.png'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
+                child: ProfileImageCard(nameUser: nameUser, userId: userId, imagePath: imgPath),
               ),
               SizedBox(width: 10.h,),
               Expanded(
@@ -76,13 +43,12 @@ class CardDisimpan extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      nameUser,
-                      style: TextStyle(
-                          fontSize: p2,
-                          fontWeight: heavy
-                      ),
-                      overflow: TextOverflow.ellipsis,
+                    NameUserCard(
+                        nameUser: nameUser,
+                        userId: userId,
+                        textColor: Theme.of(context).textTheme.labelSmall!.color!,
+                        fontSize: p2,
+                        fontWeight: heavy
                     ),
                     Text(
                       'Dibuat ${helper.dayDiff(date)}',
@@ -99,13 +65,13 @@ class CardDisimpan extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Icon(Icons.chat, size: p2, color: kPrimary,),
+                    Icon(Icons.chat, size: p2, color: Theme.of(context).primaryColor,),
                     SizedBox(width: 5.w,),
                     Text(
                       "Topik $categoryName",
                       textAlign: TextAlign.end,
                       style: TextStyle(
-                          color: kPrimary,
+                          color: Theme.of(context).primaryColor,
                           fontSize: p3,
                           fontWeight: heavy
                       ),
@@ -169,14 +135,14 @@ class CardDisimpan extends StatelessWidget {
                                                 child: ElevatedButton(
                                                   style: ElevatedButton.styleFrom(
                                                     foregroundColor: const Color(0xFFFFFFFF),
-                                                    backgroundColor: kPrimary,
+                                                    backgroundColor: Theme.of(context).primaryColor,
                                                     minimumSize: const Size(0, 45),
                                                     shape: RoundedRectangleBorder(
                                                       borderRadius: BorderRadius.circular(8),
                                                     ),
                                                   ),
                                                   onPressed: () async {
-                                                    await postController.addBookmark(postId);
+                                                    await postController.addBookmark(postId, 'bookmark');
                                                   },
                                                   child: const Text(
                                                     'Ya, Hapus',
@@ -279,7 +245,7 @@ class CardDisimpan extends StatelessWidget {
                                                 () => ElevatedButton(
                                               style: ElevatedButton.styleFrom(
                                                 foregroundColor: kLight,
-                                                backgroundColor: postController.charCount.value < 1 ? kGrey : kPrimary,
+                                                backgroundColor: postController.charCount.value < 1 ? kGrey : Theme.of(context).primaryColor,
                                                 minimumSize: const Size(0, 45),
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius: BorderRadius.circular(8),

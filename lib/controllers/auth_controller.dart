@@ -42,6 +42,7 @@ class AuthController extends GetxController {
       Pwa pwaConfig = Pwa.fromJson(pwaData);
       setPwa(pwaConfig);
       await SharedPref().storePwa(pwaData['theme']);
+      // await SharedPref().storePwa('light');
 
       if (pwaConfig.theme == 'light') {
         Get.changeThemeMode(ThemeMode.light);
@@ -57,6 +58,7 @@ class AuthController extends GetxController {
           setAuth(auth);
           await SharedPref().storeToken(auth.token);
           await SharedPref().storeOfficeName(auth.user.officeName);
+          await SharedPref().storeAuthName('${auth.user.firstname} ${auth.user.lastname}');
           String? token = await SharedPref().getToken();
           if (token != null) {
             tokenSavedAuth.value = token;

@@ -13,12 +13,9 @@ class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key});
   final ProfileController profileController = Get.put(ProfileController());
   final PostController postController = Get.put(PostController());
-  final int profileId = (Get.arguments != null && Get.arguments['profileId'] != null)
-      ? Get.arguments['profileId']
-      : 0;
 
   Future<void> getData() async {
-    await profileController.getProfile(profileId);
+    await profileController.getProfile(0);
   }
 
   @override
@@ -34,40 +31,42 @@ class ProfileScreen extends StatelessWidget {
           final user = profileController.profileDetail.value!;
           return RefreshIndicator(
             onRefresh: getData,
-            child: Padding(
-              padding: EdgeInsets.all(10.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SectionUserInfo(
-                    activityPoint: user.credit,
-                    totalPost: user.postTotal,
-                    totalTopics: user.topicTotal,
-                    name: '${user.firstname} ${user.lastname}',
-                    email: user.email,
-                    officeName: user.officeName,
-                    department: user.departmentName,
-                    role: user.roleName,
-                    imgPath: user.images,
-                  ),
-                  const Divider(),
-                  Center(
-                    child: Text(
-                      'My Post',
-                      style: TextStyle(
-                        fontSize: smLabel,
-                        fontWeight: medium,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(10.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SectionUserInfo(
+                      activityPoint: user.credit,
+                      totalPost: user.postTotal,
+                      totalTopics: user.topicTotal,
+                      name: '${user.firstname} ${user.lastname}',
+                      email: user.email,
+                      officeName: user.officeName,
+                      department: user.departmentName,
+                      role: user.roleName,
+                      imgPath: user.images,
+                    ),
+                    const Divider(),
+                    Center(
+                      child: Text(
+                        'My Post',
+                        style: TextStyle(
+                          fontSize: smLabel,
+                          fontWeight: medium,
+                        ),
                       ),
                     ),
-                  ),
-                  const Divider(),
-                  Expanded(
-                    child: Obx(() {
-                      final postList = postController.postList;
+                    const Divider(),
+                    Obx(() {
+                      final postList = postController.profilePostList;
                       if (postList.isEmpty) {
                         return const DefaultScreen();
                       } else {
                         return ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
                           itemCount: postList.length,
                           itemBuilder: (context, index) {
                             final post = postList[index];
@@ -86,14 +85,15 @@ class ProfileScreen extends StatelessWidget {
                                   index: index,
                                   postId: post.id,
                                   postController: postController,
+                                  userId: post.userId,
                               ),
                             ); // Pass post to CardProfile
                           },
                         );
                       }
                     }),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

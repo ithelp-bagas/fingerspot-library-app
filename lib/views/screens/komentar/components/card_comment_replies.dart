@@ -22,7 +22,7 @@ class CardCommentReplies extends StatelessWidget {
       padding: EdgeInsets.all(10.h),
       width: double.infinity,
       decoration: BoxDecoration(
-          color: Theme.of(context).primaryColorDark
+          color: Theme.of(context).secondaryHeaderColor
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +51,7 @@ class CardCommentReplies extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100.h),
                       image: const DecorationImage(
-                        image: AssetImage('assets/images/profile_large.png'),
+                        image: AssetImage('assets/images/profile.jpg'),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -63,7 +63,7 @@ class CardCommentReplies extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100.h),
                     image: const DecorationImage(
-                      image: AssetImage('assets/images/profile_large.png'),
+                      image: AssetImage('assets/images/profile.jpg'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -78,7 +78,6 @@ class CardCommentReplies extends StatelessWidget {
                     Text(
                       name,
                       style: TextStyle(
-                        color: kPrimary,
                         fontSize: p1,
                         fontWeight: heavy,
                       ),

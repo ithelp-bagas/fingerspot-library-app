@@ -38,7 +38,7 @@ class TextInputFieldCustom extends StatelessWidget {
         TextField(
           keyboardType: keyboardText ?? TextInputType.text,
           decoration: InputDecoration(
-            prefixIcon: Icon(icon, color: kPrimary,),
+            prefixIcon: Icon(icon, color: Theme.of(context).primaryColor,),
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.h)
             ),

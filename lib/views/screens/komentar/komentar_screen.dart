@@ -30,7 +30,13 @@ class KomentarScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Komentar ($komentar)"),
+        title: Text(
+          "Komentar ($komentar)",
+          style: TextStyle(
+            fontSize: h4,
+            fontWeight: heavy
+          )
+        ),
         centerTitle: true,
       ),
       body: Obx(() {
@@ -96,7 +102,7 @@ class KomentarScreen extends StatelessWidget {
                                   Get.snackbar('Success', 'Berhasil menambahkan komentar!', backgroundColor: kSuccess, colorText: kLight);
                                 }
                               },
-                              icon: const Icon(Icons.send, color: kPrimary),
+                              icon: Icon(Icons.send, color: Theme.of(context).primaryColor),
                             );
                           }
                         }),
@@ -173,7 +179,7 @@ class KomentarScreen extends StatelessWidget {
                                 Get.snackbar('Success', 'Berhasil menambahkan komentar!', backgroundColor: kSuccess, colorText: kLight);
                               }
                             },
-                            icon: const Icon(Icons.send, color: kPrimary),
+                            icon: Icon(Icons.send, color: Theme.of(context).primaryColor),
                           );
                         }
                       }),

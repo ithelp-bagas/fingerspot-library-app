@@ -12,7 +12,13 @@ class ProfileSettingScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Edit Profil'),
+        title: Text(
+          'Edit Profil',
+          style: TextStyle(
+            fontSize: h4,
+            fontWeight: heavy
+          )
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -24,7 +30,7 @@ class ProfileSettingScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Image.asset(
-                      'assets/images/profile_large.png',
+                      'assets/images/profile.jpg',
                       height: 60.h,
                       fit: BoxFit.cover,
                     ),
@@ -34,7 +40,7 @@ class ProfileSettingScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: p2,
                         fontWeight: heavy,
-                        color: kPrimary
+                        color: Theme.of(context).primaryColor
                       ),
                     ),
                   ],
@@ -74,7 +80,7 @@ class ProfileSettingScreen extends StatelessWidget {
                 onPressed: (){},
                 style: ElevatedButton.styleFrom(
                     minimumSize: Size(double.infinity, 50.h),
-                    backgroundColor: kPrimary,
+                    backgroundColor: Theme.of(context).primaryColor,
                     foregroundColor: kLight,
                     elevation: 0,
                     shape: RoundedRectangleBorder(

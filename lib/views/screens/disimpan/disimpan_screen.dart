@@ -82,7 +82,8 @@ class DisimpanScreen extends StatelessWidget {
                             date: bookmark.createdAt,
                             categoryName: bookmark.categoryName,
                             title: bookmark.title,
-                            index: index
+                            index: index,
+                            userId: bookmark.userId,
                         ),
                       );
                     }

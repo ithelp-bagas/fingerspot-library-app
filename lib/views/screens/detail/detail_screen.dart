@@ -4,6 +4,8 @@ import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/helpers.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
 import 'package:fingerspot_library_app/views/components/card_tags.dart';
+import 'package:fingerspot_library_app/views/components/name_user_card.dart';
+import 'package:fingerspot_library_app/views/components/profile_image_card.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +44,13 @@ class DetailScreen extends StatelessWidget {
           }
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Diskusi'),
+              title: Text(
+                'Diskusi',
+                style: TextStyle(
+                  fontSize: h4,
+                  fontWeight: heavy
+                )
+              ),
               centerTitle: true,
               actions: [
                 PopupMenuButton(
@@ -115,7 +123,7 @@ class DetailScreen extends StatelessWidget {
                                                 () => ElevatedButton(
                                               style: ElevatedButton.styleFrom(
                                                 foregroundColor: kLight,
-                                                backgroundColor: postController.charCount.value < 1 ? kGrey : kPrimary,
+                                                backgroundColor: postController.charCount.value < 1 ? kGrey : Theme.of(context).primaryColor,
                                                 minimumSize: const Size(0, 45),
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius: BorderRadius.circular(8),
@@ -201,7 +209,7 @@ class DetailScreen extends StatelessWidget {
                         IconButton(
                           icon: Icon(
                             post!.liked ? Icons.thumb_up : Icons.thumb_up_alt_outlined,
-                            color: post.liked ? kPrimary : Theme.of(context).iconTheme.color,
+                            color: post.liked ? Theme.of(context).primaryColor : Theme.of(context).iconTheme.color,
                           ),
                           onPressed: () async {
                             await postController.likePost(postId, true, true);
@@ -232,10 +240,10 @@ class DetailScreen extends StatelessWidget {
                         IconButton(
                           icon: Icon(
                             post!.saved ? Icons.bookmark : Icons.bookmark_add_outlined,
-                            color:  post.saved ? kPrimary : Theme.of(context).iconTheme.color,
+                            color:  post.saved ? Theme.of(context).primaryColor : Theme.of(context).iconTheme.color,
                           ),
                           onPressed: () async{
-                            await postController.addBookmark(postId);
+                            await postController.addBookmark(postId, 'home');
                           },
                         ),
                         Text(
@@ -257,43 +265,7 @@ class DetailScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           flex: 1,
-                          child: imgPath.isNotEmpty
-                              ? CachedNetworkImage(
-                            imageUrl: Api.imgurl + imgPath,
-                            imageBuilder: (context, imageProvider) => Container(
-                              width: 28.h,
-                              height: 28.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100.h),
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            errorWidget: (context, url, error) => Container(
-                              width: 28.h,
-                              height: 28.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100.h),
-                                image: const DecorationImage(
-                                  image: AssetImage('assets/images/profile_large.png'),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          )
-                              : Container(
-                            width: 28.h,
-                            height: 28.h,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100.h),
-                              image: const DecorationImage(
-                                image: AssetImage('assets/images/profile_large.png'),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
+                          child: ProfileImageCard(nameUser: '${post.user.firstname} ${post.user.lastname}', userId: post.user.id, imagePath: imgPath),
                         ),
                         SizedBox(width: 10.h),
                         Expanded(
@@ -301,14 +273,12 @@ class DetailScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                '${post.user.firstname} ${post.user.lastname}',
-                                style: TextStyle(
-                                  color: kPrimary,
+                              NameUserCard(
+                                  nameUser: '${post.user.firstname} ${post.user.lastname}',
+                                  userId: post.userId,
+                                  textColor: Theme.of(context).primaryColor,
                                   fontSize: p1,
-                                  fontWeight: heavy,
-                                ),
-                                overflow: TextOverflow.ellipsis,
+                                  fontWeight: heavy
                               ),
                               Text(
                                 helper.dayDiff(post.createdAt),
@@ -327,13 +297,13 @@ class DetailScreen extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Icon(MdiIcons.chat, color: kPrimary,),
+                              Icon(MdiIcons.chat, color: Theme.of(context).primaryColor,),
                               SizedBox(width: 5.w,),
                               Text(
                                 "Topik ${post.categoryName}",
                                 textAlign: TextAlign.end,
                                 style: TextStyle(
-                                  color: kPrimary,
+                                  color: Theme.of(context).primaryColor,
                                   fontSize: p2,
                                   fontWeight: regular,
                                 ),
@@ -417,7 +387,13 @@ class DetailScreen extends StatelessWidget {
 Widget _buildShimmer() {
   return Scaffold(
     appBar: AppBar(
-      title: const Text('Diskusi'),
+      title: Text(
+        'Diskusi',
+        style: TextStyle(
+          fontSize: h4,
+          fontWeight: heavy
+        ) 
+      ),
       centerTitle: true,
     ),
     bottomNavigationBar: BottomAppBar(

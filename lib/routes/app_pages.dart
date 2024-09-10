@@ -3,6 +3,7 @@ import 'package:fingerspot_library_app/views/screens/detail/detail_screen.dart';
 import 'package:fingerspot_library_app/views/screens/home_page.dart';
 import 'package:fingerspot_library_app/views/screens/komentar/komentar_screen.dart';
 import 'package:fingerspot_library_app/views/screens/profile/profile_screen.dart';
+import 'package:fingerspot_library_app/views/screens/profile/profile_visit_screen.dart';
 import 'package:fingerspot_library_app/views/screens/viewers/viewers_screen.dart';
 import 'package:fingerspot_library_app/views/wrapper.dart';
 import 'package:get/get.dart';
@@ -19,5 +20,6 @@ class AppPages{
     GetPage(name: Routes.VIEWER, page: () => ViewersScreen()),
     GetPage(name: Routes.KOMENTAR, page: () => KomentarScreen()),
     GetPage(name: Routes.PROFILE, page: () => ProfileScreen()),
+    GetPage(name: Routes.PROFILE_VISIT, page: () => ProfileVisitScreen()),
   ];
 }

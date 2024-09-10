@@ -2,16 +2,20 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fingerspot_library_app/controllers/post_controller.dart';
 import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/helpers.dart';
+import 'package:fingerspot_library_app/helpers/shared_pref.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
 import 'package:fingerspot_library_app/views/components/expandable_text.dart';
+import 'package:fingerspot_library_app/views/components/name_user_card.dart';
+import 'package:fingerspot_library_app/views/components/profile_image_card.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
 import 'package:fingerspot_library_app/views/screens/home/components/icon_home.dart';
+import 'package:fingerspot_library_app/views/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class CardDiskusi extends StatelessWidget {
-  CardDiskusi({super.key, required this.nameUser, required this.title, required this.content, required this.like, required this.comment, required this.view, required this.date, required this.imagePath, required this.postId, required this.index});
+  CardDiskusi({super.key, required this.nameUser, required this.title, required this.content, required this.like, required this.comment, required this.view, required this.date, required this.imagePath, required this.postId, required this.index, required this.userId});
   final String nameUser;
   final String title;
   final String content;
@@ -22,10 +26,12 @@ class CardDiskusi extends StatelessWidget {
   final String imagePath;
   final int postId;
   final int index;
+  final int userId;
   
   Helper helper = Helper();
 
   final PostController postController = Get.put(PostController());
+  final BottomNavController bottomNavController = Get.put(BottomNavController());
 
   @override
   Widget build(BuildContext context) {
@@ -39,56 +45,18 @@ class CardDiskusi extends StatelessWidget {
             children: [
               Expanded(
                 flex: 1,
-                child: imagePath.isNotEmpty
-                    ? CachedNetworkImage(
-                  imageUrl: Api.imgurl + imagePath,
-                  imageBuilder: (context, imageProvider) => Container(
-                    width: 28.h,
-                    height: 28.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100.h),
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    width: 28.h,
-                    height: 28.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100.h),
-                      image: const DecorationImage(
-                        image: AssetImage('assets/images/profile_large.png'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                )
-                    : Container(
-                  width: 28.h,
-                  height: 28.h,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100.h),
-                    image: const DecorationImage(
-                      image: AssetImage('assets/images/profile_large.png'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
+                child: ProfileImageCard(nameUser: nameUser, userId: userId, imagePath: imagePath),
               ),
               SizedBox(width: 10.h,),
               Expanded(
                 flex: 5,
-                child: Text(
-                  nameUser,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: kPrimary,
+                child: NameUserCard(
+                    nameUser: nameUser,
+                    userId: userId,
+                    textColor: Theme.of(context).primaryColor,
                     fontSize: p1,
-                    fontWeight: heavy,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
+                    fontWeight: heavy
+                )
               ),
               Expanded(
                 flex: 3,
@@ -108,13 +76,13 @@ class CardDiskusi extends StatelessWidget {
                   itemBuilder:  (context) => [
                     PopupMenuItem(
                       onTap: () async{
-                        await postController.addBookmark(postId);
+                        await postController.addBookmark(postId, 'home');
                       },
                       child: Obx(() => Row(
                           children: [
                             Icon(
                               postController.postList[index].saved ? Icons.bookmark : Icons.bookmark_add_outlined,
-                              color: postController.postList[index].saved ? kPrimary : Theme.of(context).iconTheme.color,
+                              color: postController.postList[index].saved ? Theme.of(context).primaryColor : Theme.of(context).iconTheme.color,
                             ),
                             SizedBox(width: 5.w,),
                             Text(
@@ -196,7 +164,7 @@ class CardDiskusi extends StatelessWidget {
                                                 () => ElevatedButton(
                                               style: ElevatedButton.styleFrom(
                                                 foregroundColor: kLight,
-                                                backgroundColor: postController.charCount.value < 1 ? kGrey : kPrimary,
+                                                backgroundColor: postController.charCount.value < 1 ? kGrey : Theme.of(context).primaryColor,
                                                 minimumSize: const Size(0, 45),
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius: BorderRadius.circular(8),
@@ -302,7 +270,7 @@ class CardDiskusi extends StatelessWidget {
             children: [
               Obx(() {
                 return GestureDetector(
-                  child: IconHome(icon: postController.postList[index].liked ? Icons.thumb_up : Icons.thumb_up_alt_outlined, label: like, color: postController.postList[index].liked ? kPrimary : Theme.of(context).iconTheme.color,),
+                  child: IconHome(icon: postController.postList[index].liked ? Icons.thumb_up : Icons.thumb_up_alt_outlined, label: like, color: postController.postList[index].liked ? Theme.of(context).primaryColor : Theme.of(context).iconTheme.color,),
                   onTap: () async{
                     await postController.likePost(postId, true, false);
                   },

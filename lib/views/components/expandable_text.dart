@@ -60,7 +60,7 @@ class _ExpandableTextState extends State<ExpandableText> {
                 child: Text(
                   _isExpanded ? "Tampilkan lebih sedikit" : "Tampilkan lebih banyak",
                   style: TextStyle(
-                    color: kPrimary,
+                    color: Theme.of(context).primaryColor,
                     fontSize: widget.style.fontSize,
                     fontWeight: FontWeight.bold,
                   ),

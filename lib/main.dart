@@ -48,8 +48,8 @@ class MyApp extends StatelessWidget {
       builder: (context, child) => GetMaterialApp(
         title: 'Fingerspot Library',
         getPages: AppPages.routes,
-        theme: lightMode,
-        darkTheme: darkMode,
+        theme: light,
+        darkTheme: dark,
         themeMode: themeMode,
         debugShowCheckedModeBanner: false,
       ),

@@ -35,7 +35,7 @@ class ProfileController extends GetxController {
       if(response.statusCode == 200) {
         var data = response.data['data']['profile'];
         List<dynamic> post = response.data['data']['posts'];
-        postController.postList.value = post.map((json) => Post.fromJson(json)).toList();
+        postController.profilePostList.value = post.map((json) => Post.fromJson(json)).toList();
         Profile profile = Profile.fromJson(data);
         setProfile(profile);
       } else {

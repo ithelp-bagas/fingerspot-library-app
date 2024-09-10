@@ -34,20 +34,24 @@ class SearchScreen extends StatelessWidget {
           } else if (snapshot.hasError) {
             return const DefaultScreen();
           } else {
-            return Padding(
-              padding: EdgeInsets.all(10.h),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Obx(() => TextField(
-                        controller: postController.searchController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15.h)
-                          ),
-                            prefixIcon: GestureDetector(
-                              onTap: () {
+            return RefreshIndicator(
+              onRefresh: () async{
+                await postController.getSearchPost(postController.selectedCategoryId.value);
+              } ,
+              child: Padding(
+                padding: EdgeInsets.all(10.h),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Obx(() => TextField(
+                          controller: postController.searchController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15.h)
+                            ),
+                              prefixIcon: IconButton(
+                                onPressed: () {
                                   postController.searchController.clear();
 
                                   // Convert RxList<String> to List<String>
@@ -58,236 +62,231 @@ class SearchScreen extends StatelessWidget {
 
                                   // Print tagList to check the contents
                                   print(tags);
-                              },
-                              child: const Icon(Icons.search),
-                            ),
-                            suffixIcon: postController.searchText.value != '' ? Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                IconButton(
-                                  onPressed: () {
-                                    if (postController.searchText.value.isNotEmpty) {
-                                      tagList.add(postController.searchText.value);
-                                      postController.searchController.clear();
-                                      postController.searchText.value = '';
-                                    }
-                                  },
-                                  icon: const Icon(Icons.add),
-                                ),
-                                IconButton(
-                                    onPressed: (){
-                                      postController.searchController.clear();
-                                      postController.searchText.value = '';
+                                },
+                                icon: Icon(Icons.search),
+                              ),
+                              suffixIcon: postController.searchText.value != '' ? Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  IconButton(
+                                    onPressed: () {
+                                      if (postController.searchText.value.isNotEmpty) {
+                                        tagList.add(postController.searchText.value);
+                                        postController.searchController.clear();
+                                        postController.searchText.value = '';
+                                      }
+                                    },
+                                    icon: const Icon(Icons.add),
+                                  ),
+                                  IconButton(
+                                      onPressed: (){
+                                        postController.searchController.clear();
+                                        postController.searchText.value = '';
+                                        postController.isSearchResultAvailable.value = true;
+                                        postController.searchPost.addAll(postController.searchPostList);
+                                        tagList.clear();
+                                      },
+                                      icon: const Icon(Icons.clear),
+                                  ),
+                                ],
+                              ) : null
+                          ),
+                          onChanged: (value) {
+                            postController.searchText.value = value; // Update the searchText value
+                            postController.searchingPost(value);
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 5.h,),
+                      Obx(() {
+                        if(tagList.isNotEmpty) {
+                          return Wrap(
+                            spacing: 8.0,
+                            runSpacing: 8.0,
+                            children: [
+                              for (var item in tagList)
+                                SearchTags(
+                                  tagsName: item,
+                                  onTap: () {
+                                    if(tagList.length == 1) {
                                       postController.isSearchResultAvailable.value = true;
                                       postController.searchPost.addAll(postController.searchPostList);
-                                      tagList.clear();
-                                    },
-                                    icon: const Icon(Icons.clear),
+                                    }
+                                    tagList.remove(item);
+                                  },
                                 ),
-                              ],
-                            ) : null
-                        ),
-                        onChanged: (value) {
-                          postController.searchText.value = value; // Update the searchText value
-                          postController.searchingPost(value);
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 5.h,),
-                    Obx(() {
-                      if(tagList.isNotEmpty) {
-                        return Wrap(
-                          spacing: 8.0,
-                          runSpacing: 8.0,
-                          children: [
-                            for (var item in tagList)
-                              SearchTags(
-                                tagsName: item,
-                                onTap: () {
-                                  if(tagList.length == 1) {
-                                    postController.isSearchResultAvailable.value = true;
-                                    postController.searchPost.addAll(postController.searchPostList);
-                                  }
-                                  tagList.remove(item);
-                                },
-                              ),
-                          ],
-                        );
-                      } else {
-                        return Container();
-                      }
-                    }),
-                    Obx(() {
-                      final allTags = postController.searchTag;
-                      double itemHeight = 50.h; // Estimated height for each item
-                      double maxHeight = MediaQuery.of(context).size.height * 0.3; // Max height for the list
-                      double listHeight = (allTags.length * itemHeight).clamp(0.0, maxHeight);
-                      if(postController.searchText.value.isNotEmpty || postController.searchText.value != ''){
-                        return SizedBox(
-                          height: listHeight,
+                            ],
+                          );
+                        } else {
+                          return Container();
+                        }
+                      }),
+                      Obx(() {
+                        final allTags = postController.searchTag;
+                        double itemHeight = 50.h; // Estimated height for each item
+                        double maxHeight = MediaQuery.of(context).size.height * 0.3; // Max height for the list
+                        double listHeight = (allTags.length * itemHeight).clamp(0.0, maxHeight);
+                        if(postController.searchText.value.isNotEmpty || postController.searchText.value != ''){
+                          return SizedBox(
+                            height: listHeight,
+                            child: ListView.builder(
+                              itemCount: allTags.length,
+                              itemBuilder: (builder, index) {
+                                final tag = allTags[index];
+                                return GestureDetector(
+                                  onTap: () {
+                                    tagList.add(tag.name);
+                                    postController.searchController.clear();
+                                    postController.searchText.value = '';
+                                  },
+                                  child: Container(
+                                    color: Theme.of(context).cardColor,
+                                    padding: EdgeInsets.all(10.h),
+                                    child: Text(tag.name),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        } else {
+                          return Container();
+                        }
+                      }),
+                      Obx(() {
+                        final searchList = postController.searchList;
+                        return (postController.searchText.value.isEmpty || postController.searchText.value == '') && tagList.isEmpty ? SizedBox(
+                          height: 50.h,
                           child: ListView.builder(
-                            itemCount: allTags.length,
-                            itemBuilder: (builder, index) {
-                              final tag = allTags[index];
-                              print('tags : $tag');
+                            scrollDirection: Axis.horizontal,
+                            itemCount: searchList.length,
+                            itemBuilder: (context, index) {
+                              final searchCategory = searchList[index];
                               return GestureDetector(
-                                onTap: () {
-                                  tagList.add(tag.name);
-                                  postController.searchController.clear();
-                                  postController.searchText.value = '';
+                                onTap: () async{
+                                  await postController.tappedSearchCategory(searchCategory['id']);
                                 },
-                                child: Container(
-                                  padding: EdgeInsets.all(10.h),
-                                  child: Text(tag.name),
+                                child: CardCategories(
+                                  categoriesName: searchCategory['name'],
+                                  isSelected: postController.selectedSearchId.value == searchCategory['id'],
                                 ),
                               );
                             },
                           ),
-                        );
-                      } else {
-                        return Container();
-                      }
-                    }),
-                    Obx(() {
-                      final searchList = postController.searchList;
-                      return (postController.searchText.value.isEmpty || postController.searchText.value == '') && tagList.isEmpty ? SizedBox(
-                        height: 50.h,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: searchList.length,
-                          itemBuilder: (context, index) {
-                            final searchCategory = searchList[index];
-                            return GestureDetector(
-                              onTap: () async{
-                                await postController.tappedSearchCategory(searchCategory['id']);
-                              },
-                              child: CardCategories(
-                                categoriesName: searchCategory['name'],
-                                isSelected: postController.selectedSearchId.value == searchCategory['id'],
-                              ),
-                            );
-                          },
-                        ),
-                      )  : Container();
-                    }),
-                    Obx(() {
-                      final postList = postController.searchPost;
-                      final recommendedlist = postController.recommendedList;
+                        )  : Container();
+                      }),
+                      Obx(() {
+                        final postList = postController.searchPost;
+                        final recommendedlist = postController.recommendedList;
 
-                      if((postController.searchText.value.isEmpty || postController.searchText.value == '') && tagList.isEmpty) {
-                        return RefreshIndicator(
-                          onRefresh: () async{
-                            await postController.getSearchPost(postController.selectedCategoryId.value);
-                          } ,
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height * .65,
-                            child: SingleChildScrollView(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  postController.isSearchResultAvailable.value ? ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    itemCount: 5,
-                                    itemBuilder: (builder, index) {
-                                      final post = postList[index];
-                                      return GestureDetector(
-                                        onTap: (){
-                                          Get.toNamed(Routes.DETAIL, arguments: {'postId': post.id, 'imgPath': post.user.image, 'liked': post.liked});
-                                        },
-                                        child: CardSearch(
-                                          index: index+1,
-                                          namaUser: '${post.user.firstname} ${post.user.lastname}',
-                                          imgPath: post.user.image,
-                                          categoryName: post.categoryName,
-                                          title: post.title,
-                                          date: post.createdAt,
-                                          viewed: post.views,
-                                          commented: post.postComment,
-                                          postId: post.id,
-                                        ),
-                                      );
+                        if((postController.searchText.value.isEmpty || postController.searchText.value == '') && tagList.isEmpty) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              postController.isSearchResultAvailable.value ? ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: 5,
+                                itemBuilder: (builder, index) {
+                                  final post = postList[index];
+                                  return GestureDetector(
+                                    onTap: (){
+                                      Get.toNamed(Routes.DETAIL, arguments: {'postId': post.id, 'imgPath': post.user.image, 'liked': post.liked});
                                     },
-                                  ) : const Text('tidak ada data'),
-                                  SizedBox(height: 10.h,),
-                                  Text(
-                                    "Rekomendasi Informasi Untukmu".toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: p1,
-                                      fontWeight: heavy,
-                                      color: kPrimary,
+                                    child: CardSearch(
+                                      index: index+1,
+                                      namaUser: '${post.user.firstname} ${post.user.lastname}',
+                                      imgPath: post.user.image,
+                                      categoryName: post.categoryName,
+                                      title: post.title,
+                                      date: post.createdAt,
+                                      viewed: post.views,
+                                      commented: post.postComment,
+                                      postId: post.id,
+                                      userId: post.userId,
                                     ),
-                                  ),
-                                  SizedBox(height: 10.h,),
-                                  ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    itemCount: recommendedlist.length,
-                                    itemBuilder: (builder, index){
-                                      final recommended = recommendedlist[index];
-                                      return GestureDetector(
-                                        onTap: () => Get.toNamed(Routes.DETAIL, arguments: {'postId': recommended.id, 'imgPath': recommended.user.image, 'liked': recommended.liked}),
-                                        child: CardRekomendasi(
-                                          imgPath: recommended.user.image,
-                                          nameUser: '${recommended.user.firstname} ${recommended.user.lastname}',
-                                          categoryName: recommended.categoryName,
-                                          title: recommended.title,
-                                          viewed: recommended.views,
-                                          commented: recommended.postComment,
-                                          date: recommended.createdAt,
-                                          postId: recommended.id,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ],
+                                  );
+                                },
+                              ) : const Text('tidak ada data'),
+                              SizedBox(height: 10.h,),
+                              Text(
+                                "Rekomendasi Informasi Untukmu".toUpperCase(),
+                                style: TextStyle(
+                                  fontSize: p1,
+                                  fontWeight: heavy,
+                                  color: Theme.of(context).primaryColor,
+                                ),
                               ),
+                              SizedBox(height: 10.h,),
+                              ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: recommendedlist.length,
+                                itemBuilder: (builder, index){
+                                  final recommended = recommendedlist[index];
+                                  return GestureDetector(
+                                    onTap: () => Get.toNamed(Routes.DETAIL, arguments: {'postId': recommended.id, 'imgPath': recommended.user.image, 'liked': recommended.liked}),
+                                    child: CardRekomendasi(
+                                      imgPath: recommended.user.image,
+                                      nameUser: '${recommended.user.firstname} ${recommended.user.lastname}',
+                                      categoryName: recommended.categoryName,
+                                      title: recommended.title,
+                                      viewed: recommended.views,
+                                      commented: recommended.postComment,
+                                      date: recommended.createdAt,
+                                      postId: recommended.id,
+                                      userId: recommended.userId,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          );
+                        }
+                        return Container(
+                          margin: EdgeInsets.only(top: 10.h),
+                          height: MediaQuery.of(context).size.height * .65,
+                          child: postController.isSearchResultAvailable.value ? ListView.builder(
+                            itemCount: postList.length,
+                            itemBuilder: (builder, index) {
+                              final post = postList[index];
+                              return GestureDetector(
+                                onTap: () => Get.toNamed(Routes.DETAIL, arguments: {'postId': post.id, 'imgPath': post.user.image, 'liked': post.liked}),
+                                child: CardRekomendasi(
+                                  imgPath: post.user.image,
+                                  nameUser: '${post.user.firstname} ${post.user.lastname}',
+                                  categoryName: post.categoryName,
+                                  title: post.title,
+                                  viewed: post.views,
+                                  commented: post.postComment,
+                                  date: post.createdAt,
+                                  postId: post.id,
+                                  userId: post.userId,
+                                ),
+                              );
+                            },
+                          ):  Center(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset('assets/images/no_data.png', width: 100.h,),
+                                Text(
+                                  'Tidak ada data postingan',
+                                  style: TextStyle(
+                                      fontSize: defLabel,
+                                      fontWeight: heavy
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                         );
-                      }
-                      return Container(
-                        margin: EdgeInsets.only(top: 10.h),
-                        height: MediaQuery.of(context).size.height * .65,
-                        child: postController.isSearchResultAvailable.value ? ListView.builder(
-                          itemCount: postList.length,
-                          itemBuilder: (builder, index) {
-                            final post = postList[index];
-                            return GestureDetector(
-                              onTap: () => Get.toNamed(Routes.DETAIL, arguments: {'postId': post.id, 'imgPath': post.user.image, 'liked': post.liked}),
-                              child: CardRekomendasi(
-                                imgPath: post.user.image,
-                                nameUser: '${post.user.firstname} ${post.user.lastname}',
-                                categoryName: post.categoryName,
-                                title: post.title,
-                                viewed: post.views,
-                                commented: post.postComment,
-                                date: post.createdAt,
-                                postId: post.id,
-                              ),
-                            );
-                          },
-                        ):  Center(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset('assets/images/no_data.png', width: 100.h,),
-                              Text(
-                                'Tidak ada data postingan',
-                                style: TextStyle(
-                                    fontSize: defLabel,
-                                    fontWeight: heavy
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      );
 
-                    }),
-                  ],
+                      }),
+                    ],
+                  ),
                 ),
               ),
             );

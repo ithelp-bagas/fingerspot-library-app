@@ -6,4 +6,5 @@ abstract class Routes{
   static const VIEWER = '/viewer';
   static const KOMENTAR = '/komentar';
   static const PROFILE = '/profile';
+  static const PROFILE_VISIT = '/profile-visit';
 }

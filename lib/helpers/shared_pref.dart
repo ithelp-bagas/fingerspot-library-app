@@ -41,6 +41,16 @@ class SharedPref {
     return preferences.getString('officeName');
   }
 
+  Future<void> storeAuthName(String authName) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.setString('authName', authName);
+  }
+
+  Future<String?> getAuthName() async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getString('authName');
+  }
+
   Future<void> removePwa() async {
     SharedPreferences preference = await SharedPreferences.getInstance();
     preference.remove('pwa');

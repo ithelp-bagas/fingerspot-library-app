@@ -2,71 +2,50 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-ThemeData darkMode = ThemeData(
-  primaryColor: kPrimary,
-  primaryColorDark: kDark,
-  primaryColorLight: kLight,
-    canvasColor: kBlack,
-  scaffoldBackgroundColor: kBlack,
-  brightness: Brightness.dark,
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: kDark
-    ),
-    bottomAppBarTheme: const BottomAppBarTheme(
-        color: kDark
-    ),
-    dialogTheme: const DialogTheme(
-        backgroundColor: kDark
-    ),
-    popupMenuTheme: const PopupMenuThemeData(
-        color: kDark
-    ),
-  iconTheme: const IconThemeData(
-    color: kLight
+ThemeData light = ThemeData(
+  fontFamily: 'Roboto',
+  primaryColor: const Color(0xFF3f87b9),
+  secondaryHeaderColor: const Color(0xFF75b7ec),
+  disabledColor: const Color(0xFFBABFC4),
+  brightness: Brightness.light,
+  hintColor: const Color(0xFF9F9F9F),
+  cardColor: Colors.white,
+  textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: const Color(0xFF3f87b9))),
+  colorScheme: const ColorScheme.light(primary: Color(0xFF3f87b9),
+      tertiary: Color(0xFF3f87b9),
+      tertiaryContainer: Color(0xFF005a89),
+      secondary: Color(0xFF3f87b9)).copyWith(background: const Color(0xFFF3F3F3)).copyWith(error: const Color(0xFFE84D4F)),
+  popupMenuTheme: const PopupMenuThemeData(color: Colors.white, surfaceTintColor: Colors.white),
+  dialogTheme: const DialogTheme(surfaceTintColor: Colors.white),
+  floatingActionButtonTheme: FloatingActionButtonThemeData(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(500))),
+  bottomAppBarTheme: const BottomAppBarTheme(
+    surfaceTintColor: Colors.white, height: 60,
+    padding: EdgeInsets.symmetric(vertical: 5),
   ),
-  textTheme: const TextTheme(
-    labelSmall: TextStyle(
-      color: kLight
-    ),
-    labelMedium: TextStyle(
-      color: kBlack
-    )
-  )
+  dividerTheme: const DividerThemeData(thickness: 0.2, color: Color(0xFFA0A4A8)),
 );
 
-ThemeData lightMode = ThemeData(
-    appBarTheme: const AppBarTheme(
-      color: kLight
-    ),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: kLight
-    ),
-    bottomAppBarTheme: const BottomAppBarTheme(
-      color: kLight
-    ),
-    dialogTheme: const DialogTheme(
-      backgroundColor: kLight
-    ),
-    popupMenuTheme: const PopupMenuThemeData(
-      color: kLight
-    ),
-    primaryColor: kPrimary,
-    canvasColor: kLighted,
-    primaryColorDark: kLight,
-    primaryColorLight: kBlack,
-    scaffoldBackgroundColor: kLighted,
-    brightness: Brightness.light,
-    iconTheme: const IconThemeData(
-        color: kGrey
-    ),
-    textTheme: const TextTheme(
-        labelSmall: TextStyle(
-            color: kGrey
-        ),
-        labelMedium: TextStyle(
-            color: kGrey
-        )
-    )
+ThemeData dark = ThemeData(
+  fontFamily: 'Roboto',
+  primaryColor: const Color(0xFF3f87b9),
+  secondaryHeaderColor: const Color(0xFF005a89),
+  disabledColor: const Color(0xffa2a7ad),
+  brightness: Brightness.dark,
+  hintColor: const Color(0xFFbebebe),
+  cardColor: const Color(0xFF272d34),
+  textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: const Color(0xFF3f87b9))),
+  colorScheme: const ColorScheme.dark(primary: Color(0xFF3f87b9),
+      tertiary: Color(0xFF3f87b9),
+      tertiaryContainer: Color(0xFF005a89),
+      secondary: Color(0xFF3f87b9)).copyWith(background: const Color(0xFF191A26)).copyWith(error: const Color(0xFFdd3135)),
+  popupMenuTheme: const PopupMenuThemeData(color: Color(0xFF272d34), surfaceTintColor: Color(0xFF272d34)),
+  dialogTheme: const DialogTheme(surfaceTintColor: Colors.white10),
+  floatingActionButtonTheme: FloatingActionButtonThemeData(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(500))),
+  bottomAppBarTheme: const BottomAppBarTheme(
+    surfaceTintColor: Colors.black, height: 60,
+    padding: EdgeInsets.symmetric(vertical: 5),
+  ),
+  dividerTheme: const DividerThemeData(thickness: 0.5, color: Color(0xFFA0A4A8)),
 );
 
 

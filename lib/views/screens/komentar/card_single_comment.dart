@@ -3,6 +3,8 @@ import 'package:fingerspot_library_app/controllers/comment_controller.dart';
 import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/helpers.dart';
 import 'package:fingerspot_library_app/views/components/expandable_text.dart';
+import 'package:fingerspot_library_app/views/components/name_user_card.dart';
+import 'package:fingerspot_library_app/views/components/profile_image_card.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
 import 'package:fingerspot_library_app/views/screens/home/components/icon_home.dart';
 import 'package:flutter/material.dart';
@@ -50,43 +52,7 @@ class CardSingleComment extends StatelessWidget {
                   children: [
                     Expanded(
                       flex: 1,
-                      child: imgPath.isNotEmpty
-                          ? CachedNetworkImage(
-                        imageUrl: Api.imgurl + imgPath,
-                        imageBuilder: (context, imageProvider) => Container(
-                          width: 28.h,
-                          height: 28.h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100.h),
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        errorWidget: (context, url, error) => Container(
-                          width: 28.h,
-                          height: 28.h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100.h),
-                            image: const DecorationImage(
-                              image: AssetImage('assets/images/profile_large.png'),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      )
-                          : Container(
-                        width: 28.h,
-                        height: 28.h,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100.h),
-                          image: const DecorationImage(
-                            image: AssetImage('assets/images/profile_large.png'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
+                      child: ProfileImageCard(nameUser: name, userId: commentUserId, imagePath: imgPath),
                     ),
                     SizedBox(width: 10.h,),
                     Expanded(
@@ -96,21 +62,19 @@ class CardSingleComment extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Text(
-                                name,
-                                style: TextStyle(
-                                  color: Theme.of(context).textTheme.labelSmall?.color,
+                              NameUserCard(
+                                  nameUser: name,
+                                  userId: commentUserId,
+                                  textColor: Theme.of(context).textTheme.labelSmall!.color!,
                                   fontSize: p2,
-                                  fontWeight: heavy,
-                                ),
-                                overflow: TextOverflow.ellipsis,
+                                  fontWeight: heavy
                               ),
                               SizedBox(width: 5.w,),
                               commentUserId == postUserId ?
                               Container(
                                 padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 5.h),
                                 decoration: BoxDecoration(
-                                  color: kPrimary,
+                                  color: Theme.of(context).primaryColor,
                                   borderRadius: BorderRadius.circular(3.h)
                                 ),
                                 child: Text(
@@ -165,7 +129,7 @@ class CardSingleComment extends StatelessWidget {
                           child: IconHome(
                             icon: liked ? Icons.thumb_up : Icons.thumb_up_alt_outlined,
                             label: '$like',
-                            color: liked ? kPrimary : Theme.of(context).iconTheme.color,
+                            color: liked ? Theme.of(context).primaryColor : Theme.of(context).iconTheme.color,
                           ),
                         ),
                         balasan > 0 ? GestureDetector(

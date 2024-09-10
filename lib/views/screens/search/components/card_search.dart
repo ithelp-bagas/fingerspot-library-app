@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/helpers.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
+import 'package:fingerspot_library_app/views/components/name_user_card.dart';
+import 'package:fingerspot_library_app/views/components/profile_image_card.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
 import 'package:fingerspot_library_app/views/screens/search/components/icon_search.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class CardSearch extends StatelessWidget {
-  CardSearch({super.key, required this.index, required this.namaUser, required this.imgPath, required this.categoryName, required this.title, required this.date, required this.viewed, required this.commented, required this.postId});
+  CardSearch({super.key, required this.index, required this.namaUser, required this.imgPath, required this.categoryName, required this.title, required this.date, required this.viewed, required this.commented, required this.postId, required this.userId});
   final int index;
   final String namaUser;
   final String imgPath;
@@ -19,6 +21,7 @@ class CardSearch extends StatelessWidget {
   final int viewed;
   final int commented;
   final int postId;
+  final int userId;
 
 
   Helper helper = Helper();
@@ -50,68 +53,31 @@ class CardSearch extends StatelessWidget {
                   children: [
                     Expanded(
                       flex: 1,
-                      child: imgPath.isNotEmpty
-                          ? CachedNetworkImage(
-                        imageUrl: Api.imgurl + imgPath,
-                        imageBuilder: (context, imageProvider) => Container(
-                          width: 28.h,
-                          height: 28.h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100.h),
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        errorWidget: (context, url, error) => Container(
-                          width: 28.h,
-                          height: 28.h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100.h),
-                            image: const DecorationImage(
-                              image: AssetImage('assets/images/profile_large.png'),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      )
-                          : Container(
-                        width: 28.h,
-                        height: 28.h,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100.h),
-                          image: const DecorationImage(
-                            image: AssetImage('assets/images/profile_large.png'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
+                      child: ProfileImageCard(nameUser: namaUser, userId: userId, imagePath: imgPath),
                     ),
                     SizedBox(width: 5.h,),
                     Expanded(
                       flex: 5,
-                      child: Text(
-                        namaUser,
-                        style: TextStyle(
-                            fontSize: p2,
-                            fontWeight: regular
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      child: NameUserCard(
+                          nameUser: namaUser,
+                          userId: userId,
+                          textColor: Theme.of(context).textTheme.labelSmall!.color!,
+                          fontSize: p2,
+                          fontWeight: regular
+                      )
                     ),
                     Expanded(
                       flex: 4,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Icon(Icons.chat, size: p2, color: kPrimary,),
+                          Icon(Icons.chat, size: p2, color: Theme.of(context).primaryColor,),
                           SizedBox(width: 5.w,),
                           Text(
                             "Topik $categoryName",
                             textAlign: TextAlign.end,
                             style: TextStyle(
-                                color: kPrimary,
+                                color: Theme.of(context).primaryColor,
                                 fontSize: p3,
                                 fontWeight: heavy
                             ),
@@ -169,7 +135,7 @@ class CardSearch extends StatelessWidget {
 }
 
 class CardRekomendasi extends StatelessWidget {
-  CardRekomendasi({super.key, required this.imgPath, required this.nameUser, required this.categoryName, required this.title, required this.viewed, required this.commented, required this.date, required this.postId});
+  CardRekomendasi({super.key, required this.imgPath, required this.nameUser, required this.categoryName, required this.title, required this.viewed, required this.commented, required this.date, required this.postId, required this.userId});
   final String imgPath;
   final String nameUser;
   final String categoryName;
@@ -178,6 +144,7 @@ class CardRekomendasi extends StatelessWidget {
   final int commented;
   final String date;
   final int postId;
+  final int userId;
   
   Helper helper = Helper();
 
@@ -192,67 +159,30 @@ class CardRekomendasi extends StatelessWidget {
             children: [
               Expanded(
                 flex: 1,
-                child: imgPath.isNotEmpty
-                    ? CachedNetworkImage(
-                  imageUrl: Api.imgurl + imgPath,
-                  imageBuilder: (context, imageProvider) => Container(
-                    width: 28.h,
-                    height: 28.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100.h),
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    width: 28.h,
-                    height: 28.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100.h),
-                      image: const DecorationImage(
-                        image: AssetImage('assets/images/profile_large.png'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                )
-                    : Container(
-                  width: 28.h,
-                  height: 28.h,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100.h),
-                    image: const DecorationImage(
-                      image: AssetImage('assets/images/profile_large.png'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
+                child: ProfileImageCard(nameUser: nameUser, userId: userId, imagePath: imgPath),
               ),
               SizedBox(width: 10.h,),
               Expanded(
                 flex: 6,
-                child: Text(
-                  nameUser,
-                  style: TextStyle(
-                      fontSize: p2,
-                      fontWeight: regular
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
+                child: NameUserCard(
+                    nameUser: nameUser,
+                    userId: userId,
+                    textColor: Theme.of(context).textTheme.labelSmall!.color!,
+                    fontSize: p2,
+                    fontWeight: regular
+                )
               ),
               Expanded(
                 flex: 3,
                 child: Row(
                   children: [
-                    Icon(Icons.chat, size: p2, color: kPrimary,),
+                    Icon(Icons.chat, size: p2, color: Theme.of(context).primaryColor,),
                     SizedBox(width: 5.w,),
                     Text(
                       "Topik $categoryName",
                       textAlign: TextAlign.end,
                       style: TextStyle(
-                          color: kPrimary,
+                          color: Theme.of(context).primaryColor,
                           fontSize: p3,
                           fontWeight: heavy
                       ),

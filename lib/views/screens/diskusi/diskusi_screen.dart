@@ -71,7 +71,7 @@ class DiskusiScreen extends StatelessWidget {
                 onPressed: (){},
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(double.infinity, 50.h),
-                  backgroundColor: kPrimary,
+                  backgroundColor: Theme.of(context).primaryColor,
                   foregroundColor: kLight,
                   elevation: 0,
                   shape: RoundedRectangleBorder(

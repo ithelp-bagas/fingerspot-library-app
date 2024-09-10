@@ -49,7 +49,7 @@ class SectionUserInfo extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100.h),
                       image: const DecorationImage(
-                        image: AssetImage('assets/images/profile_large.png'),
+                        image: AssetImage('assets/images/profile.jpg'),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -61,7 +61,7 @@ class SectionUserInfo extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100.h),
                     image: const DecorationImage(
-                      image: AssetImage('assets/images/profile_large.png'),
+                      image: AssetImage('assets/images/profile.jpg'),
                       fit: BoxFit.cover,
                     ),
                   ),

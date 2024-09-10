@@ -15,7 +15,13 @@ class ViewersScreen extends StatelessWidget {
     postController.getViewers(param['postId']);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dilihat'),
+        title: Text(
+          'Dilihat',
+          style: TextStyle(
+            fontSize: h4,
+            fontWeight: heavy
+          )
+        ),
         centerTitle: true,
       ),
       body: Padding(
@@ -50,6 +56,7 @@ class ViewersScreen extends StatelessWidget {
                     name: viewer.firstname + viewer.lastname,
                     username: viewer.username,
                     imgPath: viewer.image,
+                    userId: viewer.userId,
                   );
                 },
               );

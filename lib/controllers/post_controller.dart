@@ -10,17 +10,20 @@ import 'package:fingerspot_library_app/models/user_model.dart';
 import 'package:fingerspot_library_app/models/votes_model.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
+import 'package:fingerspot_library_app/views/screens/profile/profile_visit_screen.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-class PostController extends GetxController {
+class PostController extends GetxController{
   Dio dio = Dio();
 
   RxList<Post> postList = RxList<Post>([]);
   RxList<Post> searchPostList = RxList<Post>([]);
   RxList<Post> recommendedList = RxList<Post>([]);
   RxList<Post> bookmarkPostList = RxList<Post>([]);
+  RxList<Post> profilePostList = RxList<Post>([]);
   RxList<User> viewerPost = RxList<User>([]);
   RxList<Category> categoryList = RxList<Category>([]);
   RxList searchList = RxList([
@@ -272,6 +275,12 @@ class PostController extends GetxController {
               postList[postIndex].postLike = data;
               postList.refresh();
             }
+            int profilePostIndex = profilePostList.indexWhere((post) => post.id == postId);
+            if(profilePostIndex != -1) {
+              profilePostList[profilePostIndex].liked = !profilePostList[profilePostIndex].liked;
+              profilePostList[profilePostIndex].postLike = data;
+              profilePostList.refresh();
+            }
           }
         } else {
           Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
@@ -282,7 +291,7 @@ class PostController extends GetxController {
       }
   }
 
-  Future<void> getDetailPost(int postId) async  {
+  Future<void> getDetailPost(int postId) async {
     String? token = await SharedPref().getToken();
     try {
       var response = await dio.post(
@@ -297,16 +306,26 @@ class PostController extends GetxController {
         ),
       );
 
-      if(response.statusCode == 200) {
+      if (response.statusCode == 200) {
         Map<String, dynamic> responseData = response.data;
         var detail = responseData['data']['post'];
-        Post postdetail = Post.fromJson(detail);
-        setDetail(postdetail);
+        Post postDetail = Post.fromJson(detail);
+        setDetail(postDetail);
+      } else if (response.statusCode == 403) {
+        // Handle 403 Forbidden error
+        Get.toNamed(Routes.ERROR, arguments: {'title': 'You need to log in to view this post'});
       } else {
         Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
       }
     } catch (e) {
-      throw Exception(e);
+      // Optionally handle Dio exceptions (network, timeout, etc.)
+      if (e is DioError && e.response?.statusCode == 403) {
+        // Handle Dio error specifically for 403
+        Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
+      } else {
+        // Handle general errors
+        throw Exception(e);
+      }
     }
   }
 
@@ -374,7 +393,7 @@ class PostController extends GetxController {
     }
   }
 
-  Future<void> addBookmark(int postId) async{
+  Future<void> addBookmark(int postId, String screen) async{
     String? token = await SharedPref().getToken();
 
     try{
@@ -399,17 +418,29 @@ class PostController extends GetxController {
 
         int postIndex = postList.indexWhere((post) => post.id == postId);
         int bookmarkIndex = bookmarkPostList.indexWhere((bookmark) => bookmark.id == postId);
+        int profilePostIndex = profilePostList.indexWhere((post) => post.id == postId);
 
-        if(postIndex != -1) {
-          postList[postIndex].saved = !postList[postIndex].saved;
-          postList.refresh();
+        if(screen == 'home') {
+          if(postIndex != -1) {
+            postList[postIndex].saved = !postList[postIndex].saved;
+            postList.refresh();
+          }
         }
 
-        if(bookmarkIndex != -1) {
-          bookmarkPostList[bookmarkIndex].saved = !bookmarkPostList[bookmarkIndex].saved;
-          bookmarkPostList.refresh();
-          await getBookmarkPost();
-          Get.back();
+        if(screen == 'bookmark') {
+          if(bookmarkIndex != -1) {
+            bookmarkPostList[bookmarkIndex].saved = !bookmarkPostList[bookmarkIndex].saved;
+            bookmarkPostList.refresh();
+            await getBookmarkPost();
+            Get.back();
+          }
+        }
+
+        if(screen == 'profile') {
+          if(profilePostIndex != -1) {
+            profilePostList[profilePostIndex].saved = !profilePostList[profilePostIndex].saved;
+            profilePostList.refresh();
+          }
         }
 
         Get.snackbar('Success', 'Berhasil ${postList[postIndex].saved ? 'menambahkan' : 'menghapus' } postingan ${postList[postIndex].saved ? 'ke' : 'dari' } daftar bookmark', backgroundColor: kPrimary, colorText: kLight, snackPosition: SnackPosition.BOTTOM);
