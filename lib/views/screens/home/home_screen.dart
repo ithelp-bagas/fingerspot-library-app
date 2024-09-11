@@ -74,7 +74,7 @@ class HomeScreen extends StatelessWidget {
                               Expanded(
                                 flex: 7,
                                 child: Text(
-                                  officeName.value ?? '',
+                                  officeName.value,
                                   // '',
                                   style: TextStyle(
                                     color: kLight, // Make sure to define kLight somewhere in your code
@@ -143,7 +143,7 @@ class HomeScreen extends StatelessWidget {
                             } else {
                               return ListView.builder(
                                 shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
+                                physics: const NeverScrollableScrollPhysics(),
                                 itemCount: postList.length,
                                 itemBuilder: (context, index) {
                                   final post = postList[index];

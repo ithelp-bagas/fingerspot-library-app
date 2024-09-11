@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fingerspot_library_app/controllers/comment_controller.dart';
 import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/helpers.dart';
+import 'package:fingerspot_library_app/views/components/dialog_hapus.dart';
+import 'package:fingerspot_library_app/views/components/dialog_laporkan.dart';
 import 'package:fingerspot_library_app/views/components/expandable_text.dart';
 import 'package:fingerspot_library_app/views/components/name_user_card.dart';
 import 'package:fingerspot_library_app/views/components/profile_image_card.dart';
@@ -100,10 +102,97 @@ class CardSingleComment extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const Expanded(
+                    name != commentController.nameAuth ?
+                    Expanded(
                       flex: 1,
-                      child: Icon(
-                        Icons.more_vert,
+                      child: PopupMenuButton(
+                        itemBuilder:  (context) => [
+                          PopupMenuItem(
+                            onTap: () {
+                              Get.dialog(
+                                DialogLaporkan(
+                                    textController: commentController.reasonController,
+                                    charCount: commentController.charCount,
+                                    onPress: () async {
+                                      if (!commentController.isLoading.value) {
+                                        commentController.isLoading.value = true;
+
+                                        // Execute the report function
+                                        await commentController.reportComment(postId, commentId, commentController.reasonController.text);
+
+                                        // Reset loading state
+                                        commentController.isLoading.value = false;
+
+                                        // Clear the controller and reset the count
+                                        commentController.reasonController.clear();
+                                        commentController.charCount.value = 0;
+                                      }
+                                    },
+                                    isLoading: commentController.isLoading
+                                ),
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                const Icon(Icons.report_outlined),
+                                SizedBox(width: 5.w,),
+                                Text(
+                                  'Laporkan',
+                                  style: TextStyle(
+                                      fontSize: smLabel,
+                                      fontWeight: regular
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ) : Expanded(
+                      flex: 1,
+                      child: PopupMenuButton(
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            child: Row(
+                              children: [
+                                const Icon(Icons.edit_note),
+                                SizedBox(width: 5.w,),
+                                Text(
+                                  'Edit',
+                                  style: TextStyle(
+                                      fontSize: smLabel,
+                                      fontWeight: regular
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          PopupMenuItem(
+                            onTap: () async{
+                              Get.dialog(
+                                DialogHapus(
+                                  title: "Apakah anda akan menghapus komentar ini?",
+                                  onPress: () async {
+                                    await commentController.deleteComment(postId, commentId);
+                                  },
+                                ),
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                const Icon(Icons.delete_outline),
+                                SizedBox(width: 5.w,),
+                                Text(
+                                  'Hapus',
+                                  style: TextStyle(
+                                      fontSize: smLabel,
+                                      fontWeight: regular
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],

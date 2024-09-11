@@ -50,6 +50,7 @@ class AuthController extends GetxController {
         Get.changeThemeMode(ThemeMode.dark);
       }
 
+
       if(response.statusCode == 200) {
         bool success = response.data['success'];
         if(success) {

@@ -118,76 +118,77 @@ class KomentarScreen extends StatelessWidget {
           onRefresh: () async {
             await _loadData(postId);
           },
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: post.comments.where((comment) => comment.parentCommentId == 0).length,
-                  itemBuilder: (context, index) {
-                    final filteredComments = post.comments.where((comment) => comment.parentCommentId == 0).toList();
-                    final comment = filteredComments[index];
-                    return CommentWidget(
-                      comment: comment,
-                      isTappedChild: commentController.isTappedChild,
-                      allComments: post.comments,
-                      onTapReply: (commentId) async {
-                        await commentController.toggleReply(commentId);
-                      },
-                      postUserId: post.userId,
-                      index: index,
-                    );
-                  },
+          child: Obx(() => Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: post.comments.where((comment) => comment.parentCommentId == 0).length,
+                    itemBuilder: (context, index) {
+                      final filteredComments = post.comments.where((comment) => comment.parentCommentId == 0).toList();
+                      final comment = filteredComments[index];
+                      return CommentWidget(
+                        comment: comment,
+                        isTappedChild: commentController.isTappedChild,
+                        allComments: post.comments,
+                        onTapReply: (commentId) async {
+                          await commentController.toggleReply(commentId);
+                        },
+                        postUserId: post.userId,
+                        index: index,
+                      );
+                    },
+                  ),
                 ),
-              ),
-              commentController.repliedTap.value ? CardCommentReplies(imgPath: commentController.imgPathUser.value, name: commentController.nameUser.value, comment: commentController.commentUser.value)
-              : Container(),
-              Container(
-                height: 60.h,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: postController.komentarController,
-                        keyboardType: TextInputType.text,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Add a comment...',
-                          contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
+                commentController.repliedTap.value ? CardCommentReplies(imgPath: commentController.imgPathUser.value, name: commentController.nameUser.value, comment: commentController.commentUser.value)
+                : Container(),
+                Container(
+                  height: 60.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: postController.komentarController,
+                          keyboardType: TextInputType.text,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Add a comment...',
+                            contentPadding: EdgeInsets.symmetric(horizontal: 8.0),
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Obx(() {
-                        var isLoading = postController.isLoading;
-                        if (isLoading.value) {
-                          return const CircularProgressIndicator();
-                        } else {
-                          return IconButton(
-                            onPressed: () async {
-                              if (postController.komentarController.text == '') {
-                                Get.snackbar('Warning', 'Komentar harus diisi!', backgroundColor: kWarning);
-                              } else {
-                                if(commentController.repliedTap.value) {
-                                  await commentController.replyComment(postController.komentarController.text, commentController.commentIdUser.value, postId, komentar);
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Obx(() {
+                          var isLoading = postController.isLoading;
+                          if (isLoading.value) {
+                            return const CircularProgressIndicator();
+                          } else {
+                            return IconButton(
+                              onPressed: () async {
+                                if (postController.komentarController.text == '') {
+                                  Get.snackbar('Warning', 'Komentar harus diisi!', backgroundColor: kWarning);
                                 } else {
-                                  await postController.comment(postId, postController.komentarController.text, komentar);
+                                  if(commentController.repliedTap.value) {
+                                    await commentController.replyComment(postController.komentarController.text, commentController.commentIdUser.value, postId, komentar);
+                                  } else {
+                                    await postController.comment(postId, postController.komentarController.text, komentar);
+                                  }
+                                  Get.snackbar('Success', 'Berhasil menambahkan komentar!', backgroundColor: kSuccess, colorText: kLight);
                                 }
-                                Get.snackbar('Success', 'Berhasil menambahkan komentar!', backgroundColor: kSuccess, colorText: kLight);
-                              }
-                            },
-                            icon: Icon(Icons.send, color: Theme.of(context).primaryColor),
-                          );
-                        }
-                      }),
-                    ),
-                  ],
+                              },
+                              icon: Icon(Icons.send, color: Theme.of(context).primaryColor),
+                            );
+                          }
+                        }),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       }),

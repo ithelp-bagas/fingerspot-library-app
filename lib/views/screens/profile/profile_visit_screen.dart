@@ -81,7 +81,7 @@ class ProfileVisitScreen extends StatelessWidget {
                         } else {
                           return ListView.builder(
                             shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             itemCount: postList.length,
                             itemBuilder: (context, index) {
                               final post = postList[index];

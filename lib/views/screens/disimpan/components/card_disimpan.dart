@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fingerspot_library_app/controllers/post_controller.dart';
 import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/helpers.dart';
+import 'package:fingerspot_library_app/views/components/dialog_hapus.dart';
+import 'package:fingerspot_library_app/views/components/dialog_laporkan.dart';
 import 'package:fingerspot_library_app/views/components/name_user_card.dart';
 import 'package:fingerspot_library_app/views/components/profile_image_card.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
@@ -87,77 +89,11 @@ class CardDisimpan extends StatelessWidget {
                     PopupMenuItem(
                       onTap: () async{
                         Get.dialog(
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 40),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context).canvasColor,
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(20),
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(20.0),
-                                    child: Material(
-                                      child: Column(
-                                        children: [
-                                          const SizedBox(height: 10),
-                                          const Text(
-                                            "Apakah anda akan menghapus postingan ini dari daftar “Disimpan” ",
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          const SizedBox(height: 20),
-                                          Row(
-                                            children: [
-                                              Expanded(
-                                                child: ElevatedButton(
-                                                  style: ElevatedButton.styleFrom(
-                                                    foregroundColor: Theme.of(context).primaryColorLight,
-                                                    backgroundColor: Theme.of(context).primaryColorDark,
-                                                    minimumSize: const Size(0, 45),
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(8),
-                                                    ),
-                                                  ),
-                                                  onPressed: () {
-                                                    Get.back();
-                                                  },
-                                                  child: const Text(
-                                                    'Kembali',
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 10),
-                                              Expanded(
-                                                child: ElevatedButton(
-                                                  style: ElevatedButton.styleFrom(
-                                                    foregroundColor: const Color(0xFFFFFFFF),
-                                                    backgroundColor: Theme.of(context).primaryColor,
-                                                    minimumSize: const Size(0, 45),
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(8),
-                                                    ),
-                                                  ),
-                                                  onPressed: () async {
-                                                    await postController.addBookmark(postId, 'bookmark');
-                                                  },
-                                                  child: const Text(
-                                                    'Ya, Hapus',
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                          DialogHapus(
+                            title: "Apakah anda akan menghapus postingan ini dari daftar “Disimpan” ",
+                            onPress: () async {
+                              await postController.addBookmark(postId, 'bookmark');
+                            },
                           ),
                         );
                       },
@@ -180,106 +116,25 @@ class CardDisimpan extends StatelessWidget {
                     PopupMenuItem(
                       onTap: () {
                         Get.dialog(
-                          Dialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Material(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min, // This makes the dialog take only as much space as needed
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 10),
-                                    Center(
-                                      child: Text(
-                                        "Laporkan",
-                                        style: TextStyle(
-                                          fontSize: p1,
-                                          fontWeight: heavy,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                    SizedBox(height: 10.h),
-                                    Text(
-                                      "Alasan : ",
-                                      style: TextStyle(
-                                        fontSize: p2,
-                                        fontWeight: regular,
-                                      ),
-                                      textAlign: TextAlign.start,
-                                    ),
-                                    SizedBox(height: 10.h),
-                                    TextFormField(
-                                      controller: postController.reasonController,
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10.h),
-                                        ),
-                                      ),
-                                      minLines: 3,
-                                      keyboardType: TextInputType.multiline,
-                                      maxLines: null,
-                                    ),
-                                    const SizedBox(height: 20),
-                                    //Buttons
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Obx(
-                                              () => Expanded(
-                                            child: Text(
-                                              '${postController.charCount.value}/300',
-                                              style: TextStyle(
-                                                fontSize: p3,
-                                                fontWeight: regular,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Expanded(
-                                          child: Obx(
-                                                () => ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                foregroundColor: kLight,
-                                                backgroundColor: postController.charCount.value < 1 ? kGrey : Theme.of(context).primaryColor,
-                                                minimumSize: const Size(0, 45),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(8),
-                                                ),
-                                              ),
-                                              onPressed: postController.charCount.value < 1
-                                                  ? () {}
-                                                  : () async {
-                                                if (!postController.isLoading.value) {
-                                                  postController.isLoading.value = true;
+                          DialogLaporkan(
+                              textController: postController.reasonController,
+                              charCount: postController.charCount,
+                              onPress: () async {
+                                if (!postController.isLoading.value) {
+                                  postController.isLoading.value = true;
 
-                                                  // Execute the report function
-                                                  await postController.reportPost(postId, postController.reasonController.text);
+                                  // Execute the report function
+                                  await postController.reportPost(postId, postController.reasonController.text);
 
-                                                  // Reset loading state
-                                                  postController.isLoading.value = false;
+                                  // Reset loading state
+                                  postController.isLoading.value = false;
 
-                                                  // Clear the controller and reset the count
-                                                  postController.reasonController.clear();
-                                                  postController.charCount.value = 0;
-                                                }
-                                              },
-                                              child: postController.isLoading.value
-                                                  ? const CircularProgressIndicator()
-                                                  : const Text('KIRIM'),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                                  // Clear the controller and reset the count
+                                  postController.reasonController.clear();
+                                  postController.charCount.value = 0;
+                                }
+                              },
+                              isLoading: postController.isLoading
                           ),
                         );
                       },

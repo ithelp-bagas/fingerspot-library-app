@@ -61,9 +61,8 @@ class SearchScreen extends StatelessWidget {
                                   postController.searchByTags(tags);
 
                                   // Print tagList to check the contents
-                                  print(tags);
                                 },
-                                icon: Icon(Icons.search),
+                                icon: const Icon(Icons.search),
                               ),
                               suffixIcon: postController.searchText.value != '' ? Row(
                                 mainAxisSize: MainAxisSize.min,

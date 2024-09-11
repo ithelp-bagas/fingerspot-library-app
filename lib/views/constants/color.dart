@@ -11,10 +11,14 @@ ThemeData light = ThemeData(
   hintColor: const Color(0xFF9F9F9F),
   cardColor: Colors.white,
   textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: const Color(0xFF3f87b9))),
-  colorScheme: const ColorScheme.light(primary: Color(0xFF3f87b9),
+  colorScheme: const ColorScheme.light(
+      primary: Color(0xFF3f87b9),
       tertiary: Color(0xFF3f87b9),
       tertiaryContainer: Color(0xFF005a89),
-      secondary: Color(0xFF3f87b9)).copyWith(background: const Color(0xFFF3F3F3)).copyWith(error: const Color(0xFFE84D4F)),
+      secondary: Color(0xFF3f87b9)).copyWith(
+      surface: const Color(0xFFF3F3F3)).copyWith(
+      error: const Color(0xFFE84D4F)
+  ),
   popupMenuTheme: const PopupMenuThemeData(color: Colors.white, surfaceTintColor: Colors.white),
   dialogTheme: const DialogTheme(surfaceTintColor: Colors.white),
   floatingActionButtonTheme: FloatingActionButtonThemeData(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(500))),
@@ -34,10 +38,14 @@ ThemeData dark = ThemeData(
   hintColor: const Color(0xFFbebebe),
   cardColor: const Color(0xFF272d34),
   textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: const Color(0xFF3f87b9))),
-  colorScheme: const ColorScheme.dark(primary: Color(0xFF3f87b9),
+  colorScheme: const ColorScheme.dark(
+      primary: Color(0xFF3f87b9),
       tertiary: Color(0xFF3f87b9),
       tertiaryContainer: Color(0xFF005a89),
-      secondary: Color(0xFF3f87b9)).copyWith(background: const Color(0xFF191A26)).copyWith(error: const Color(0xFFdd3135)),
+      secondary: Color(0xFF3f87b9)).copyWith(
+      surface: const Color(0xFF191A26)).copyWith(
+      error: const Color(0xFFdd3135)
+  ),
   popupMenuTheme: const PopupMenuThemeData(color: Color(0xFF272d34), surfaceTintColor: Color(0xFF272d34)),
   dialogTheme: const DialogTheme(surfaceTintColor: Colors.white10),
   floatingActionButtonTheme: FloatingActionButtonThemeData(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(500))),

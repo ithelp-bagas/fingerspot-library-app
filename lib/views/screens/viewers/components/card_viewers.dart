@@ -22,7 +22,6 @@ class CardViewers extends StatelessWidget {
     return GestureDetector(
       onTap: () async{
         String? nameAuth = await SharedPref().getAuthName();
-        print(userId);
         if(name != nameAuth) {
           Get.toNamed(Routes.PROFILE_VISIT, arguments: {'profileId': userId});
         } else {

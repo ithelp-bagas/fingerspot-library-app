@@ -9,6 +9,7 @@ import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/shared_pref.dart';
 import 'package:fingerspot_library_app/models/comment_model.dart';
 import 'package:fingerspot_library_app/routes/app_routes.dart';
+import 'package:fingerspot_library_app/views/constants/color.dart';
 import 'package:fingerspot_library_app/views/screens/coming_soon.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,11 +26,44 @@ class CommentController extends GetxController {
   RxString commentUser = ''.obs;
   RxInt commentIdUser = 0.obs;
   RxBool isLoading = false.obs;
+  var charCount = 0.obs;
+  final reasonController = TextEditingController();
+  final editCommentController = TextEditingController();
+  String nameAuth = '';
 
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+    reasonController.addListener(_updateCharCount);
+  }
+
+  @override
+  void onReady() async{
+    // TODO: implement onReady
+    super.onReady();
+    String? name = await SharedPref().getAuthName();
+    nameAuth = name!;
+  }
+
+  @override
+  void onClose() {
+    // TODO: implement onClose
+    reasonController.dispose();
+    editCommentController.dispose();
+    super.onClose();
+  }
+
+  void _updateCharCount() {
+    if (reasonController.text.length <= 300) {
+      charCount.value = reasonController.text.length;
+    } else {
+      // Prevent the text from exceeding 300 characters
+      reasonController.text = reasonController.text.substring(0, 300);
+      reasonController.selection = TextSelection.fromPosition(
+        TextPosition(offset: reasonController.text.length),
+      );
+    }
   }
 
 
@@ -120,6 +154,7 @@ class CommentController extends GetxController {
     String? token = await SharedPref().getToken();
 
     try {
+      isLoading.value = true;
       var response = await dio.post(
         '${Api.baseUrl}/comment/comment-like',
         data: {
@@ -149,6 +184,117 @@ class CommentController extends GetxController {
       }
     } catch(e) {
       throw Exception(e);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+
+  Future<void> reportComment(int postId, int commentId, String reason) async {
+    String? token = await SharedPref().getToken();
+    try{
+      var response = await dio.post(
+        '${Api.baseUrl}/comment/comment-report',
+        data: {
+          'post_id': postId,
+          'comment_id': commentId,
+          'reason': reason
+        },
+        options: Options(
+            headers: {
+              "Authorization": "Bearer $token"
+            }
+        ),
+      );
+
+      if(response.statusCode == 200) {
+        Map<String, dynamic> responseData = response.data;
+        var isSuccess = responseData['success'];
+        if(isSuccess){
+          Get.back();
+          Get.snackbar('Success', 'Komentar berhasil dilaporkan!', backgroundColor: kSuccess, colorText: kLight);
+        } else {
+          Get.back();
+          Get.snackbar('Failed', 'Anda telah melaporkan komentar ini sebelumnya!', backgroundColor: kDanger, colorText: kLight);
+        }
+      } else {
+        Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
+      }
+    } catch(e) {
+      print('report comment error: $e');
+    }
+  }
+
+  Future<void> deleteComment(int postId, int commentId) async {
+    String? token = await SharedPref().getToken();
+    try {
+      isLoading.value = true;
+      var response = await dio.post(
+        '${Api.baseUrl}/comment/comment-delete',
+        data: {
+          'post_id': postId,
+          'comment_id': commentId
+        },
+        options: Options(
+            headers: {
+              "Authorization": "Bearer $token"
+            }
+        ),
+      );
+
+      if(response.statusCode == 200) {
+        Map<String, dynamic> responseData = response.data;
+        var isSuccess = responseData['success'];
+        if(isSuccess){
+          Get.back();
+          commentList.refresh();
+          Get.snackbar('Success', 'Komentar berhasil dihapus!', backgroundColor: kSuccess, colorText: kLight);
+        } else {
+          Get.back();
+          Get.snackbar('Failed', 'Gagal menghapus komentar!', backgroundColor: kDanger, colorText: kLight);
+        }
+      } else {
+        Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
+      }
+    } catch(e) {
+      print('delete comment error: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> editComment(int commentId, String comment) async{
+    String? token = await SharedPref().getToken();
+    try{
+      var response = await dio.post(
+        '${Api.baseUrl}/comment/comment-edit',
+        data: {
+          'comment_id': commentId,
+          'comment': comment
+        },
+        options: Options(
+            headers: {
+              "Authorization": "Bearer $token"
+            }
+        ),
+      );
+
+      if(response.statusCode == 200) {
+        Map<String, dynamic> responseData = response.data;
+        var isSuccess = responseData['success'];
+        if(isSuccess){
+          Get.back();
+          commentList.refresh();
+          Get.snackbar('Success', 'Komentar berhasil diubah!', backgroundColor: kSuccess, colorText: kLight);
+        } else {
+          Get.back();
+          Get.snackbar('Failed', 'Gagal mengubah komentar!', backgroundColor: kDanger, colorText: kLight);
+        }
+      } else {
+        Get.toNamed(Routes.ERROR, arguments: {'title': 'Coming Soon'});
+      }
+    } catch(e) {
+      print('edit comment error: $e');
     }
   }
 }

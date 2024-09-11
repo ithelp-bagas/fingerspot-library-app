@@ -478,6 +478,7 @@ class PostController extends GetxController{
           Get.back();
           Get.snackbar('Success', 'Postingan berhasil dilaporkan!', backgroundColor: kSuccess, colorText: kLight);
         } else {
+          Get.back();
           Get.snackbar('Failed', 'Anda telah melaporkan postingan ini sebelumnya!', backgroundColor: kDanger, colorText: kLight);
         }
       } else {
