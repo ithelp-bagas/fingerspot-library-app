@@ -36,6 +36,7 @@ class CommentController extends GetxController {
     // TODO: implement onInit
     super.onInit();
     reasonController.addListener(_updateCharCount);
+    editCommentController.addListener(_updateCharCountKomentar);
   }
 
   @override
@@ -54,6 +55,10 @@ class CommentController extends GetxController {
     super.onClose();
   }
 
+  void _updateCharCountKomentar() {
+    charCount.value = editCommentController.text.length;
+  }
+
   void _updateCharCount() {
     if (reasonController.text.length <= 300) {
       charCount.value = reasonController.text.length;
@@ -67,18 +72,20 @@ class CommentController extends GetxController {
   }
 
 
-  void toggleUserCommentReply(String imgPath, String name, String comment, int commentId) {
+  void toggleUserCommentReply(String imgPath, String name, String comment, int commentId, String username) {
     repliedTap.value = !repliedTap.value;
     if (repliedTap.value) {
       imgPathUser.value = imgPath;
       nameUser.value = name;
       commentUser.value = comment;
       commentIdUser.value = commentId;
+      postController.komentarController.text = '@$username ';
     } else {
       imgPathUser.value = '';
       nameUser.value = '';
       commentUser.value = '';
       commentIdUser.value = 0;
+      postController.komentarController.clear();
     }
   }
 
@@ -284,7 +291,6 @@ class CommentController extends GetxController {
         var isSuccess = responseData['success'];
         if(isSuccess){
           Get.back();
-          commentList.refresh();
           Get.snackbar('Success', 'Komentar berhasil diubah!', backgroundColor: kSuccess, colorText: kLight);
         } else {
           Get.back();

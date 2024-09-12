@@ -5,6 +5,7 @@ import 'package:fingerspot_library_app/helpers/helpers.dart';
 import 'package:fingerspot_library_app/views/components/dialog_hapus.dart';
 import 'package:fingerspot_library_app/views/components/dialog_laporkan.dart';
 import 'package:fingerspot_library_app/views/components/expandable_text.dart';
+import 'package:fingerspot_library_app/views/components/mention_text.dart';
 import 'package:fingerspot_library_app/views/components/name_user_card.dart';
 import 'package:fingerspot_library_app/views/components/profile_image_card.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
@@ -14,10 +15,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class CardSingleComment extends StatelessWidget {
-  CardSingleComment({super.key, required this.imgPath, required this.name, required this.date, required this.komentar, required this.like, required this.balasan, required this.liked, required this.commentId, required this.commentUserId, required this.postUserId, required this.postId, required this.parentCommentId, required this.isFirst});
+  CardSingleComment({super.key, required this.imgPath, required this.name, required this.date, required this.komentar, required this.like, required this.balasan, required this.liked, required this.commentId, required this.commentUserId, required this.postUserId, required this.postId, required this.parentCommentId, required this.isFirst, required this.username});
   final String imgPath;
   final String name;
   final String date;
+  final String username;
   final String komentar;
   final int like;
   final int balasan;
@@ -102,13 +104,14 @@ class CardSingleComment extends StatelessWidget {
                         ],
                       ),
                     ),
-                    name != commentController.nameAuth ?
-                    Expanded(
+                    if (name != commentController.nameAuth) Expanded(
                       flex: 1,
                       child: PopupMenuButton(
                         itemBuilder:  (context) => [
                           PopupMenuItem(
                             onTap: () {
+                              commentController.reasonController.clear();
+                              commentController.charCount.value = 0;
                               Get.dialog(
                                 DialogLaporkan(
                                     textController: commentController.reasonController,
@@ -148,11 +151,95 @@ class CardSingleComment extends StatelessWidget {
                           ),
                         ],
                       ),
-                    ) : Expanded(
+                    ) else Expanded(
                       flex: 1,
                       child: PopupMenuButton(
                         itemBuilder: (context) => [
                           PopupMenuItem(
+                            onTap: () async{
+                              commentController.charCount.value = 0;
+                              commentController.editCommentController.text = komentar;
+                              Get.dialog(
+                                Dialog(
+                                  surfaceTintColor: Theme.of(context).cardColor,
+                                  backgroundColor: Theme.of(context).cardColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Material(
+                                      color: Theme.of(context).cardColor,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min, // This makes the dialog take only as much space as needed
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(height: 10),
+                                          Center(
+                                            child: Text(
+                                              "Edit Komentar",
+                                              style: TextStyle(
+                                                fontSize: p1,
+                                                fontWeight: heavy,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                          SizedBox(height: 10.h),
+                                          Text(
+                                            "Komentar : ",
+                                            style: TextStyle(
+                                              fontSize: p2,
+                                              fontWeight: regular,
+                                            ),
+                                            textAlign: TextAlign.start,
+                                          ),
+                                          SizedBox(height: 10.h),
+                                          TextFormField(
+                                            controller: commentController.editCommentController,
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(10.h),
+                                              ),
+                                            ),
+                                            minLines: 3,
+                                            keyboardType: TextInputType.multiline,
+                                            maxLines: null,
+                                          ),
+                                          const SizedBox(height: 20),
+                                          Obx(
+                                                () => Center(
+                                                  child: ElevatedButton(
+                                                    style: ElevatedButton.styleFrom(
+                                                      foregroundColor: kLight,
+                                                      backgroundColor: commentController.charCount.value < 1 ? kGrey : Theme.of(context).primaryColor,
+                                                      minimumSize: const Size(0, 45),
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(8),
+                                                      ),
+                                                    ),
+                                                    onPressed: commentController.isLoading.value
+                                                    ? () {}
+                                                    : () async{
+                                                      commentController.isLoading.value = true;
+                                                      await commentController.editComment(commentId, commentController.editCommentController.text);
+                                                      commentController.isLoading.value = false;
+                                                      commentController.editCommentController.clear();
+                                                      commentController.charCount.value = 0;
+                                                      },
+                                                    child: commentController.isLoading.value
+                                                    ? const CircularProgressIndicator()
+                                                    : const Text('KIRIM'),
+                                                  ),
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                             child: Row(
                               children: [
                                 const Icon(Icons.edit_note),
@@ -198,12 +285,13 @@ class CardSingleComment extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 10.h,),
-                ExpandableText(
-                  text: helper.renderHtmlToString(komentar),
+                MentionText(
+                  htmlContent: komentar,
                   style: TextStyle(
                       fontSize: p2,
                       fontWeight: regular
                   ),
+                  maxLines: 2,
                 ),
                 SizedBox(height: 10.h,),
                 Row(
@@ -231,7 +319,7 @@ class CardSingleComment extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: (){
-                        commentController.toggleUserCommentReply(imgPath, name, komentar, commentId);
+                        commentController.toggleUserCommentReply(imgPath, name, komentar, commentId, username);
                       },
                       child: Text(
                         'Balas',

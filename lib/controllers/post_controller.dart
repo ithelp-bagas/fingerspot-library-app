@@ -55,6 +55,9 @@ class PostController extends GetxController{
   RxList<Tag> allTags = RxList<Tag>([]);
   RxList<Tag> searchTag = RxList<Tag>([]);
   RxString searchText = ''.obs;
+  RxBool isMention = false.obs;
+  RxList<User> allUser = RxList<User>([]);
+  RxList<User> searchUser = RxList<User>([]);
 
   @override
   void onClose() {
@@ -106,6 +109,17 @@ class PostController extends GetxController{
     }
   }
 
+  Future<int?> searchIdByUsername(String username) async {
+    // Find the first user whose username matches the search term
+    var matchingUser = allUser.firstWhere(
+          (user) => user.username.toLowerCase().contains(username.toLowerCase())
+    );
+
+    // Return the ID of the matching user, or null if no match is found
+    return matchingUser.id;
+  }
+
+
   void searchByTags(List<String> tags) {
     searchPost.clear();
 
@@ -123,8 +137,34 @@ class PostController extends GetxController{
     }
   }
 
+  void searchUserMention(String query) {
+    searchUser.clear();
+
+    if (query.isEmpty) {
+      searchUser.addAll(allUser);
+      isMention.value = true;
+    } else {
+      var result = allUser.where((user) {
+        bool firstNameMatch = user.firstname.toLowerCase().contains(query.toLowerCase());
+        bool lastNameMatch = user.lastname.toLowerCase().contains(query.toLowerCase());
+        bool usernameMatch = user.username.toLowerCase().contains(query.toLowerCase());
+
+        return firstNameMatch || lastNameMatch || usernameMatch;
+      }).toList();
+
+      searchUser.addAll(result);
+      isMention.value = result.isNotEmpty;
+    }
+  }
 
 
+  void _mentionComment() {
+    if (komentarController.text.contains('@')) {
+      isMention.value = true;
+    } else {
+      isMention.value = false; // Hide container if '@' is removed
+    }
+  }
 
   void _updateCharCount() {
     if (reasonController.text.length <= 300) {
@@ -494,6 +534,7 @@ class PostController extends GetxController{
 
   Future<void> getSearchPost(int searchId) async {
     String? token = await SharedPref().getToken();
+    print(token);
 
     try {
       var response = await dio.post(
@@ -568,6 +609,33 @@ class PostController extends GetxController{
         List<dynamic> data = responseData['data'];
         allTags.value = data.map((json) => Tag.fromJson(json)).toList();
         searchTag.value = data.map((json) => Tag.fromJson(json)).toList();
+      } else {
+        Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
+        throw Exception('error');
+      }
+    } catch (e) {
+      print(e);
+      throw Exception(e);
+    }
+  }
+
+  Future<void> getAllUser() async{
+    String? token = await SharedPref().getToken();
+    try {
+      var response = await dio.get(
+        '${Api.baseUrl}/profile/getAllUser',
+        options: Options(
+            headers: {
+              "Authorization": "Bearer $token",
+            }
+        ),
+      );
+
+      if(response.statusCode == 200){
+        Map<String, dynamic> responseData = response.data;
+        List<dynamic> data = responseData['data'];
+        allUser.value = data.map((json) => User.fromJson(json)).toList();
+        searchUser.value = data.map((json) => User.fromJson(json)).toList();
       } else {
         Get.toNamed(Routes.ERROR, arguments: {'title': 'Masuk untuk melihat semua fitur'});
         throw Exception('error');

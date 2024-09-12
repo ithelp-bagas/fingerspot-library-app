@@ -19,50 +19,54 @@ class ProfileImageCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () async{
-        String? nameAuth = await SharedPref().getAuthName();
-        if(nameUser != nameAuth) {
-          Get.toNamed(Routes.PROFILE_VISIT, arguments: {'profileId': userId});
-        } else {
-          bottomNavController.selectedIndex.value = 4;
-          Get.toNamed(Routes.HOME);
-        }
-      },
-      child: imagePath.isNotEmpty
-          ? CachedNetworkImage(
-        imageUrl: Api.imgurl + imagePath,
-        imageBuilder: (context, imageProvider) => Container(
-          width: 28.h,
-          height: 28.h,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100.h),
-            image: DecorationImage(
-              image: imageProvider,
-              fit: BoxFit.cover,
-            ),
-          ),
+      onTap: () => _handleTap(context),
+      child: _buildImage(),
+    );
+  }
+
+  Future<void> _handleTap(BuildContext context) async {
+    String? nameAuth = await SharedPref().getAuthName();
+    if (nameUser != nameAuth) {
+      Get.toNamed(Routes.PROFILE_VISIT, arguments: {'profileId': userId});
+    } else {
+      bottomNavController.selectedIndex.value = 4;
+      Get.toNamed(Routes.HOME);
+    }
+  }
+
+  Widget _buildImage() {
+    return imagePath.isNotEmpty
+        ? CachedNetworkImage(
+      imageUrl: Api.imgurl + imagePath,
+      imageBuilder: (context, imageProvider) => _buildImageContainer(imageProvider),
+      errorWidget: (context, url, error) => _buildDefaultImage(),
+    )
+        : _buildDefaultImage();
+  }
+
+  Widget _buildImageContainer(ImageProvider imageProvider) {
+    return Container(
+      width: 28.h,
+      height: 28.h,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(100.h),
+        image: DecorationImage(
+          image: imageProvider,
+          fit: BoxFit.cover,
         ),
-        errorWidget: (context, url, error) => Container(
-          width: 28.h,
-          height: 28.h,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100.h),
-            image: const DecorationImage(
-              image: AssetImage('assets/images/profile.jpg'),
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-      )
-          : Container(
-        width: 28.h,
-        height: 28.h,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100.h),
-          image: const DecorationImage(
-            image: AssetImage('assets/images/profile.jpg'),
-            fit: BoxFit.cover,
-          ),
+      ),
+    );
+  }
+
+  Widget _buildDefaultImage() {
+    return Container(
+      width: 28.h,
+      height: 28.h,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(100.h),
+        image: const DecorationImage(
+          image: AssetImage('assets/images/profile.jpg'),
+          fit: BoxFit.cover,
         ),
       ),
     );

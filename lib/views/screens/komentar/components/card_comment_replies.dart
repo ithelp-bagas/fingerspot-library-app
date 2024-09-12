@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fingerspot_library_app/controllers/comment_controller.dart';
+import 'package:fingerspot_library_app/controllers/post_controller.dart';
 import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/helpers.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
@@ -15,6 +16,7 @@ class CardCommentReplies extends StatelessWidget {
 
   Helper helper = Helper();
   final CommentController commentController = Get.put(CommentController());
+  final PostController postController = Get.put(PostController());
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +93,7 @@ class CardCommentReplies extends StatelessWidget {
                 child: IconButton(
                     onPressed: () {
                       commentController.repliedTap.value = false;
+                      postController.komentarController.clear();
                     },
                     icon: const Icon(Icons.clear)
                 ),

@@ -1,7 +1,7 @@
 class Api {
   Api._();
 
-  static const String runMode = 'mobile';
+  static const String runMode = 'web';
 
   static late String defaultUrl;
   static late String baseUrl;
@@ -29,7 +29,7 @@ class Api {
         defaultUrl = 'http://192.168.1.150:81/lib';
         baseUrl = '$defaultUrl/api';
         imgurl = '$defaultUrl/';
-        encodedData = 'FINfQ==c2VyX2lkIjozNjQ3MywidHlwZSI6MiwiY29tcGFueV9pZCI6MTI3NzYsInBhY2thZ2VfaWQiOjYsImVtcF9pZCI6OTk3ODUsImVtcF9waW4iOiIxIiwibW9kdWxlX2lkIjozLCJpcF9hZGRyZXNzIjoiMTkyLjE2OC4xLjkxIiwicGxhdGZvcm0iOiJhbmRyb2lkIiwibGFuZ3VhZ2UiOiJpZCIsInRoZW1lIjoibGlnaHQiLCJlbWFpbCI6ImFkbWluQG15c2ltcGxlc29mdC5jb20ieyJ1SPOT';
+        encodedData = 'FINfQ==c2VyX2lkIjozNjQ3MywidHlwZSI6MiwiY29tcGFueV9pZCI6MTI3NzYsInBhY2thZ2VfaWQiOjYsImVtcF9pZCI6OTk3ODUsImVtcF9waW4iOiIxIiwibW9kdWxlX2lkIjozLCJpcF9hZGRyZXNzIjoiMTkyLjE2OC4xLjkxIiwicGxhdGZvcm0iOiJhbmRyb2lkIiwibGFuZ3VhZ2UiOiJpZCIsInRoZW1lIjoibGlnaHQiLCJlbWFpbCI6ImhlcnUuZmluZ2Vyc3BvdEBnbWFpbC5jb20ieyJ1SPOT';
         break;
 
       case 'dev':

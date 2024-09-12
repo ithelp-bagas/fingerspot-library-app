@@ -29,7 +29,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPreferences.getInstance();
   await initializeDateFormatting('id_ID', null);
-  Api.initializeApi('dev');
+  Api.initializeApi('prod');
   Get.put(AuthController(), permanent: true);
 
   // Initialize other necessary items like theme mode

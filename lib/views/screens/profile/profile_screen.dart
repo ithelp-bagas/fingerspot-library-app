@@ -46,7 +46,7 @@ class ProfileScreen extends StatelessWidget {
                       officeName: user.officeName,
                       department: user.departmentName,
                       role: user.roleName,
-                      imgPath: user.images,
+                      imgPath: user.image,
                     ),
                     const Divider(),
                     Center(
@@ -62,7 +62,25 @@ class ProfileScreen extends StatelessWidget {
                     Obx(() {
                       final postList = postController.profilePostList;
                       if (postList.isEmpty) {
-                        return const DefaultScreen();
+                        return SizedBox(
+                          height: MediaQuery.of(context).size.height * .5,
+                          child: Center(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset('assets/images/no_data.png', width: 100.h,),
+                                Text(
+                                  'Belum ada postingan',
+                                  style: TextStyle(
+                                      fontSize: defLabel,
+                                      fontWeight: heavy
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
                       } else {
                         return ListView.builder(
                           shrinkWrap: true,
@@ -71,9 +89,9 @@ class ProfileScreen extends StatelessWidget {
                           itemBuilder: (context, index) {
                             final post = postList[index];
                             return GestureDetector(
-                              onTap: () => Get.toNamed(Routes.DETAIL, arguments: {'postId': post.id, 'imgPath' : user.images}),
+                              onTap: () => Get.toNamed(Routes.DETAIL, arguments: {'postId': post.id, 'imgPath' : user.image}),
                               child: CardProfile(
-                                  imgPath: user.images,
+                                  imgPath: user.image,
                                   name: '${user.firstname} ${user.lastname}',
                                   date: post.createdAt,
                                   categoryName: post.categoryName,

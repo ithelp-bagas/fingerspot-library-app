@@ -2,7 +2,7 @@ import 'package:fingerspot_library_app/views/constants/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-// import 'dart:js' as js;
+import 'dart:js' as js;
 
 
 class ComingSoon extends StatelessWidget {
@@ -14,7 +14,7 @@ class ComingSoon extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(onPressed: (){
-          // js.context.callMethod('backToMainApp');
+          js.context.callMethod('backToMainApp');
         }, icon: const Icon(Icons.arrow_back_ios_new)),
       ),
       body: Center(

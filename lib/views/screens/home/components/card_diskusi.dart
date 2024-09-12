@@ -50,26 +50,28 @@ class CardDiskusi extends StatelessWidget {
               ),
               SizedBox(width: 10.h,),
               Expanded(
-                flex: 5,
-                child: NameUserCard(
-                    nameUser: nameUser,
-                    userId: userId,
-                    textColor: Theme.of(context).primaryColor,
-                    fontSize: p1,
-                    fontWeight: heavy
+                flex: 8,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    NameUserCard(
+                        nameUser: nameUser,
+                        userId: userId,
+                        textColor: Theme.of(context).primaryColor,
+                        fontSize: p1,
+                        fontWeight: heavy
+                    ),
+                    Text(
+                      helper.formatedDate(date),
+                      textAlign: TextAlign.end,
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          fontSize: p2,
+                          fontWeight: regular
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 )
-              ),
-              Expanded(
-                flex: 3,
-                child: Text(
-                  helper.formatedDate(date),
-                  textAlign: TextAlign.end,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      fontSize: p2,
-                      fontWeight: regular
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
               ),
               Expanded(
                 flex: 1,

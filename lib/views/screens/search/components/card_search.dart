@@ -163,33 +163,35 @@ class CardRekomendasi extends StatelessWidget {
               ),
               SizedBox(width: 10.h,),
               Expanded(
-                flex: 6,
-                child: NameUserCard(
-                    nameUser: nameUser,
-                    userId: userId,
-                    textColor: Theme.of(context).textTheme.labelSmall!.color!,
-                    fontSize: p2,
-                    fontWeight: regular
-                )
-              ),
-              Expanded(
-                flex: 3,
+                flex: 9,
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(Icons.chat, size: p2, color: Theme.of(context).primaryColor,),
-                    SizedBox(width: 5.w,),
-                    Text(
-                      "Topik $categoryName",
-                      textAlign: TextAlign.end,
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontSize: p3,
-                          fontWeight: heavy
-                      ),
-                      overflow: TextOverflow.ellipsis,
+                    NameUserCard(
+                        nameUser: nameUser,
+                        userId: userId,
+                        textColor: Theme.of(context).textTheme.labelSmall!.color!,
+                        fontSize: p2,
+                        fontWeight: regular
+                    ),
+                    Row(
+                      children: [
+                        Icon(Icons.chat, size: p2, color: Theme.of(context).primaryColor,),
+                        SizedBox(width: 5.w,),
+                        Text(
+                          "Topik $categoryName",
+                          textAlign: TextAlign.end,
+                          style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: p3,
+                              fontWeight: heavy
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
                   ],
-                ),
+                )
               ),
             ],
           ),

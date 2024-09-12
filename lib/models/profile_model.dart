@@ -3,7 +3,7 @@ import 'package:fingerspot_library_app/models/post_model.dart';
 class Profile {
   int id;
   String username;
-  String images;
+  String image;
   String firstname;
   String lastname;
   String skills;
@@ -18,7 +18,7 @@ class Profile {
 
   Profile({
     required this.id,
-    required this.images,
+    required this.image,
     required this.username,
     required this.firstname,
     required this.lastname,
@@ -52,7 +52,7 @@ class Profile {
         departmentName: (json['department_name'] ?? '') as String,
         officeName: (json['office_name'] ?? '') as String,
         roleName: (json['role_name'] ?? '') as String,
-        images: (json['images'] ?? '') as String
+        image: (json['image'] ?? '') as String
     );
   }
 

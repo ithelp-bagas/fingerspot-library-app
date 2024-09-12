@@ -61,7 +61,7 @@ class ProfileVisitScreen extends StatelessWidget {
                         officeName: user.officeName,
                         department: user.departmentName,
                         role: user.roleName,
-                        imgPath: user.images,
+                        imgPath: user.image,
                       ),
                       const Divider(),
                       Center(
@@ -86,9 +86,9 @@ class ProfileVisitScreen extends StatelessWidget {
                             itemBuilder: (context, index) {
                               final post = postList[index];
                               return GestureDetector(
-                                onTap: () => Get.toNamed(Routes.DETAIL, arguments: {'postId': post.id, 'imgPath' : user.images}),
+                                onTap: () => Get.toNamed(Routes.DETAIL, arguments: {'postId': post.id, 'imgPath' : user.image}),
                                 child: CardProfileVisit(
-                                  imgPath: user.images,
+                                  imgPath: user.image,
                                   name: '${user.firstname} ${user.lastname}',
                                   date: post.createdAt,
                                   categoryName: post.categoryName,

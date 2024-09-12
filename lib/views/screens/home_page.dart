@@ -2,6 +2,7 @@
 import 'package:fingerspot_library_app/helpers/api.dart';
 import 'package:fingerspot_library_app/helpers/shared_pref.dart';
 import 'package:fingerspot_library_app/views/constants/color.dart';
+import 'package:fingerspot_library_app/views/screens/coming_soon.dart';
 import 'package:fingerspot_library_app/views/screens/default_screen.dart';
 import 'package:fingerspot_library_app/views/screens/disimpan/disimpan_screen.dart';
 import 'package:fingerspot_library_app/views/screens/diskusi/diskusi_screen.dart';
@@ -11,7 +12,7 @@ import 'package:fingerspot_library_app/views/screens/search/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-// import 'dart:js' as js;
+import 'dart:js' as js;
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
@@ -20,7 +21,7 @@ class MyHomePage extends StatelessWidget {
   final List<Widget> pages = [
     HomeScreen(),
     SearchScreen(),
-    Api.isDebug ? const DefaultScreen() : const DiskusiScreen(),
+    Api.isDebug ? const DefaultScreen() : DiskusiScreen(),
     DisimpanScreen(),
     ProfileScreen(),
   ];
@@ -46,7 +47,7 @@ class MyHomePage extends StatelessWidget {
           ),
         )),
         leading: Obx(() => bottomNavController.selectedIndex.value == 0 ? IconButton(onPressed: (){
-          // js.context.callMethod('backToMainApp');
+          js.context.callMethod('backToMainApp');
         }, icon: const Icon(Icons.arrow_back_ios_new)) : Container()),
       ),
       body: Obx(() => pages[bottomNavController.selectedIndex.value]),

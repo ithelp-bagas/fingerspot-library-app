@@ -35,6 +35,7 @@ class CommentWidget extends StatelessWidget {
             postId: comment.postId,
             parentCommentId: comment.parentCommentId!,
             isFirst: index == 0,
+            username: comment.user.username,
           ),
           if (isTappedChild[comment.id] == true)
             Container(
